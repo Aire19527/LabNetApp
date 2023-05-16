@@ -27,6 +27,18 @@ namespace Infraestructure.Core.Context
         public DbSet<SkillEntity> SkillEntity { get; set; }
         public DbSet<UserEntity> UserEntity { get; set; }
         public DbSet<WorkEntity> WorkEntity { get; set; }
+        public DbSet<RolePermissionEntity> RolePermissionEntity { get; set; }
+        public DbSet<StateEntity> StateEntity { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<UserEntity>()
+                   .HasIndex(b => b.Mail)
+                   .IsUnique();
+
+            modelBuilder.Entity<RolePermissionEntity>()
+                .HasIndex(r => new { r.IdPermission, r.IdRol })
+                .IsUnique();
+        }
     }
 }

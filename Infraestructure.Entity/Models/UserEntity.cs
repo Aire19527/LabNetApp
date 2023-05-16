@@ -1,18 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infraestructure.Entity.Models
 {
     [Table("User")]
     public class UserEntity
     {
+        [Key]
         public int Id { get; set; }
         public string Mail { get; set; }
-        public string  Password { get; set; }
-        public bool State { get; set; }
+        public string Password { get; set; }
+        // public bool State { get; set; }
+
+
+        [ForeignKey("StateEntity")]
+        public int IdStatus { get; set; }
+
+        public StateEntity StateEntity { get; set; }
     }
 }
