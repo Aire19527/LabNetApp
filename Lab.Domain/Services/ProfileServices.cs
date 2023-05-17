@@ -50,10 +50,6 @@ namespace Lab.Domain.Services
             return profiles;
         }
 
-        public void BenjaRompiendo()
-        {
-
-        }
         public ConsultProfileDto GetById(int id)
         {
             throw new NotImplementedException();
