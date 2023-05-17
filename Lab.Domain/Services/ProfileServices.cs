@@ -64,7 +64,7 @@ namespace Lab.Domain.Services
                 Name = add.Name,
                 LastName = add.LastName,
                 DNI = add.DNI,
-                BirthDate=add.BirthDate,
+                BirthDate = add.BirthDate,
                 Mail = add.Mail
             };
             _unitOfWork.ProfileRepository.Insert(profile);
@@ -95,11 +95,6 @@ namespace Lab.Domain.Services
 
         #endregion
 
-
-        #region Benja-Nico
-
-
-        #endregion
 
     }
 
