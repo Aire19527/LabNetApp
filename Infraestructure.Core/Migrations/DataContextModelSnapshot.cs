@@ -39,7 +39,7 @@ namespace Infraestructure.Core.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Configuration");
+                    b.ToTable("Configuration", (string)null);
                 });
 
             modelBuilder.Entity("Infraestructure.Entity.Models.SkillEntity", b =>
@@ -60,7 +60,7 @@ namespace Infraestructure.Core.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Skill");
+                    b.ToTable("Skill", (string)null);
                 });
 #pragma warning restore 612, 618
         }

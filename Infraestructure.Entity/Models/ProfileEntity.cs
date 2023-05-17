@@ -14,6 +14,7 @@ namespace Infraestructure.Entity.Models
     {
         [Key]
         public int Id { get; set; }
+
         [Required]
         [MaxLength(50)]
         public string Name { get; set; }
@@ -31,16 +32,14 @@ namespace Infraestructure.Entity.Models
         [Required]
         public string Mail { get; set; }
         public byte[] CV { get; set; }
+        public UserEntity UserEntity { get; set; }
 
-        [ForeignKey("UserEntity")]
-        public int IdUsur { get; set; }
         [ForeignKey("AdressEntity")]
         public int IdAdress { get; set; }
         [ForeignKey("DniTypeEntity")]
         public int IdDniType { get; set; }
         [ForeignKey("JobPositionEntity")]
         public int IdJobPosition { get; set; }
-        public UserEntity UserEntity { get; set; }
         public AdressEntity AdressEntity { get; set; }
         public DniTypeEntity DniTypeEntity { get; set; }
         public JobPositionEntity JobPositionEntity { get; set; }

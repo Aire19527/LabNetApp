@@ -32,6 +32,9 @@ namespace Infraestructure.Core.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<ProfileEntity>()
+                   .HasNoKey();
+
             modelBuilder.Entity<UserEntity>()
                    .HasIndex(b => b.Mail)
                    .IsUnique();

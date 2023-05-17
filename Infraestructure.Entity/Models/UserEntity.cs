@@ -13,9 +13,6 @@ namespace Infraestructure.Entity.Models
 
         [ForeignKey("StateEntity")]
         public int IdStatus { get; set; }
-
-        [ForeignKey("ProfileEntity")]
-        public int IdProfile { get; set; }
         public ProfileEntity ProfileEntity { get; set; }
         public StateEntity StateEntity { get; set; }
     }
