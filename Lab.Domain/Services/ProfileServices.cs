@@ -50,12 +50,6 @@ namespace Lab.Domain.Services
             return profiles;
         }
 
-        public void MethodSalva()
-        {
-            //AAAAAAAAAAAAA
-            ///AAAA
-        }
-
         public ConsultProfileDto GetById(int id)
         {
             throw new NotImplementedException();
