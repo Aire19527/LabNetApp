@@ -26,7 +26,7 @@ namespace Lab.Domain.Services
         #endregion
 
 
-        #region Methods
+        #region MethodsEmi-Salva
 
         public List<ConsultProfileDto> Getall()
         {
@@ -71,6 +71,7 @@ namespace Lab.Domain.Services
 
             return await _unitOfWork.Save() > 0;
         }
+
 
         public async Task<bool> Update(ModifyProfileDto update)
         {
