@@ -15,5 +15,13 @@ namespace Infraestructure.Entity.Models
         [Required]
         [MaxLength(60)]
         public string Description { get; set; }
+
+
+        [ForeignKey("CountryEntity")]
+        public int IdCountryEntity { get; set; }
+        public CountryEntity CountryEntity { get; set; }
+
+
+        public IEnumerable<CityEntity> CityEntities { get; set; }
     }
 }

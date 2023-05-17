@@ -20,5 +20,10 @@ namespace Infraestructure.Entity.Models
         [MaxLength(200)]
         public string Description { get; set; }
         public IEnumerable<ProfileEntity> ProfileEntity { get; set; }
+
+
+        [ForeignKey("CityEntity")]
+        public int IdCityEntity { get; set; }
+        public CityEntity CityEntity { get; set; }
     }
 }

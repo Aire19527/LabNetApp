@@ -15,5 +15,10 @@ namespace Infraestructure.Entity.Models
         public int IdStatus { get; set; }
         public ProfileEntity ProfileEntity { get; set; }
         public StateEntity StateEntity { get; set; }
+
+
+        [ForeignKey("RoleEntity")]
+        public int IdEntity { get; set; }
+        public RoleEntity RoleEntity { get; set; }
     }
 }

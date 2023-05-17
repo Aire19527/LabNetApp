@@ -32,8 +32,10 @@ namespace Infraestructure.Core.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ProfileEntity>()
-                   .HasNoKey();
+            modelBuilder.Entity<UserEntity>()
+                   .HasOne(u => u.ProfileEntity)
+                   .WithOne(p => p.UserEntity)
+                   .HasForeignKey<ProfileEntity>(p => p.IdUser);
 
             modelBuilder.Entity<UserEntity>()
                    .HasIndex(b => b.Mail)

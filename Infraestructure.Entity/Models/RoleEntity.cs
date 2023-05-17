@@ -17,5 +17,6 @@ namespace Infraestructure.Entity.Models
         public string Description { get; set; }
 
         public IEnumerable<RolePermissionEntity> RolePermissionEntities { get; set; }
+        public IEnumerable<UserEntity> UsersEntities { get; set; }
     }
 }

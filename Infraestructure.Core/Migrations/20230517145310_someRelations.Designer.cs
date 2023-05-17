@@ -4,6 +4,7 @@ using Infraestructure.Core.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infraestructure.Core.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230517145310_someRelations")]
+    partial class someRelations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,9 +37,6 @@ namespace Infraestructure.Core.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<int>("IdCityEntity")
-                        .HasColumnType("int");
-
                     b.Property<int>("Number")
                         .HasColumnType("int");
 
@@ -47,8 +46,6 @@ namespace Infraestructure.Core.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("IdCityEntity");
 
                     b.ToTable("Adress");
                 });
@@ -87,12 +84,7 @@ namespace Infraestructure.Core.Migrations
                         .HasMaxLength(60)
                         .HasColumnType("nvarchar(60)");
 
-                    b.Property<int>("IDProvinceEntity")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("IDProvinceEntity");
 
                     b.ToTable("City");
                 });
@@ -173,17 +165,12 @@ namespace Infraestructure.Core.Migrations
                     b.Property<DateTime>("ExpeditionDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("IdInstitutionType")
-                        .HasColumnType("int");
-
                     b.Property<string>("InstitutionName")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("IdInstitutionType");
 
                     b.ToTable("Education");
                 });
@@ -235,12 +222,7 @@ namespace Infraestructure.Core.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("IdPermissionTypeEntity")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("IdPermissionTypeEntity");
 
                     b.ToTable("Permission");
                 });
@@ -443,12 +425,7 @@ namespace Infraestructure.Core.Migrations
                         .HasMaxLength(60)
                         .HasColumnType("nvarchar(60)");
 
-                    b.Property<int>("IdCountryEntity")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("IdCountryEntity");
 
                     b.ToTable("Province");
                 });
@@ -546,9 +523,6 @@ namespace Infraestructure.Core.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("IdEntity")
-                        .HasColumnType("int");
-
                     b.Property<int>("IdStatus")
                         .HasColumnType("int");
 
@@ -561,8 +535,6 @@ namespace Infraestructure.Core.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("IdEntity");
 
                     b.HasIndex("IdStatus");
 
@@ -609,50 +581,6 @@ namespace Infraestructure.Core.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Work");
-                });
-
-            modelBuilder.Entity("Infraestructure.Entity.Models.AdressEntity", b =>
-                {
-                    b.HasOne("Infraestructure.Entity.Models.CityEntity", "CityEntity")
-                        .WithMany()
-                        .HasForeignKey("IdCityEntity")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CityEntity");
-                });
-
-            modelBuilder.Entity("Infraestructure.Entity.Models.CityEntity", b =>
-                {
-                    b.HasOne("Infraestructure.Entity.Models.ProvinceEntity", "ProvinceEntity")
-                        .WithMany("CityEntities")
-                        .HasForeignKey("IDProvinceEntity")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ProvinceEntity");
-                });
-
-            modelBuilder.Entity("Infraestructure.Entity.Models.EducationEntity", b =>
-                {
-                    b.HasOne("Infraestructure.Entity.Models.InstitutionTypeEntity", "InstitutionTypeEntity")
-                        .WithMany("EducationEntities")
-                        .HasForeignKey("IdInstitutionType")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("InstitutionTypeEntity");
-                });
-
-            modelBuilder.Entity("Infraestructure.Entity.Models.PermissionEntity", b =>
-                {
-                    b.HasOne("Infraestructure.Entity.Models.PermissionTypeEntity", "PermissionTypeEntity")
-                        .WithMany("PermissionEntity")
-                        .HasForeignKey("IdPermissionTypeEntity")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("PermissionTypeEntity");
                 });
 
             modelBuilder.Entity("Infraestructure.Entity.Models.ProfileCertificationEntity", b =>
@@ -766,17 +694,6 @@ namespace Infraestructure.Core.Migrations
                     b.Navigation("WorkEntity");
                 });
 
-            modelBuilder.Entity("Infraestructure.Entity.Models.ProvinceEntity", b =>
-                {
-                    b.HasOne("Infraestructure.Entity.Models.CountryEntity", "CountryEntity")
-                        .WithMany()
-                        .HasForeignKey("IdCountryEntity")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CountryEntity");
-                });
-
             modelBuilder.Entity("Infraestructure.Entity.Models.RolePermissionEntity", b =>
                 {
                     b.HasOne("Infraestructure.Entity.Models.PermissionEntity", "PermissionEntity")
@@ -798,19 +715,11 @@ namespace Infraestructure.Core.Migrations
 
             modelBuilder.Entity("Infraestructure.Entity.Models.UserEntity", b =>
                 {
-                    b.HasOne("Infraestructure.Entity.Models.RoleEntity", "RoleEntity")
-                        .WithMany("UsersEntities")
-                        .HasForeignKey("IdEntity")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Infraestructure.Entity.Models.StateEntity", "StateEntity")
                         .WithMany("UserEntities")
                         .HasForeignKey("IdStatus")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("RoleEntity");
 
                     b.Navigation("StateEntity");
                 });
@@ -835,11 +744,6 @@ namespace Infraestructure.Core.Migrations
                     b.Navigation("ProfileEducationEntity");
                 });
 
-            modelBuilder.Entity("Infraestructure.Entity.Models.InstitutionTypeEntity", b =>
-                {
-                    b.Navigation("EducationEntities");
-                });
-
             modelBuilder.Entity("Infraestructure.Entity.Models.JobPositionEntity", b =>
                 {
                     b.Navigation("ProfileEntity");
@@ -848,11 +752,6 @@ namespace Infraestructure.Core.Migrations
             modelBuilder.Entity("Infraestructure.Entity.Models.PermissionEntity", b =>
                 {
                     b.Navigation("RolePermissionEntities");
-                });
-
-            modelBuilder.Entity("Infraestructure.Entity.Models.PermissionTypeEntity", b =>
-                {
-                    b.Navigation("PermissionEntity");
                 });
 
             modelBuilder.Entity("Infraestructure.Entity.Models.ProfileEntity", b =>
@@ -866,16 +765,9 @@ namespace Infraestructure.Core.Migrations
                     b.Navigation("ProfilesSkillsEntity");
                 });
 
-            modelBuilder.Entity("Infraestructure.Entity.Models.ProvinceEntity", b =>
-                {
-                    b.Navigation("CityEntities");
-                });
-
             modelBuilder.Entity("Infraestructure.Entity.Models.RoleEntity", b =>
                 {
                     b.Navigation("RolePermissionEntities");
-
-                    b.Navigation("UsersEntities");
                 });
 
             modelBuilder.Entity("Infraestructure.Entity.Models.SkillEntity", b =>

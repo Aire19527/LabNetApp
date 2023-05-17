@@ -16,5 +16,7 @@ namespace Infraestructure.Entity.Models
         [Required]
         [MaxLength(60)]
         public string Description { get; set; }   
+
+        public IEnumerable<ProvinceEntity> ProvinceEntities;
     }
 }

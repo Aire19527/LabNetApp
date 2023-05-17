@@ -15,6 +15,13 @@ namespace Infraestructure.Entity.Models
         public int Id { get; set; }
         public string Description { get; set; }
 
+        [ForeignKey("PermissionTypeEntity")]
+        public int IdPermissionTypeEntity { get; set; }
+
+        public PermissionTypeEntity PermissionTypeEntity { get; set; }
+
         public IEnumerable<RolePermissionEntity> RolePermissionEntities { get; set; }
+
+
     }
 }

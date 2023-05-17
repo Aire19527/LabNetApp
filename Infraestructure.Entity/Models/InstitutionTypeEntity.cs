@@ -16,5 +16,7 @@ namespace Infraestructure.Entity.Models
         [Required]
         [MaxLength(100)]
         public string Description { get; set; }
+
+        public IEnumerable <EducationEntity> EducationEntities { get; set; }
     }
 }

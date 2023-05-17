@@ -24,5 +24,9 @@ namespace Infraestructure.Entity.Models
         [Required]
         public DateTime ExpeditionDate { get; set; }
         public IEnumerable<ProfileEducationEntity> ProfileEducationEntity { get; set; }
+
+        [ForeignKey("InstitutionTypeEntity")]
+        public int IdInstitutionType { get; set; }
+        public InstitutionTypeEntity InstitutionTypeEntity { get; set; }
     }
 }

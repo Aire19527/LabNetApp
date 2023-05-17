@@ -33,6 +33,7 @@ namespace Infraestructure.Entity.Models
         public string Mail { get; set; }
         public byte[] CV { get; set; }
         public UserEntity UserEntity { get; set; }
+        public int IdUser { get; set; }
 
         [ForeignKey("AdressEntity")]
         public int IdAdress { get; set; }
