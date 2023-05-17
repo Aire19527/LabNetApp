@@ -8,7 +8,7 @@ namespace Infraestructure.Core.UnitOfWork.Interface
     {
         IRepository<SkillEntity> SkillRepository { get; }
 
-
+        IRepository<ProfileEntity> ProfileRepository { get; } 
 
         void Dispose();
         Task<int> Save();
