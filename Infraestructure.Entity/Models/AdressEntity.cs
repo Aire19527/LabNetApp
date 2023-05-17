@@ -19,5 +19,6 @@ namespace Infraestructure.Entity.Models
         public int Number { get; set; }
         [MaxLength(200)]
         public string Description { get; set; }
+        public IEnumerable<ProfileEntity> ProfileEntity { get; set; }
     }
 }

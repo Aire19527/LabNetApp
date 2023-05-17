@@ -23,5 +23,6 @@ namespace Infraestructure.Entity.Models
         public string BossRole { get; set; }
         public string BossContact { get; set; }
         public string BossName { get; set; }
+        public IEnumerable<ProfileWorkEntity> ProfileWorkEntity { get; set; }
     }
 }

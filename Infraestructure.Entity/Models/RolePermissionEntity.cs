@@ -15,10 +15,10 @@ namespace Infraestructure.Entity.Models
         [Key]
         public int Id { get; set; }
 
-        [ForeignKey("RolEntity")]
+        [ForeignKey("RoleEntity")]
         public int IdRol { get; set; }
 
-        public RoleEntity RolEntity { get; set; }
+        public RoleEntity RoleEntity { get; set; }
 
         [ForeignKey("PermissionEntity")]
         public int IdPermission { get; set; }

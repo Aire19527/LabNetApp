@@ -12,5 +12,6 @@ namespace Infraestructure.Entity.Models
         [MaxLength(120)]
         public string Name { get; set; }
         public DateTime ExpeditionDate { get; set; }
+        public IEnumerable<ProfileCertificationEntity> ProfileCertificationEntity { get; set; }
     }
 }

@@ -14,6 +14,7 @@ namespace Infraestructure.Entity.Models
         public string Description { get; set; }
 
         public bool IsVisible { get; set; }
+        public IEnumerable<ProfilesSkillsEntity> ProfilesSkillsEntity { get; set; }
 
     }
 }

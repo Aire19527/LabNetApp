@@ -23,5 +23,6 @@ namespace Infraestructure.Entity.Models
         public DateTime AdmissionDate { get; set; }
         [Required]
         public DateTime ExpeditionDate { get; set; }
+        public IEnumerable<ProfileEducationEntity> ProfileEducationEntity { get; set; }
     }
 }

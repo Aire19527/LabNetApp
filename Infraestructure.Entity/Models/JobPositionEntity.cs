@@ -14,5 +14,6 @@ namespace Infraestructure.Entity.Models
         [Key]
         public int Id { get; set; }
         public string Description { get; set; }
+        public IEnumerable<ProfileEntity> ProfileEntity { get; set; }
     }
 }
