@@ -1,4 +1,5 @@
-﻿using Infraestructure.Core.UnitOfWork.Interface;
+﻿using Infraestructure.Core.UnitOfWork;
+using Infraestructure.Core.UnitOfWork.Interface;
 using Infraestructure.Entity.Models;
 using Lab.Domain.Dto.Profile;
 using Lab.Domain.Dto.Skill;
@@ -49,6 +50,11 @@ namespace Lab.Domain.Services
             return profiles;
         }
 
+        public ConsultProfileDto GetById(int id)
+        {
+            throw new NotImplementedException();
+            //TODO: IMPLEMENT GET BY ID
+        }
 
         public async Task<bool> Insert(AddProfileDto add)
         {
@@ -66,6 +72,28 @@ namespace Lab.Domain.Services
             return await _unitOfWork.Save() > 0;
         }
 
+        public async Task<bool> Update(ModifyProfileDto update)
+        {
+            bool result = false;
+
+            ProfileEntity profile = _unitOfWork.ProfileRepository.FirstOrDefault(x => x.Id == update.IdUser);
+            if (profile == null)
+            {
+                profile.Description = update.Description;
+                profile.Phone = update.Phone;
+                profile.CV = update.CV;
+                profile.Photo = update.Photo;
+
+                _unitOfWork.ProfileRepository.Update(profile);
+
+                result = await _unitOfWork.Save() > 0;
+            }
+
+            return result;
+        }
+
         #endregion
     }
+
+
 }

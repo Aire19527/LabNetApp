@@ -41,6 +41,20 @@ namespace MyLabApp.Controllers
             });
         }
 
+        [HttpGet]
+        [Route("Get/{id}")]
+        public IActionResult GetById()
+        {
+            List<ConsultProfileDto> result = _profileServices.Getall();
+
+            return Ok(new ResponseDto()
+            {
+                IsSuccess = true,
+                Message = string.Empty,
+                Result = result
+            });
+        }
+
         [HttpPost]
         [Route("Insert")]
         public async Task<IActionResult> Insert(AddProfileDto profile)
@@ -53,6 +67,29 @@ namespace MyLabApp.Controllers
                 IsSuccess = result,
                 Result = result,
                 Message = result ? GeneralMessages.ItemInserted : GeneralMessages.ItemNoInserted
+            };
+
+            if (result)
+                action = Ok(response);
+            else
+                action = BadRequest(response);
+
+            return action;
+        }
+
+
+        [HttpPut]
+        [Route("Update")]
+        public async Task<IActionResult> Update(ModifyProfileDto update)
+        {
+            IActionResult action;
+
+            bool result = await _profileServices.Update(update);
+            ResponseDto response = new ResponseDto()
+            {
+                IsSuccess = result,
+                Result = result,
+                Message = result ? GeneralMessages.ItemUpdated : GeneralMessages.ItemNoUpdated
             };
 
             if (result)
