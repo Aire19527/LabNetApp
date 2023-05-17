@@ -14,6 +14,7 @@ namespace Lab.Domain.Services.Interfaces
 
         Task<List<ConsultProfileDto>> Getall();
 
+
         Task<bool> Update(ModifyProfileDto update);
 
         Task<ConsultProfileDto> GetById(int id);

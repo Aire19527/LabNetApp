@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Lab.Domain.Dto.Profile;
 using Common.Resources;
+using System;
 
 namespace MyLabApp.Controllers
 {
@@ -41,19 +42,29 @@ namespace MyLabApp.Controllers
             });
         }
 
-        //[HttpGet]
-        //[Route("Get/{id}")]
-        //public IActionResult GetById()
-        //{
-        //    List<ConsultProfileDto> result =  _profileServices.Getall();
+        [HttpGet]
+        [Route("Get/{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
 
-        //    return Ok(new ResponseDto()
-        //    {
-        //        IsSuccess = true,
-        //        Message = string.Empty,
-        //        Result = result
-        //    });
-        //}
+            IActionResult action;
+
+            ConsultProfileDto result = await _profileServices.GetById(id);
+
+             ResponseDto rpdto =  new ResponseDto()
+            {
+                IsSuccess = true,
+                Message = string.Empty,
+                Result = result
+            };
+
+            if (result != null)
+                action = Ok(rpdto);
+            else
+                action = BadRequest(rpdto);
+            return action;
+        }
+
 
         [HttpPost]
         [Route("Insert")]

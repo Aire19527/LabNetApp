@@ -52,8 +52,29 @@ namespace Lab.Domain.Services
 
         public async Task<ConsultProfileDto> GetById(int id)
         {
-            //TODO: IMPLEMENT GET BY ID
-            throw new NotImplementedException();
+            ProfileEntity profile = _unitOfWork.ProfileRepository.FirstOrDefault(
+                x => x.IdUser == id);
+
+            if(profile != null)
+            {
+                ConsultProfileDto consultProfileDto =  new ConsultProfileDto()
+                {
+                    IdUser = profile.IdUser,
+                    Description = profile.Description,
+                    LastName = profile.LastName,
+                    Name = profile.Name,
+                    Mail = profile.Mail,
+                    DNI = profile.DNI,
+                    CV = profile.CV,
+                    Photo = profile.Photo,
+                    Phone = profile.Phone,
+                    BirthDate = profile.BirthDate
+                };
+
+                return consultProfileDto;
+            }
+
+            return null;
         }
 
         public async Task<bool> Insert(AddProfileDto add)
