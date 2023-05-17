@@ -28,7 +28,7 @@ namespace Lab.Domain.Services
 
         #region MethodsEmi-Salva
 
-        public List<ConsultProfileDto> Getall()
+        public async Task<List<ConsultProfileDto>> Getall()
         {
             IEnumerable<ProfileEntity> ProfileList = _unitOfWork.ProfileRepository.GetAll();
 
@@ -50,10 +50,10 @@ namespace Lab.Domain.Services
             return profiles;
         }
 
-        public ConsultProfileDto GetById(int id)
+        public async Task<ConsultProfileDto> GetById(int id)
         {
-            throw new NotImplementedException();
             //TODO: IMPLEMENT GET BY ID
+            throw new NotImplementedException();
         }
 
         public async Task<bool> Insert(AddProfileDto add)
@@ -75,10 +75,8 @@ namespace Lab.Domain.Services
 
         public async Task<bool> Update(ModifyProfileDto update)
         {
-            bool result = false;
-
             ProfileEntity profile = _unitOfWork.ProfileRepository.FirstOrDefault(x => x.Id == update.IdUser);
-            if (profile == null)
+            if (profile != null)
             {
                 profile.Description = update.Description;
                 profile.Phone = update.Phone;
@@ -87,10 +85,9 @@ namespace Lab.Domain.Services
 
                 _unitOfWork.ProfileRepository.Update(profile);
 
-                result = await _unitOfWork.Save() > 0;
+                return await _unitOfWork.Save() > 0;
             }
-
-            return result;
+            return false;
         }
 
         #endregion

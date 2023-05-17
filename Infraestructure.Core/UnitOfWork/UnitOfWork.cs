@@ -49,7 +49,6 @@ namespace Infraestructure.Core.UnitOfWork
             {
                 if (this.profileRepository == null)
                     this.profileRepository = new Repository<ProfileEntity>(_context);
-
                 return profileRepository;
             }
         }

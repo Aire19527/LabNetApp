@@ -29,9 +29,9 @@ namespace MyLabApp.Controllers
 
         [HttpGet]
         [Route("GetAll")]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            List<ConsultProfileDto> result = _profileServices.Getall();
+            List<ConsultProfileDto> result = await _profileServices.Getall();
 
             return Ok(new ResponseDto()
             {
@@ -41,19 +41,19 @@ namespace MyLabApp.Controllers
             });
         }
 
-        [HttpGet]
-        [Route("Get/{id}")]
-        public IActionResult GetById()
-        {
-            List<ConsultProfileDto> result = _profileServices.Getall();
+        //[HttpGet]
+        //[Route("Get/{id}")]
+        //public IActionResult GetById()
+        //{
+        //    List<ConsultProfileDto> result =  _profileServices.Getall();
 
-            return Ok(new ResponseDto()
-            {
-                IsSuccess = true,
-                Message = string.Empty,
-                Result = result
-            });
-        }
+        //    return Ok(new ResponseDto()
+        //    {
+        //        IsSuccess = true,
+        //        Message = string.Empty,
+        //        Result = result
+        //    });
+        //}
 
         [HttpPost]
         [Route("Insert")]

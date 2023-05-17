@@ -12,6 +12,7 @@ namespace Lab.Domain.Dto.Profile
         public string Description { get; set; }
         public string Phone { get; set; }
         public byte[] Photo { get; set; }
-        public byte[] CV { get; set; }  
+        public byte[] CV { get; set; }
+
     }
 }
