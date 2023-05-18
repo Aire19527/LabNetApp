@@ -62,9 +62,10 @@ namespace Lab.Domain.Services
         public async Task<bool> Delete(int id)
         {
             UserEntity? userEntity = _unitOfWork.UserRepository.FindAll((user) => user.Id == id).SingleOrDefault();
+
             if (userEntity != null)
-            {
-                userEntity.StateEntity.State = "Inactivo";
+            {   
+                userEntity.IdState = 2;
                 _unitOfWork.UserRepository.Update(userEntity);
                 await _unitOfWork.Save();
                 return true;
