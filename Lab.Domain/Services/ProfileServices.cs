@@ -2,6 +2,7 @@
 using Infraestructure.Core.UnitOfWork.Interface;
 using Infraestructure.Entity.Models;
 using Lab.Domain.Dto.Profile;
+using Lab.Domain.Dto.ProfileSkill;
 using Lab.Domain.Dto.Skill;
 using Lab.Domain.Services.Interfaces;
 using System;
@@ -100,7 +101,7 @@ namespace Lab.Domain.Services
                 Name = add.Name,
                 LastName = add.LastName,
                 DNI = add.DNI,
-                BirthDate=add.BirthDate,
+                BirthDate = add.BirthDate,
                 Mail = add.Mail
             };
             _unitOfWork.ProfileRepository.Insert(profile);
@@ -132,6 +133,29 @@ namespace Lab.Domain.Services
         }
 
         #endregion
+
+        #region Nico-benja
+
+        public async Task<bool> AddSkillToProfile(AddProfileSkillDto profileSkill)
+        {
+            ProfileEntity Profile = _unitOfWork.ProfileRepository.FirstOrDefault(x => x.Id == profileSkill.IdProfile);
+            SkillEntity Skill = _unitOfWork.SkillRepository.FirstOrDefault(x => x.Id == profileSkill.IdSkill);
+
+            if (Profile != null && Skill != null )
+            {
+                _unitOfWork.ProfilesSkillsRepository.Insert(new ProfilesSkillsEntity()
+                {
+                    IdProfile = profileSkill.IdProfile,
+                    IdSkill = profileSkill.IdSkill
+                });
+
+            }
+
+            return await _unitOfWork.Save() > 0;
+        }
+
+        #endregion
+
     }
 
 

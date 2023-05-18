@@ -1,4 +1,5 @@
 ﻿using Lab.Domain.Dto.Profile;
+using Lab.Domain.Dto.ProfileSkill;
 using Lab.Domain.Dto.Skill;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,11 @@ namespace Lab.Domain.Services.Interfaces
 
         Task<bool> Update(ModifyProfileDto update);
 
+        ConsultProfileDto GetById(int id);
+        Task<bool> AddSkillToProfile(AddProfileSkillDto profileSkill);
+
+
         Task<ConsultProfileDto> GetById(int id);
+
     }
 }
