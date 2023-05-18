@@ -96,7 +96,7 @@ namespace Lab.Domain.Services
 
         public async Task<bool> Update(ModifyProfileDto update)
         {
-            ProfileEntity profile = _unitOfWork.ProfileRepository.FirstOrDefault(x => x.Id == update.IdUser);
+            ProfileEntity profile = _unitOfWork.ProfileRepository.FirstOrDefault(x => x.Id == update.Id);
             if (profile != null)
             {
                 profile.Description = update.Description;

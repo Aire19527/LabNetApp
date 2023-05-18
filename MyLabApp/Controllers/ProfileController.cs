@@ -51,7 +51,7 @@ namespace MyLabApp.Controllers
 
             ConsultProfileDto result = await _profileServices.GetById(id);
 
-             ResponseDto rpdto =  new ResponseDto()
+            ResponseDto rpdto =  new ResponseDto()
             {
                 IsSuccess = true,
                 Message = string.Empty,
