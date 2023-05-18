@@ -25,6 +25,7 @@ namespace Lab.Domain.Services
             SkillEntity skill = new SkillEntity()
             {
                 Description = add.Description,
+                IsVisible = true
             };
             _unitOfWork.SkillRepository.Insert(skill);
 
@@ -33,7 +34,9 @@ namespace Lab.Domain.Services
 
         public List<ConsultSkllDto> Getall()
         {
-            IEnumerable<SkillEntity> skillList = _unitOfWork.SkillRepository.GetAll();
+            IEnumerable<SkillEntity> skillList = _unitOfWork.SkillRepository.FindAll((skill) => skill.IsVisible == true);
+
+            
 
             List<ConsultSkllDto> skills = skillList.Select(x => new ConsultSkllDto()
             {
@@ -44,6 +47,19 @@ namespace Lab.Domain.Services
 
             return skills;
         }
+
+        
+        public async Task Delete(int id)
+        {
+            SkillEntity? skillEntity = _unitOfWork.SkillRepository.FindAll((skill) => skill.Id == id).FirstOrDefault();
+            if (skillEntity != null)
+            {
+                skillEntity.IsVisible = false;
+                _unitOfWork.SkillRepository.Update(skillEntity);
+                await _unitOfWork.Save();
+            }
+        }
+
         #endregion
 
     }

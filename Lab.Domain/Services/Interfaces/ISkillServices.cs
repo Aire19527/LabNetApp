@@ -6,6 +6,8 @@ namespace Lab.Domain.Services.Interfaces
     {
         Task<bool> Insert(AddSkilDto add);
 
+        Task Delete(int id);
+
         List<ConsultSkllDto> Getall();
     }
 }

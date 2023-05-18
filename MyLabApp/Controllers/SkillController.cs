@@ -60,6 +60,23 @@ namespace MyLabApp.Controllers
 
             return action;
         }
+
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+           await  _skillServices.Delete(id);
+
+            return Ok(new ResponseDto()
+            {
+                IsSuccess = true,
+                Message = string.Empty,
+                Result = new object()
+            });
+        }
         #endregion
+
+
+
     }
 }
