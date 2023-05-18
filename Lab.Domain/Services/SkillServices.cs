@@ -52,7 +52,8 @@ namespace Lab.Domain.Services
             SkillEntity? skillEntity = _unitOfWork.SkillRepository.FindAll((skill) => skill.Id == id).FirstOrDefault();
             if (skillEntity != null)
             {
-                _unitOfWork.SkillRepository.Delete(id);
+                skillEntity.IsVisible = false;
+                _unitOfWork.SkillRepository.Update(skillEntity);
                 await _unitOfWork.Save();
                 return true;
             }
