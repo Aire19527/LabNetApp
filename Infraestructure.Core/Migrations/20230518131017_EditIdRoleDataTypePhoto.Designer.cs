@@ -4,6 +4,7 @@ using Infraestructure.Core.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infraestructure.Core.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230518131017_EditIdRoleDataTypePhoto")]
+    partial class EditIdRoleDataTypePhoto
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,13 +33,14 @@ namespace Infraestructure.Core.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("IdCityEntity")
                         .HasColumnType("int");
 
-                    b.Property<int?>("Number")
+                    b.Property<int>("Number")
                         .HasColumnType("int");
 
                     b.Property<string>("Street")
@@ -60,7 +63,7 @@ namespace Infraestructure.Core.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<DateTime?>("ExpeditionDate")
+                    b.Property<DateTime>("ExpeditionDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
@@ -105,6 +108,7 @@ namespace Infraestructure.Core.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Value")
@@ -213,6 +217,7 @@ namespace Infraestructure.Core.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -229,6 +234,7 @@ namespace Infraestructure.Core.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("IdPermissionTypeEntity")
@@ -319,6 +325,7 @@ namespace Infraestructure.Core.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<byte[]>("CV")
+                        .IsRequired()
                         .HasColumnType("varbinary(max)");
 
                     b.Property<int>("DNI")
@@ -326,6 +333,7 @@ namespace Infraestructure.Core.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("IdAdress")
@@ -355,9 +363,11 @@ namespace Infraestructure.Core.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Phone")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Photo")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -541,24 +551,22 @@ namespace Infraestructure.Core.Migrations
                     b.Property<int>("IdRole")
                         .HasColumnType("int");
 
-                    b.Property<int>("IdState")
+                    b.Property<int>("IdStatus")
                         .HasColumnType("int");
 
                     b.Property<string>("Mail")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("IdRole");
 
-                    b.HasIndex("IdState");
+                    b.HasIndex("IdStatus");
 
                     b.HasIndex("Mail")
                         .IsUnique();
@@ -575,12 +583,15 @@ namespace Infraestructure.Core.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("BossContact")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("BossName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("BossRole")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Company")
@@ -589,6 +600,7 @@ namespace Infraestructure.Core.Migrations
                         .HasColumnType("nvarchar(120)");
 
                     b.Property<string>("DetailFuntion")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Role")
@@ -796,7 +808,7 @@ namespace Infraestructure.Core.Migrations
 
                     b.HasOne("Infraestructure.Entity.Models.StateEntity", "StateEntity")
                         .WithMany("UserEntities")
-                        .HasForeignKey("IdState")
+                        .HasForeignKey("IdStatus")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

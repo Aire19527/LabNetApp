@@ -34,9 +34,9 @@ namespace Lab.Domain.Services
                 Id = x.Id,
                 Email=x.Mail,
                 Password=x.Password,
-                IdRole=x.IdEntity, //cambiar por IdRole en la tabla
-                Role=x.RoleEntity.Description
-
+                IdRole=x.IdRole, 
+                Role=x.RoleEntity.Description,
+                State=x.StateEntity.State
             })
             .ToList();
 
@@ -50,8 +50,8 @@ namespace Lab.Domain.Services
             {
                 Mail = dto.Email,
                 Password = dto.Password,
-                IdStatus = dto.IdStatus,
-                IdEntity = dto.IdRole
+                IdState = dto.IdState,
+                IdRole = dto.IdRole
             };
             _unitOfWork.UserRepository.Insert(user);
 

@@ -26,12 +26,12 @@ namespace Infraestructure.Entity.Models
         public int DNI { get; set; }
         [Required]
         public DateTime BirthDate { get; set; }
-        public string Description { get; set; }
-        public string Phone { get; set; }
-        public string Photo { get; set; }
+        public string? Description { get; set; }
+        public string? Phone { get; set; }
+        public string? Photo { get; set; }
         [Required]
         public string Mail { get; set; }
-        public byte[] CV { get; set; }
+        public byte[]? CV { get; set; }
         public UserEntity UserEntity { get; set; }
         public int IdUser { get; set; }
 

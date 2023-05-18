@@ -1,6 +1,8 @@
 ﻿using Common.Resources;
 using Lab.Domain.Dto;
+using Lab.Domain.Dto.Skill;
 using Lab.Domain.Dto.User;
+using Lab.Domain.Services;
 using Lab.Domain.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -41,5 +43,20 @@ namespace MyLabApp.Controllers
 
             return action;
         }
+
+        [HttpGet]
+        [Route("GetAll")]
+        public IActionResult GetAll()
+        {
+            List<GetUserDto> result = _userServices.GetAll();
+
+            return Ok(new ResponseDto()
+            {
+                IsSuccess = true,
+                Message = string.Empty,
+                Result = result
+            });
+        }
+
     }
 }
