@@ -13,12 +13,16 @@ namespace Lab.Domain.Services.Interfaces
     {
         Task<bool> Insert(AddProfileDto add);
 
-        List<ConsultProfileDto> Getall();
+        Task<List<ConsultProfileDto>> Getall();
+
 
         Task<bool> Update(ModifyProfileDto update);
 
         ConsultProfileDto GetById(int id);
         Task<bool> AddSkillToProfile(AddProfileSkillDto profileSkill);
+
+
+        Task<ConsultProfileDto> GetById(int id);
 
     }
 }

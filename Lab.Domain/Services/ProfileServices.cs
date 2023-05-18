@@ -8,6 +8,7 @@ using Lab.Domain.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -29,9 +30,10 @@ namespace Lab.Domain.Services
 
         #region MethodsEmi-Salva
 
-        public List<ConsultProfileDto> Getall()
+        public async Task<List<ConsultProfileDto>> Getall()
         {
-            IEnumerable<ProfileEntity> ProfileList = _unitOfWork.ProfileRepository.GetAll();
+            IEnumerable<ProfileEntity> ProfileList = _unitOfWork.ProfileRepository.GetAll(
+                x => x.AdressEntity, j => j.JobPositionEntity, d => d.DniTypeEntity);
 
             List<ConsultProfileDto> profiles = ProfileList.Select(p => new ConsultProfileDto()
             {
@@ -44,17 +46,51 @@ namespace Lab.Domain.Services
                 CV = p.CV,
                 Photo = p.Photo,
                 Phone = p.Phone,
-                BirthDate = p.BirthDate
-
+                BirthDate = p.BirthDate,
+                IdAdress = p.AdressEntity?.Id,
+                AdressDescription = p.AdressEntity?.Description,
+                IdJobPosition = p.JobPositionEntity?.Id,
+                JobPositionDescription = p.JobPositionEntity?.Description,
+                IdDniType = p.DniTypeEntity?.id,
+                DniDescrption = p.JobPositionEntity?.Description
+                
             }).ToList();
 
             return profiles;
         }
 
-        public ConsultProfileDto GetById(int id)
+        public async Task<ConsultProfileDto> GetById(int id)
         {
-            throw new NotImplementedException();
-            //TODO: IMPLEMENT GET BY ID
+            ProfileEntity profile = _unitOfWork.ProfileRepository.FirstOrDefault(
+                x => x.IdUser == id, a => a.AdressEntity, j => j.JobPositionEntity,
+                d => d.DniTypeEntity);
+
+            if(profile != null)
+            {
+                ConsultProfileDto consultProfileDto =  new ConsultProfileDto()
+                {
+                    IdUser = profile.IdUser,
+                    Description = profile.Description,
+                    LastName = profile.LastName,
+                    Name = profile.Name,
+                    Mail = profile.Mail,
+                    DNI = profile.DNI,
+                    CV = profile.CV,
+                    Photo = profile.Photo,
+                    Phone = profile.Phone,
+                    BirthDate = profile.BirthDate,
+                    IdAdress = profile.AdressEntity?.Id,
+                    AdressDescription = profile.AdressEntity?.Description,
+                    IdJobPosition = profile.JobPositionEntity?.Id,
+                    JobPositionDescription = profile.JobPositionEntity?.Description,
+                    IdDniType = profile.DniTypeEntity?.id,
+                    DniDescrption = profile.DniTypeEntity?.Description
+                };
+
+                return consultProfileDto;
+            }
+
+            return null;
         }
 
         public async Task<bool> Insert(AddProfileDto add)
@@ -76,22 +112,24 @@ namespace Lab.Domain.Services
 
         public async Task<bool> Update(ModifyProfileDto update)
         {
-            bool result = false;
-
-            ProfileEntity profile = _unitOfWork.ProfileRepository.FirstOrDefault(x => x.Id == update.IdUser);
-            if (profile == null)
+            ProfileEntity profile = _unitOfWork.ProfileRepository.FirstOrDefault(x => x.IdUser == update.IdUser);
+            if (profile != null)
             {
+
                 profile.Description = update.Description;
                 profile.Phone = update.Phone;
-                profile.CV = update.CV;
+                profile.CV = update?.CV;
                 profile.Photo = update.Photo;
+                profile.IdAdress = update.IdAdress;
+                profile.IdJobPosition = update.IdJobPosition;
+
+
 
                 _unitOfWork.ProfileRepository.Update(profile);
 
-                result = await _unitOfWork.Save() > 0;
+                return await _unitOfWork.Save() > 0;
             }
-
-            return result;
+            return false;
         }
 
         #endregion

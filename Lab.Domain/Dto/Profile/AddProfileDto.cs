@@ -19,8 +19,8 @@ namespace Lab.Domain.Dto.Profile
         [MaxLength(50)]
         public string LastName { get; set; }
         [Required]
-        [MaxLength(8)]
         public int DNI { get; set; }
+
         [Required]
         public DateTime BirthDate { get; set; }
 

@@ -1,4 +1,5 @@
 using Infraestructure.Core.Context;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using MyLabApp.Handlers;
 
@@ -22,10 +23,31 @@ DependencyInyectionHandler.DependencyInyectionConfig(builder.Services);
 
 // Add services to the container.
 
+builder.Services.AddCors(Options =>
+{
+    Options.AddPolicy("CorsPolicy", policy => 
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+
+    });
+});
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddCors(opt =>
+{
+    opt.AddPolicy("NewPolicy", app =>
+    {
+        app.AllowAnyOrigin()
+        .AllowAnyHeader()
+        .AllowAnyMethod();
+    });
+});
 
 var app = builder.Build();
 
@@ -37,6 +59,12 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+
+app.UseCors("CorsPolicy");
+=======
+//app.UseCors("NewPolicy");
+
 
 app.UseAuthorization();
 

@@ -4,6 +4,10 @@ using Lab.Domain.Dto.Profile;
 using Lab.Domain.Dto.ProfileSkill;
 using Lab.Domain.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Lab.Domain.Dto.Profile;
+using Common.Resources;
+using Microsoft.AspNetCore.Cors;
+using System;
 
 namespace MyLabApp.Controllers
 {
@@ -27,9 +31,9 @@ namespace MyLabApp.Controllers
 
         [HttpGet]
         [Route("GetAll")]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            List<ConsultProfileDto> result = _profileServices.Getall();
+            List<ConsultProfileDto> result = await _profileServices.Getall();
 
             return Ok(new ResponseDto()
             {
@@ -41,17 +45,27 @@ namespace MyLabApp.Controllers
 
         [HttpGet]
         [Route("Get/{id}")]
-        public IActionResult GetById()
+        public async Task<IActionResult> GetById(int id)
         {
-            List<ConsultProfileDto> result = _profileServices.Getall();
 
-            return Ok(new ResponseDto()
+            IActionResult action;
+
+            ConsultProfileDto result = await _profileServices.GetById(id);
+
+            ResponseDto rpdto =  new ResponseDto()
             {
                 IsSuccess = true,
                 Message = string.Empty,
                 Result = result
-            });
+            };
+
+            if (result != null)
+                action = Ok(rpdto);
+            else
+                action = BadRequest(rpdto);
+            return action;
         }
+
 
         [HttpPost]
         [Route("Insert")]
