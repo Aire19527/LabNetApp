@@ -31,6 +31,8 @@ namespace Infraestructure.Core.UnitOfWork
 
         private IRepository<ProfileEntity> profileRepository;
         private IRepository<ProfilesSkillsEntity> profileSkillRepository;
+        private IRepository<WorkEntity> workRepository;
+        private IRepository<ProfileWorkEntity> profileWorkRepository;
 
         #endregion
 
@@ -78,6 +80,29 @@ namespace Infraestructure.Core.UnitOfWork
                     this.profileSkillRepository = new Repository<ProfilesSkillsEntity>(_context);
 
                 return profileSkillRepository;
+
+            }
+        }
+
+        public IRepository<WorkEntity> WorkRepository
+        {
+            get
+            {
+                if (this.workRepository == null)
+                    this.workRepository = new Repository<WorkEntity>(_context);
+
+                return workRepository;
+            }
+        }
+
+        public IRepository<ProfileWorkEntity> ProfilesWorkRepository
+        {
+            get
+            {
+                if (this.profileWorkRepository == null)
+                    this.profileWorkRepository = new Repository<ProfileWorkEntity>(_context);
+
+                return profileWorkRepository;
 
             }
         }

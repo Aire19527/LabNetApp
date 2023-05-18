@@ -3,6 +3,7 @@ using Infraestructure.Core.UnitOfWork.Interface;
 using Infraestructure.Entity.Models;
 using Lab.Domain.Dto.Profile;
 using Lab.Domain.Dto.ProfileSkill;
+using Lab.Domain.Dto.ProfileWork;
 using Lab.Domain.Dto.Skill;
 using Lab.Domain.Services.Interfaces;
 using System;
@@ -130,6 +131,23 @@ namespace Lab.Domain.Services
                 return await _unitOfWork.Save() > 0;
             }
             return false;
+        }
+
+        public async Task<bool> AddWorkProfile(AddProfileWorkDto addProfileWorkDto)
+        {
+            ProfileEntity Profile = _unitOfWork.ProfileRepository.FirstOrDefault(x => x.Id == addProfileWorkDto.IdProfile);
+            WorkEntity Work = _unitOfWork.WorkRepository.FirstOrDefault(x => x.Id == addProfileWorkDto.IdWork);
+
+            if (Profile != null && Work != null)
+            {
+                _unitOfWork.ProfilesWorkRepository.Insert(new ProfileWorkEntity()
+                {
+                    IdProfile = addProfileWorkDto.IdProfile,
+                    IdWork = addProfileWorkDto.IdWork
+                });
+            }
+
+            return await _unitOfWork.Save() > 0;
         }
 
         #endregion
