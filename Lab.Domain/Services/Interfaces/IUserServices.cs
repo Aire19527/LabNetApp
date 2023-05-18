@@ -12,6 +12,8 @@ namespace Lab.Domain.Services.Interfaces
     {
         Task<bool> Insert(AddUserDto add);
         List<GetUserDto> GetAll();
+
+        Task<bool> Delete(int id);
         
     }
 }

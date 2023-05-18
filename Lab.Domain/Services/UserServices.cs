@@ -57,5 +57,19 @@ namespace Lab.Domain.Services
 
             return await _unitOfWork.Save() > 0;
         }
+
+
+        public async Task<bool> Delete(int id)
+        {
+            UserEntity? userEntity = _unitOfWork.UserRepository.FindAll((user) => user.Id == id).SingleOrDefault();
+            if (userEntity != null)
+            {
+                userEntity.StateEntity.State = "Inactivo";
+                _unitOfWork.UserRepository.Update(userEntity);
+                await _unitOfWork.Save();
+                return true;
+            }
+            return false;
+        }
     }
 }

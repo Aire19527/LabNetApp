@@ -16,7 +16,7 @@ namespace MyLabApp.Controllers
         private readonly IUserServices _userServices;
 
 
-   
+
         public UserController(IUserServices userServices)
         {
             this._userServices = userServices;
@@ -55,6 +55,20 @@ namespace MyLabApp.Controllers
                 IsSuccess = true,
                 Message = string.Empty,
                 Result = result
+            });
+        }
+
+        [HttpDelete]
+        [Route("delete/{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            bool result = await _userServices.Delete(id);
+
+            return Ok(new ResponseDto()
+            {
+                IsSuccess = result,
+                Message = string.Empty,
+                Result = result ? GeneralMessages.ItemDeleted : GeneralMessages.ItemNoDeleted
             });
         }
 
