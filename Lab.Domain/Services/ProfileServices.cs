@@ -154,6 +154,18 @@ namespace Lab.Domain.Services
             return await _unitOfWork.Save() > 0;
         }
 
+        public async Task<bool> DeleteSkillToProfile(AddProfileSkillDto profileSkill)
+        {
+            ProfilesSkillsEntity ProfilesSkills = _unitOfWork.ProfilesSkillsRepository.FindAll(p => p.IdProfile == profileSkill.IdProfile && p.IdSkill == profileSkill.IdSkill).FirstOrDefault();
+
+            if (ProfilesSkills != null)
+            {
+                _unitOfWork.ProfilesSkillsRepository.Delete(ProfilesSkills);
+            }
+
+            return await _unitOfWork.Save() > 0;
+        }
+
         #endregion
 
     }

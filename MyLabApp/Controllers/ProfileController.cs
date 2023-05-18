@@ -89,7 +89,7 @@ namespace MyLabApp.Controllers
             return action;
         }
 
-        [HttpPut]
+        [HttpPost]
         [Route("AddSkillToProfile")]
         public async Task<IActionResult> AddSkillToProfile(AddProfileSkillDto addProfileSkillDto)
         {
@@ -109,7 +109,27 @@ namespace MyLabApp.Controllers
                 action = BadRequest(response);
 
             return action;
+        }
+        [HttpDelete]
+        [Route("DeleteSkillToProfile")]
+        public async Task<IActionResult> DeleteSkillToProfile(AddProfileSkillDto addProfileSkillDto)
+        {
+            IActionResult action;
 
+            bool result = await _profileServices.DeleteSkillToProfile(addProfileSkillDto);
+            ResponseDto response = new ResponseDto()
+            {
+                IsSuccess = result,
+                Result = result,
+                Message = result ? GeneralMessages.ItemInserted : GeneralMessages.ItemNoInserted
+            };
+
+            if (result)
+                action = Ok(response);
+            else
+                action = BadRequest(response);
+
+            return action;
         }
 
 
