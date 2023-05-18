@@ -45,12 +45,12 @@ namespace MyLabApp.Controllers
 
         [HttpGet]
         [Route("Get/{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public IActionResult GetById(int id)
         {
 
             IActionResult action;
 
-            ConsultProfileDto result = await _profileServices.GetById(id);
+            ConsultProfileDto result =  _profileServices.GetById(id);
 
             ResponseDto rpdto =  new ResponseDto()
             {
