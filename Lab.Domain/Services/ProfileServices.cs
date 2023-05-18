@@ -7,6 +7,7 @@ using Lab.Domain.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -30,7 +31,8 @@ namespace Lab.Domain.Services
 
         public async Task<List<ConsultProfileDto>> Getall()
         {
-            IEnumerable<ProfileEntity> ProfileList = _unitOfWork.ProfileRepository.GetAll();
+            IEnumerable<ProfileEntity> ProfileList = _unitOfWork.ProfileRepository.GetAll(
+                x => x.AdressEntity, j => j.JobPositionEntity, d => d.DniTypeEntity);
 
             List<ConsultProfileDto> profiles = ProfileList.Select(p => new ConsultProfileDto()
             {
@@ -43,8 +45,14 @@ namespace Lab.Domain.Services
                 CV = p.CV,
                 Photo = p.Photo,
                 Phone = p.Phone,
-                BirthDate = p.BirthDate
-
+                BirthDate = p.BirthDate,
+                IdAdress = p.AdressEntity.Id,
+                AdressDescription = p.AdressEntity.Description,
+                IdJobPosition = p.JobPositionEntity.Id,
+                JobPositionDescription = p.JobPositionEntity.Description,
+                IdDniType = p.DniTypeEntity.id,
+                DniDescrption = p.JobPositionEntity.Description
+                
             }).ToList();
 
             return profiles;
@@ -53,7 +61,8 @@ namespace Lab.Domain.Services
         public async Task<ConsultProfileDto> GetById(int id)
         {
             ProfileEntity profile = _unitOfWork.ProfileRepository.FirstOrDefault(
-                x => x.IdUser == id);
+                x => x.IdUser == id, a => a.AdressEntity, j => j.JobPositionEntity,
+                d => d.DniTypeEntity);
 
             if(profile != null)
             {
@@ -68,7 +77,13 @@ namespace Lab.Domain.Services
                     CV = profile.CV,
                     Photo = profile.Photo,
                     Phone = profile.Phone,
-                    BirthDate = profile.BirthDate
+                    BirthDate = profile.BirthDate,
+                    IdAdress = profile.AdressEntity.Id,
+                    AdressDescription = profile.AdressEntity.Description,
+                    IdJobPosition = profile.JobPositionEntity.Id,
+                    JobPositionDescription = profile.JobPositionEntity.Description,
+                    IdDniType = profile.DniTypeEntity.id,
+                    DniDescrption = profile.DniTypeEntity.Description
                 };
 
                 return consultProfileDto;
@@ -96,7 +111,7 @@ namespace Lab.Domain.Services
 
         public async Task<bool> Update(ModifyProfileDto update)
         {
-            ProfileEntity profile = _unitOfWork.ProfileRepository.FirstOrDefault(x => x.Id == update.Id);
+            ProfileEntity profile = _unitOfWork.ProfileRepository.FirstOrDefault(x => x.Id == update.IdUser);
             if (profile != null)
             {
                 profile.Description = update.Description;

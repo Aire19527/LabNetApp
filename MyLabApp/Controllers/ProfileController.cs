@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Lab.Domain.Dto.Profile;
 using Common.Resources;
+using Microsoft.AspNetCore.Cors;
 using System;
 
 namespace MyLabApp.Controllers

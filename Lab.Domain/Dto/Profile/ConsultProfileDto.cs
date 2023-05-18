@@ -13,11 +13,16 @@ namespace Lab.Domain.Dto.Profile
         public string Phone { get; set; }
 
         //TODO: STRING URL
-        public byte[] Photo { get; set; }
+        public string Photo { get; set; }
         public byte[] CV { get; set; }
 
-
         //TODO: POR EJEMPLO ID TIPO DNI Y DESCRIPCION TIPO DNI
-        
+        public int IdAdress { get; set; }
+        public string AdressDescription { get; set; }
+        public int IdDniType { get; set; }
+        public string  DniDescrption { get; set; }
+        public int IdJobPosition { get; set; }
+        public string JobPositionDescription { get; set; }
+
     }
 }
