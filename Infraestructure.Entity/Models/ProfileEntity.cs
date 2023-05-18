@@ -28,7 +28,7 @@ namespace Infraestructure.Entity.Models
         public DateTime BirthDate { get; set; }
         public string Description { get; set; }
         public string Phone { get; set; }
-        public byte[] Photo { get; set; }
+        public string Photo { get; set; }
         [Required]
         public string Mail { get; set; }
         public byte[] CV { get; set; }

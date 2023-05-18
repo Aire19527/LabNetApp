@@ -11,6 +11,7 @@ namespace Infraestructure.Entity.Models
         public string Mail { get; set; }
         public string Password { get; set; }
 
+
         [ForeignKey("StateEntity")]
         public int IdStatus { get; set; }
         public ProfileEntity ProfileEntity { get; set; }
@@ -18,7 +19,7 @@ namespace Infraestructure.Entity.Models
 
 
         [ForeignKey("RoleEntity")]
-        public int IdEntity { get; set; }
+        public int IdRole { get; set; }
         public RoleEntity RoleEntity { get; set; }
     }
 }

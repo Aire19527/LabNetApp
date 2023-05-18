@@ -26,6 +26,7 @@ namespace Infraestructure.Core.UnitOfWork
 
         #region Properties
         private IRepository<SkillEntity> skillRepository;
+        private IRepository<UserEntity>  userRepository;
         #endregion
 
         #region Members
@@ -42,8 +43,17 @@ namespace Infraestructure.Core.UnitOfWork
             }
         }
 
+        public IRepository<UserEntity> UserRepository 
+        {
+            get
+            {
+                if (this.userRepository == null)
+                    this.userRepository = new Repository<UserEntity>(_context);
 
+                return userRepository;
 
+            }
+        }
 
         public IDbContextTransaction BeginTransaction()
         {
