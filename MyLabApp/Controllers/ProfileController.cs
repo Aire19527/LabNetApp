@@ -1,11 +1,9 @@
-﻿using Lab.Domain.Dto.Skill;
+﻿using Common.Resources;
 using Lab.Domain.Dto;
-using Lab.Domain.Services;
-using Lab.Domain.Services.Interfaces;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Lab.Domain.Dto.Profile;
-using Common.Resources;
+using Lab.Domain.Dto.ProfileSkill;
+using Lab.Domain.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MyLabApp.Controllers
 {
@@ -75,6 +73,29 @@ namespace MyLabApp.Controllers
                 action = BadRequest(response);
 
             return action;
+        }
+
+        [HttpPut]
+        [Route("AddSkillToProfile")]
+        public async Task<IActionResult> AddSkillToProfile(AddProfileSkillDto addProfileSkillDto)
+        {
+            IActionResult action;
+
+            bool result = await _profileServices.AddSkillToProfile(addProfileSkillDto);
+            ResponseDto response = new ResponseDto()
+            {
+                IsSuccess = result,
+                Result = result,
+                Message = result ? GeneralMessages.ItemInserted : GeneralMessages.ItemNoInserted
+            };
+
+            if (result)
+                action = Ok(response);
+            else
+                action = BadRequest(response);
+
+            return action;
+
         }
 
 
