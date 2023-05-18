@@ -9,7 +9,7 @@ namespace Infraestructure.Core.Context
         {
 
         }
-
+       
         public DbSet<AdressEntity> AdressEntity { get; set; }
         public DbSet<CertificationEntity> CertificationsEntity { get; set; }
         public DbSet<CityEntity> CitiesEntity { get; set; }

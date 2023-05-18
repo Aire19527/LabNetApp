@@ -19,10 +19,10 @@ namespace Infraestructure.Entity.Models
         [Required]
         [MaxLength(100)]
         public string Role { get; set; }
-        public string DetailFuntion { get; set; }
-        public string BossRole { get; set; }
-        public string BossContact { get; set; }
-        public string BossName { get; set; }
+        public string? DetailFuntion { get; set; }
+        public string? BossRole { get; set; }
+        public string? BossContact { get; set; }
+        public string? BossName { get; set; }
         public IEnumerable<ProfileWorkEntity> ProfileWorkEntity { get; set; }
     }
 }

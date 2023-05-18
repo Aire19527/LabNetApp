@@ -16,6 +16,6 @@ namespace Infraestructure.Entity.Models
         [Required]
         public string Value { get; set; }
        
-        public string Description { get; set; }
+        public string? Description { get; set; }
     }
 }

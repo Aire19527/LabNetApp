@@ -20,12 +20,12 @@ namespace Lab.Domain.Services
 
 
         #region Methods
-        public async Task<bool> Insert(AddSkilDto add)
+        public async Task<bool> Insert(AddSkilDto dto)
         {
             SkillEntity skill = new SkillEntity()
             {
-                Description = add.Description,
-                IsVisible = true
+                Description = dto.Description,
+
             };
             _unitOfWork.SkillRepository.Insert(skill);
 

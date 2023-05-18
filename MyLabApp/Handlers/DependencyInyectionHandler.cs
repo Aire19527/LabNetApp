@@ -19,7 +19,11 @@ namespace MyLabApp.Handlers
 
             //Domain
             services.AddTransient<ISkillServices, SkillServices>();
+
+            services.AddTransient<IUserServices, UserServices>();
+
             services.AddTransient<IProfileServices, ProfileServices>();
+
         }
     }
 }
