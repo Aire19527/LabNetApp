@@ -16,10 +16,10 @@ namespace Lab.Domain.Dto.Profile
         public string Description { get; set; }
         public string Phone { get; set; }
         public string Photo { get; set; }
-        public byte[] CV { get; set; }
+        public byte[]? CV { get; set; }
         public int IdAdress { get; set; }
-        public string AdressDescription { get; set; }
+        //public string AdressDescription { get; set; }
         public int IdJobPosition { get; set; }
-        public string JobPositionDescription { get; set; }
+        //public string JobPositionDescription { get; set; }
     }
 }

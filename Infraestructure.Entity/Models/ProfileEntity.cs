@@ -26,24 +26,24 @@ namespace Infraestructure.Entity.Models
         public int DNI { get; set; }
         [Required]
         public DateTime BirthDate { get; set; }
-        public string Description { get; set; }
-        public string Phone { get; set; }
-        public string Photo { get; set; }
+        public string? Description { get; set; }
+        public string? Phone { get; set; }
+        public string? Photo { get; set; }
         [Required]
         public string Mail { get; set; }
-        public byte[] CV { get; set; }
+        public byte[]? CV { get; set; }
         public UserEntity UserEntity { get; set; }
         public int IdUser { get; set; }
 
         [ForeignKey("AdressEntity")]
-        public int IdAdress { get; set; }
+        public int? IdAdress { get; set; }
         [ForeignKey("DniTypeEntity")]
-        public int IdDniType { get; set; }
+        public int? IdDniType { get; set; }
         [ForeignKey("JobPositionEntity")]
-        public int IdJobPosition { get; set; }
-        public AdressEntity AdressEntity { get; set; }
-        public DniTypeEntity DniTypeEntity { get; set; }
-        public JobPositionEntity JobPositionEntity { get; set; }
+        public int? IdJobPosition { get; set; }
+        public AdressEntity? AdressEntity { get; set; }
+        public DniTypeEntity? DniTypeEntity { get; set; }
+        public JobPositionEntity? JobPositionEntity { get; set; }
         public IEnumerable<ProfileEducationEntity> ProfileEducationEntity { get; set; }
         public IEnumerable<ProfilesSkillsEntity> ProfilesSkillsEntity { get; set; }
         public IEnumerable<ProfileCertificationEntity> ProfileCertificationEntity { get; set; }

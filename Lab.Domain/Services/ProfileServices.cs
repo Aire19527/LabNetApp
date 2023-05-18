@@ -46,12 +46,12 @@ namespace Lab.Domain.Services
                 Photo = p.Photo,
                 Phone = p.Phone,
                 BirthDate = p.BirthDate,
-                IdAdress = p.AdressEntity.Id,
-                AdressDescription = p.AdressEntity.Description,
-                IdJobPosition = p.JobPositionEntity.Id,
-                JobPositionDescription = p.JobPositionEntity.Description,
-                IdDniType = p.DniTypeEntity.id,
-                DniDescrption = p.JobPositionEntity.Description
+                IdAdress = p.AdressEntity?.Id,
+                AdressDescription = p.AdressEntity?.Description,
+                IdJobPosition = p.JobPositionEntity?.Id,
+                JobPositionDescription = p.JobPositionEntity?.Description,
+                IdDniType = p.DniTypeEntity?.id,
+                DniDescrption = p.JobPositionEntity?.Description
                 
             }).ToList();
 
@@ -78,12 +78,12 @@ namespace Lab.Domain.Services
                     Photo = profile.Photo,
                     Phone = profile.Phone,
                     BirthDate = profile.BirthDate,
-                    IdAdress = profile.AdressEntity.Id,
-                    AdressDescription = profile.AdressEntity.Description,
-                    IdJobPosition = profile.JobPositionEntity.Id,
-                    JobPositionDescription = profile.JobPositionEntity.Description,
-                    IdDniType = profile.DniTypeEntity.id,
-                    DniDescrption = profile.DniTypeEntity.Description
+                    IdAdress = profile.AdressEntity?.Id,
+                    AdressDescription = profile.AdressEntity?.Description,
+                    IdJobPosition = profile.JobPositionEntity?.Id,
+                    JobPositionDescription = profile.JobPositionEntity?.Description,
+                    IdDniType = profile.DniTypeEntity?.id,
+                    DniDescrption = profile.DniTypeEntity?.Description
                 };
 
                 return consultProfileDto;
@@ -111,13 +111,18 @@ namespace Lab.Domain.Services
 
         public async Task<bool> Update(ModifyProfileDto update)
         {
-            ProfileEntity profile = _unitOfWork.ProfileRepository.FirstOrDefault(x => x.Id == update.IdUser);
+            ProfileEntity profile = _unitOfWork.ProfileRepository.FirstOrDefault(x => x.IdUser == update.IdUser);
             if (profile != null)
             {
+
                 profile.Description = update.Description;
                 profile.Phone = update.Phone;
-                profile.CV = update.CV;
+                profile.CV = update?.CV;
                 profile.Photo = update.Photo;
+                profile.IdAdress = update.IdAdress;
+                profile.IdJobPosition = update.IdJobPosition;
+
+
 
                 _unitOfWork.ProfileRepository.Update(profile);
 
