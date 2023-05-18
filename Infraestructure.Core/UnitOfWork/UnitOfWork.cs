@@ -26,7 +26,12 @@ namespace Infraestructure.Core.UnitOfWork
 
         #region Properties
         private IRepository<SkillEntity> skillRepository;
+
         private IRepository<UserEntity>  userRepository;
+
+        private IRepository<ProfileEntity> profileRepository;
+        private IRepository<ProfilesSkillsEntity> profileSkillRepository;
+
         #endregion
 
         #region Members
@@ -43,6 +48,7 @@ namespace Infraestructure.Core.UnitOfWork
             }
         }
 
+
         public IRepository<UserEntity> UserRepository 
         {
             get
@@ -51,6 +57,26 @@ namespace Infraestructure.Core.UnitOfWork
                     this.userRepository = new Repository<UserEntity>(_context);
 
                 return userRepository;
+
+
+        public IRepository<ProfileEntity> ProfileRepository
+        {
+            get
+            {
+                if (this.profileRepository == null)
+                    this.profileRepository = new Repository<ProfileEntity>(_context);
+                return profileRepository;
+            }
+        }
+
+        public IRepository<ProfilesSkillsEntity> ProfilesSkillsRepository
+        {
+            get
+            {
+                if (this.profileSkillRepository == null)
+                    this.profileSkillRepository = new Repository<ProfilesSkillsEntity>(_context);
+
+                return profileSkillRepository;
 
             }
         }
