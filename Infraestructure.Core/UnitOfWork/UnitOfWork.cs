@@ -49,7 +49,7 @@ namespace Infraestructure.Core.UnitOfWork
         }
 
 
-        public IRepository<UserEntity> UserRepository 
+        public IRepository<UserEntity> UserRepository
         {
             get
             {
@@ -57,7 +57,8 @@ namespace Infraestructure.Core.UnitOfWork
                     this.userRepository = new Repository<UserEntity>(_context);
 
                 return userRepository;
-
+            }
+        }
 
         public IRepository<ProfileEntity> ProfileRepository
         {
