@@ -35,29 +35,28 @@ namespace Lab.Domain.Services
         public List<ConsultSkllDto> Getall()
         {
             IEnumerable<SkillEntity> skillList = _unitOfWork.SkillRepository.FindAll((skill) => skill.IsVisible == true);
-
             
-
             List<ConsultSkllDto> skills = skillList.Select(x => new ConsultSkllDto()
             {
                 Id = x.Id,
                 Description = x.Description,
+                IsVisible = x.IsVisible
 
             }).ToList();
 
             return skills;
         }
 
-        
-        public async Task Delete(int id)
+        public async Task<bool> Delete(int id)
         {
             SkillEntity? skillEntity = _unitOfWork.SkillRepository.FindAll((skill) => skill.Id == id).FirstOrDefault();
             if (skillEntity != null)
             {
-                skillEntity.IsVisible = false;
-                _unitOfWork.SkillRepository.Update(skillEntity);
+                _unitOfWork.SkillRepository.Delete(id);
                 await _unitOfWork.Save();
+                return true;
             }
+            return false;
         }
 
         #endregion

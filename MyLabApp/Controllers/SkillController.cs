@@ -1,4 +1,5 @@
 ﻿using Common.Resources;
+using Infraestructure.Entity.Models;
 using Lab.Domain.Dto;
 using Lab.Domain.Dto.Skill;
 using Lab.Domain.Services;
@@ -62,16 +63,16 @@ namespace MyLabApp.Controllers
         }
 
         [HttpDelete]
-        [Route("{id}")]
+        [Route("delete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-           await  _skillServices.Delete(id);
+           bool res = await _skillServices.Delete(id);
 
             return Ok(new ResponseDto()
             {
-                IsSuccess = true,
-                Message = string.Empty,
-                Result = new object()
+                IsSuccess = res,
+                Message = res ? "se ha borrado":"no se ha borrado",
+                Result = res ? GeneralMessages.ItemDeleted : GeneralMessages.ItemNoDeleted
             });
         }
         #endregion

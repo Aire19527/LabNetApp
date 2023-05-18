@@ -1,4 +1,5 @@
-﻿using Lab.Domain.Dto.Skill;
+﻿using Infraestructure.Entity.Models;
+using Lab.Domain.Dto.Skill;
 
 namespace Lab.Domain.Services.Interfaces
 {
@@ -6,7 +7,7 @@ namespace Lab.Domain.Services.Interfaces
     {
         Task<bool> Insert(AddSkilDto add);
 
-        Task Delete(int id);
+        Task<bool> Delete(int id);
 
         List<ConsultSkllDto> Getall();
     }
