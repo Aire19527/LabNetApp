@@ -50,9 +50,9 @@ namespace MyLabApp.Controllers
 
             IActionResult action;
 
-            ConsultProfileDto result =  _profileServices.GetById(id);
+            ConsultProfileDto result = _profileServices.GetById(id);
 
-            ResponseDto rpdto =  new ResponseDto()
+            ResponseDto rpdto = new ResponseDto()
             {
                 IsSuccess = true,
                 Message = string.Empty,
@@ -66,6 +66,26 @@ namespace MyLabApp.Controllers
             return action;
         }
 
+        [HttpGet]
+        [Route("Get/FilterSkills/{skills}")]
+        public IActionResult FilterProfileBySkills(List<int> skills)
+        {
+            IActionResult action;
+
+            IEnumerable<ProfilesDto> result = _profileServices.FilterBySkill(skills);
+            ResponseDto rpdto = new ResponseDto()
+            {
+                IsSuccess = true,
+                Message = string.Empty,
+                Result = result
+            };
+
+            if (result != null)
+                action = Ok(rpdto);
+            else
+                action = BadRequest(rpdto);
+            return action;
+        }
 
         [HttpPost]
         [Route("Insert")]

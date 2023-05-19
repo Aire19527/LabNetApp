@@ -200,20 +200,31 @@ namespace Lab.Domain.Services
             return await _unitOfWork.Save() > 0;
         }
 
-        public async Task<bool> FilterBySkill(ListConsultSkillDto skills)
+        public IEnumerable<ProfilesDto> FilterBySkill(List<int> skills)
         {
-            IEnumerable<ConsultSkllDto> listSkill = skills.Skills;
+            //IEnumerable<ConsultSkllDto> listSkill = skills.Skills;
 
-            IEnumerable<ProfileDto> profiles= _unitOfWork.ProfilesSkillsRepository.FindAllSelect(p => p.IdSkill == listSkill.Select(x => x.Id, p => p.); 
+            //IEnumerable<ProfileDto> profiles= _unitOfWork.ProfilesSkillsRepository.FindAllSelect(p => p.IdSkill == listSkill.Select(x => x.Id, p => p.); 
 
-
-            // por cada skill filtrar los perfiles,
-
-
-            return await _unitOfWork.Save() > 0;
+            var perfilSkills = _unitOfWork.ProfilesSkillsRepository.FindAll(x => skills.Any(s => s == x.IdSkill), p => p.ProfileEntity); 
+            IEnumerable<ProfilesDto> agrupacion = (
+                                from p in perfilSkills 
+                                group p by p.IdProfile 
+                                into perf select new ProfilesDto
+                                { 
+                                    Profile = perf.Select(x => new ProfileDto
+                                    {
+                                        IdUser = x.ProfileEntity.Id,
+                                        Name = x.ProfileEntity.Name,
+                                        LastName = x.ProfileEntity.LastName,
+                                        Mail = x.ProfileEntity.Mail,
+                                    }),
+                                    Key = perf.Key,
+                                    Count = perf.Select(x => x.IdSkill)
+                                    .Count()
+                                }).ToList();
+            return agrupacion;
         }
-
-
         #endregion
     }
 }
