@@ -3,7 +3,9 @@ using Infraestructure.Core.UnitOfWork.Interface;
 using Infraestructure.Entity.Models;
 using Lab.Domain.Dto.Profile;
 using Lab.Domain.Dto.ProfileSkill;
+using Lab.Domain.Dto.ProfileWork;
 using Lab.Domain.Dto.Skill;
+using Lab.Domain.Dto.Work;
 using Lab.Domain.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -32,9 +34,12 @@ namespace Lab.Domain.Services
 
         public async Task<List<ConsultProfileDto>> Getall()
         {
-            IEnumerable<ProfileEntity> ProfileList = _unitOfWork.ProfileRepository.GetAll(
-                x => x.AdressEntity, j => j.JobPositionEntity, d => d.DniTypeEntity);
-
+            IEnumerable<ProfileEntity> ProfileList = _unitOfWork.ProfileRepository.GetAllSelect(x => x.AdressEntity,
+                                                                                                j => j.JobPositionEntity,
+                                                                                                d => d.DniTypeEntity,
+                                                                                                r => r.ProfileWorkEntity,
+                                                                                                r => r.ProfileWorkEntity.Select(e => e.WorkEntity)
+                                                                                                );
             List<ConsultProfileDto> profiles = ProfileList.Select(p => new ConsultProfileDto()
             {
                 IdUser = p.IdUser,
@@ -52,7 +57,13 @@ namespace Lab.Domain.Services
                 IdJobPosition = p.JobPositionEntity?.Id,
                 JobPositionDescription = p.JobPositionEntity?.Description,
                 IdDniType = p.DniTypeEntity?.id,
-                DniDescrption = p.JobPositionEntity?.Description
+                DniDescrption = p.JobPositionEntity?.Description,
+                workEntities = p.ProfileWorkEntity.Select(x => new WorkDto
+                {
+                    Id = x.WorkEntity.Id,
+                    Company = x.WorkEntity.Company,
+                    Role = x.WorkEntity.Role
+                }).ToList(),
 
             }).ToList();
 
@@ -65,7 +76,6 @@ namespace Lab.Domain.Services
                                                                                 a => a.AdressEntity,
                                                                                 j => j.JobPositionEntity,
                                                                                 d => d.DniTypeEntity,
-                                                                                r => r.ProfileWorkEntity,
                                                                                 r => r.ProfileWorkEntity.Select(e => e.WorkEntity));
 
             if (profile == null)
@@ -89,7 +99,12 @@ namespace Lab.Domain.Services
                 JobPositionDescription = profile.JobPositionEntity?.Description,
                 IdDniType = profile.DniTypeEntity?.id,
                 DniDescrption = profile.DniTypeEntity?.Description,
-                workEntities = profile.ProfileWorkEntity.Select(x => x.WorkEntity).ToList(),
+                workEntities = profile.ProfileWorkEntity.Select(x => new WorkDto
+                {
+                    Id = x.WorkEntity.Id,
+                    Company = x.WorkEntity.Company,
+                    Role = x.WorkEntity.Role
+                }).ToList(),
             };
 
             return consultProfileDto;
@@ -134,6 +149,23 @@ namespace Lab.Domain.Services
             return false;
         }
 
+        public async Task<bool> AddWorkProfile(AddProfileWorkDto addProfileWorkDto)
+        {
+            ProfileEntity Profile = _unitOfWork.ProfileRepository.FirstOrDefault(x => x.Id == addProfileWorkDto.IdProfile);
+            WorkEntity Work = _unitOfWork.WorkRepository.FirstOrDefault(x => x.Id == addProfileWorkDto.IdWork);
+
+            if (Profile != null && Work != null)
+            {
+                _unitOfWork.ProfilesWorkRepository.Insert(new ProfileWorkEntity()
+                {
+                    IdProfile = addProfileWorkDto.IdProfile,
+                    IdWork = addProfileWorkDto.IdWork
+                });
+            }
+
+            return await _unitOfWork.Save() > 0;
+        }
+
         #endregion
 
         #region Nico-benja
@@ -155,22 +187,6 @@ namespace Lab.Domain.Services
 
             return await _unitOfWork.Save() > 0;
         }
-
-        public async Task<bool> DeleteSkillToProfile(AddProfileSkillDto profileSkill)
-        {
-            ProfilesSkillsEntity ProfilesSkills = _unitOfWork.ProfilesSkillsRepository.FindAll(p => p.IdProfile == profileSkill.IdProfile && p.IdSkill == profileSkill.IdSkill).FirstOrDefault();
-
-            if (ProfilesSkills != null)
-            {
-                _unitOfWork.ProfilesSkillsRepository.Delete(ProfilesSkills);
-            }
-
-            return await _unitOfWork.Save() > 0;
-        }
-
         #endregion
-
     }
-
-
 }
