@@ -1,4 +1,5 @@
-﻿using Infraestructure.Core.UnitOfWork.Interface;
+﻿using Common.Exceptions;
+using Infraestructure.Core.UnitOfWork.Interface;
 using Infraestructure.Entity.Models;
 using Lab.Domain.Dto.Skill;
 using Lab.Domain.Services.Interfaces;
@@ -22,6 +23,9 @@ namespace Lab.Domain.Services
         #region Methods
         public async Task<bool> Insert(AddSkilDto dto)
         {
+            if (Getall().Find(x => x.Description.Equals(dto.Description)) != null)
+                throw new DuplicatedSkillException();
+
             SkillEntity skill = new SkillEntity()
             {
                 Description = dto.Description,

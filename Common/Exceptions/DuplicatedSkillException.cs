@@ -8,7 +8,7 @@ namespace Common.Exceptions
 {
     public class DuplicatedSkillException : Exception
     {
-        public DuplicatedSkillException(string? message) : base(message)
+        public DuplicatedSkillException() : base("No se puede insertar un registro duplicado")
         {
         }
     }
