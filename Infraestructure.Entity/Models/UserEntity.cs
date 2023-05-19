@@ -10,17 +10,18 @@ namespace Infraestructure.Entity.Models
         public int Id { get; set; }
         [Required]
         [MaxLength(100)]
+        //[EmailAddress(ErrorMessage ="el campo ingresado debe ser un email")]
         public string Mail { get; set; }
         [Required]
         [MinLength(8)]
         [MaxLength(20)]
         public string Password { get; set; }
 
+        public bool IsActive { get; set; }
 
-        [ForeignKey("StateEntity")]
-        public int IdState { get; set; }
+
         public ProfileEntity ProfileEntity { get; set; }
-        public StateEntity StateEntity { get; set; }
+   
 
 
         [ForeignKey("RoleEntity")]

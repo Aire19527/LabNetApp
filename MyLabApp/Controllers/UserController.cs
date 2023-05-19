@@ -33,7 +33,7 @@ namespace MyLabApp.Controllers
             {
                 IsSuccess = result,
                 Result = String.Empty,
-                Message = result ? GeneralMessages.ItemInserted : GeneralMessages.ItemNoInserted
+                Message = result ? GeneralMessages.ItemInserted : GeneralMessages.RegisteredEmail
             };
 
             if (result)

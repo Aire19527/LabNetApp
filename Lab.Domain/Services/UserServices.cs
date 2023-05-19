@@ -26,7 +26,7 @@ namespace Lab.Domain.Services
 
         public List<GetUserDto> GetAll()
         {
-            IEnumerable<UserEntity> userQuery = _unitOfWork.UserRepository.GetAll(x=> x.RoleEntity,r=>r.StateEntity);
+            IEnumerable<UserEntity> userQuery = _unitOfWork.UserRepository.GetAll(x=> x.RoleEntity);
                                                                         //.FindAll(x=> & | ) para separar las condiciones
 
 
@@ -37,7 +37,7 @@ namespace Lab.Domain.Services
                 Password=x.Password,
                 IdRole=x.IdRole, 
                 Role=x.RoleEntity.Description,
-                State=x.StateEntity.State
+                IsActive =x.IsActive
             })
             .ToList();
 
@@ -47,28 +47,26 @@ namespace Lab.Domain.Services
 
         public async Task<bool> Insert(AddUserDto dto)
         {
-            if (Utils.ValidateEmail(dto.Email))
-            {
+          
+            
                 if (_unitOfWork.UserRepository.FirstOrDefault(x => x.Mail == dto.Email) == null)
                 {
                     UserEntity user = new UserEntity()
                     {
                         Mail = dto.Email,
                         Password = "12345678",
-                        IdState = 1,
+                        IsActive = true,
                         IdRole = dto.IdRole
                     };
                     _unitOfWork.UserRepository.Insert(user);
 
                     return await _unitOfWork.Save() > 0;
                 }
-                else {
+                else
+                {
                     return false;
                 }
-            }
-            else { 
-                return false;
-            }
+        
         }
 
 
@@ -78,7 +76,7 @@ namespace Lab.Domain.Services
 
             if (userEntity != null)
             {   
-                userEntity.IdState = 2;
+                userEntity.IsActive = false;
                 _unitOfWork.UserRepository.Update(userEntity);
                 await _unitOfWork.Save();
                 return true;
