@@ -21,6 +21,12 @@ namespace Infraestructure.Core.Repository
             return includeProperties.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
         }
 
+        private IQueryable<TEntity> PerformInclusionsAndSelect(IEnumerable<Expression<Func<TEntity, object>>> includeProperties,
+                                            IQueryable<TEntity> query)
+        {
+            return includeProperties.Aggregate(query, (current, includeProperty) => current.Include(includeProperty.ToPropertyPath()));
+        }
+
         #region IRepository<TEntity> Members
 
         public IQueryable<TEntity> AsQueryable()
@@ -34,11 +40,24 @@ namespace Infraestructure.Core.Repository
             return PerformInclusions(includeProperties, query);
         }
 
+        public IEnumerable<TEntity> GetAllSelect(params Expression<Func<TEntity, object>>[] includeProperties)
+        {
+            IQueryable<TEntity> query = AsQueryable();
+            return PerformInclusionsAndSelect(includeProperties, query);
+        }
+
 
         public IEnumerable<TEntity> FindAll(Expression<Func<TEntity, bool>> where, params Expression<Func<TEntity, object>>[] includeProperties)
         {
             IQueryable<TEntity> query = AsQueryable().AsNoTracking();
             query = PerformInclusions(includeProperties, query);
+            return query.Where(where);
+        }
+
+        public IEnumerable<TEntity> FindAllSelect(Expression<Func<TEntity, bool>> where, params Expression<Func<TEntity, object>>[] includeProperties)
+        {
+            IQueryable<TEntity> query = AsQueryable();
+            query = PerformInclusionsAndSelect(includeProperties, query);
             return query.Where(where);
         }
 
@@ -54,6 +73,12 @@ namespace Infraestructure.Core.Repository
         {
             IQueryable<TEntity> query = AsQueryable().AsNoTracking();
             query = PerformInclusions(includeProperties, query);
+            return query.FirstOrDefault(where);
+        }
+        public TEntity FirstOrDefaultSelect(Expression<Func<TEntity, bool>> where, params Expression<Func<TEntity, object>>[] includeProperties)
+        {
+            IQueryable<TEntity> query = AsQueryable();
+            query = PerformInclusionsAndSelect(includeProperties, query);
             return query.FirstOrDefault(where);
         }
 

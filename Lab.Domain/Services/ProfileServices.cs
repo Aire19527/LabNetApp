@@ -53,44 +53,46 @@ namespace Lab.Domain.Services
                 JobPositionDescription = p.JobPositionEntity?.Description,
                 IdDniType = p.DniTypeEntity?.id,
                 DniDescrption = p.JobPositionEntity?.Description
-                
+
             }).ToList();
 
             return profiles;
         }
 
-        public async Task<ConsultProfileDto> GetById(int id)
+        public ConsultProfileDto GetById(int id)
         {
-            ProfileEntity profile = _unitOfWork.ProfileRepository.FirstOrDefault(
-                x => x.IdUser == id, a => a.AdressEntity, j => j.JobPositionEntity,
-                d => d.DniTypeEntity);
+            ProfileEntity profile = _unitOfWork.ProfileRepository.FirstOrDefaultSelect(x => x.IdUser == id,
+                                                                                a => a.AdressEntity,
+                                                                                j => j.JobPositionEntity,
+                                                                                d => d.DniTypeEntity,
+                                                                                r => r.ProfileWorkEntity,
+                                                                                r => r.ProfileWorkEntity.Select(e => e.WorkEntity));
 
-            if(profile != null)
+            if (profile == null)
+                throw new Exception("No existe el perfil seleccinado");
+
+            ConsultProfileDto consultProfileDto = new ConsultProfileDto()
             {
-                ConsultProfileDto consultProfileDto =  new ConsultProfileDto()
-                {
-                    IdUser = profile.IdUser,
-                    Description = profile.Description,
-                    LastName = profile.LastName,
-                    Name = profile.Name,
-                    Mail = profile.Mail,
-                    DNI = profile.DNI,
-                    CV = profile.CV,
-                    Photo = profile.Photo,
-                    Phone = profile.Phone,
-                    BirthDate = profile.BirthDate,
-                    IdAdress = profile.AdressEntity?.Id,
-                    AdressDescription = profile.AdressEntity?.Description,
-                    IdJobPosition = profile.JobPositionEntity?.Id,
-                    JobPositionDescription = profile.JobPositionEntity?.Description,
-                    IdDniType = profile.DniTypeEntity?.id,
-                    DniDescrption = profile.DniTypeEntity?.Description
-                };
+                IdUser = profile.IdUser,
+                Description = profile.Description,
+                LastName = profile.LastName,
+                Name = profile.Name,
+                Mail = profile.Mail,
+                DNI = profile.DNI,
+                CV = profile.CV,
+                Photo = profile.Photo,
+                Phone = profile.Phone,
+                BirthDate = profile.BirthDate,
+                IdAdress = profile.AdressEntity?.Id,
+                AdressDescription = profile.AdressEntity?.Description,
+                IdJobPosition = profile.JobPositionEntity?.Id,
+                JobPositionDescription = profile.JobPositionEntity?.Description,
+                IdDniType = profile.DniTypeEntity?.id,
+                DniDescrption = profile.DniTypeEntity?.Description,
+                workEntities = profile.ProfileWorkEntity.Select(x => x.WorkEntity).ToList(),
+            };
 
-                return consultProfileDto;
-            }
-
-            return null;
+            return consultProfileDto;
         }
 
         public async Task<bool> Insert(AddProfileDto add)
@@ -141,7 +143,7 @@ namespace Lab.Domain.Services
             ProfileEntity Profile = _unitOfWork.ProfileRepository.FirstOrDefault(x => x.Id == profileSkill.IdProfile);
             SkillEntity Skill = _unitOfWork.SkillRepository.FirstOrDefault(x => x.Id == profileSkill.IdSkill);
 
-            if (Profile != null && Skill != null )
+            if (Profile != null && Skill != null)
             {
                 _unitOfWork.ProfilesSkillsRepository.Insert(new ProfilesSkillsEntity()
                 {

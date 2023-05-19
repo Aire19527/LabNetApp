@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Infraestructure.Entity.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -23,6 +24,8 @@ namespace Lab.Domain.Dto.Profile
         public string?  DniDescrption { get; set; }
         public int? IdJobPosition { get; set; }
         public string? JobPositionDescription { get; set; }
+
+        public List<WorkEntity> workEntities { get; set; }
 
     }
 }
