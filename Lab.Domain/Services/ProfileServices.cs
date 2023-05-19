@@ -1,6 +1,7 @@
 ﻿using Infraestructure.Core.UnitOfWork;
 using Infraestructure.Core.UnitOfWork.Interface;
 using Infraestructure.Entity.Models;
+using Lab.Domain.Dto.Education;
 using Lab.Domain.Dto.Profile;
 using Lab.Domain.Dto.ProfileSkill;
 using Lab.Domain.Dto.ProfileWork;
@@ -37,9 +38,9 @@ namespace Lab.Domain.Services
             IEnumerable<ProfileEntity> ProfileList = _unitOfWork.ProfileRepository.GetAllSelect(x => x.AdressEntity,
                                                                                                 j => j.JobPositionEntity,
                                                                                                 d => d.DniTypeEntity,
-                                                                                                r => r.ProfileWorkEntity,
-                                                                                                r => r.ProfileWorkEntity.Select(e => e.WorkEntity)
-                                                                                                );
+                                                                                                //r => r.ProfileWorkEntity,
+                                                                                                r => r.ProfileWorkEntity.Select(e => e.WorkEntity),
+                                                                                                e => e.ProfileEducationEntity.Select(b => b.EducationEntity));
             List<ConsultProfileDto> profiles = ProfileList.Select(p => new ConsultProfileDto()
             {
                 IdUser = p.IdUser,
@@ -58,11 +59,23 @@ namespace Lab.Domain.Services
                 JobPositionDescription = p.JobPositionEntity?.Description,
                 IdDniType = p.DniTypeEntity?.id,
                 DniDescrption = p.JobPositionEntity?.Description,
-                workEntities = p.ProfileWorkEntity.Select(x => new WorkDto
-                {
+                WorkEntities = p.ProfileWorkEntity.Select(x => new WorkDto
+                { 
                     Id = x.WorkEntity.Id,
                     Company = x.WorkEntity.Company,
                     Role = x.WorkEntity.Role
+                }                            
+                ).ToList(),
+
+                EducationEntities = p.ProfileEducationEntity.Select(x => new EducationDto
+                {
+                    Id = x.EducationEntity.Id,
+                    InstitutionName = x.EducationEntity.InstitutionName,
+                    Degree = x.EducationEntity.Degree,
+                    AdmissionDate = x.EducationEntity.AdmissionDate,
+                    ExpeditionDate = x.EducationEntity.ExpeditionDate,
+                    IdInstitutionType = x.EducationEntity.InstitutionTypeEntity.Id,
+                    DescriptionInstitutionType = x.EducationEntity.InstitutionTypeEntity.Description
                 }).ToList(),
 
             }).ToList();
@@ -99,7 +112,7 @@ namespace Lab.Domain.Services
                 JobPositionDescription = profile.JobPositionEntity?.Description,
                 IdDniType = profile.DniTypeEntity?.id,
                 DniDescrption = profile.DniTypeEntity?.Description,
-                workEntities = profile.ProfileWorkEntity.Select(x => new WorkDto
+                WorkEntities = profile.ProfileWorkEntity.Select(x => new WorkDto
                 {
                     Id = x.WorkEntity.Id,
                     Company = x.WorkEntity.Company,
