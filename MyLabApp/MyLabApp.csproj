@@ -19,4 +19,8 @@
     <ProjectReference Include="..\Lab.Domain\Lab.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\files\" />
+  </ItemGroup>
+
 </Project>

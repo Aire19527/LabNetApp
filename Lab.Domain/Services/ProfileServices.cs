@@ -44,7 +44,7 @@ namespace Lab.Domain.Services
                                                                                                 d => d.DniTypeEntity,
                                                                                                 //r => r.ProfileWorkEntity,
                                                                                                 r => r.ProfileWorkEntity.Select(e => e.WorkEntity),
-                                                                                                e => e.ProfileEducationEntity.Select(b => b.EducationEntity));
+                                                                                                e => e.ProfileEducationEntity.Select(b => b.EducationEntity.InstitutionTypeEntity));
             List<ConsultProfileDto> profiles = ProfileList.Select(p => new ConsultProfileDto()
             {
                 IdUser = p.IdUser,
@@ -77,7 +77,9 @@ namespace Lab.Domain.Services
                     Degree = x.EducationEntity.Degree,
                     AdmissionDate = x.EducationEntity.AdmissionDate,
                     ExpeditionDate = x.EducationEntity.ExpeditionDate,
-                    IdInstitutionType = x.EducationEntity.InstitutionTypeEntity.Id
+                    IdInstitutionType = x.EducationEntity.InstitutionTypeEntity.Id,
+                    DescriptionInstitutionType = x.EducationEntity.InstitutionTypeEntity.Description
+                    
                 }).ToList(),
 
             }).ToList();
@@ -129,7 +131,8 @@ namespace Lab.Domain.Services
                     Degree = x.EducationEntity.Degree,
                     AdmissionDate = x.EducationEntity.AdmissionDate,
                     ExpeditionDate = x.EducationEntity.ExpeditionDate,
-                    IdInstitutionType = x.EducationEntity.IdInstitutionType
+                    IdInstitutionType = x.EducationEntity.IdInstitutionType,
+                    DescriptionInstitutionType = x.EducationEntity.InstitutionTypeEntity.Description
                 }).ToList()
 
             };
@@ -162,7 +165,7 @@ namespace Lab.Domain.Services
 
                 profile.Description = update.Description;
                 profile.Phone = update.Phone;
-                profile.CV = update?.CV;
+                profile.CV = update.CV;
                 profile.Photo = update.Photo;
                 profile.IdAdress = update.IdAdress;
                 profile.IdJobPosition = update.IdJobPosition;

@@ -23,6 +23,6 @@ namespace Lab.Domain.Dto.Education
         [Required]
         public DateTime ExpeditionDate { get; set; }
         public int IdInstitutionType { get; set; }
-        //public string DescriptionInstitutionType { get; set; }
+        public string DescriptionInstitutionType { get; set; }
     }
 }
