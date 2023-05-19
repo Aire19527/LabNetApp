@@ -22,6 +22,7 @@ namespace Lab.Domain.Dto.Profile
 
         [Required]
         public string Mail { get; set; }
+        public string Photo { get; set; }
 
         [Required]
         public IEnumerable<ConsultSkllDto> Skills { get; set; }

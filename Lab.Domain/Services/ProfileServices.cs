@@ -39,7 +39,7 @@ namespace Lab.Domain.Services
                                                                                                 d => d.DniTypeEntity,
                                                                                                 r => r.ProfileWorkEntity,
                                                                                                 r => r.ProfileWorkEntity.Select(e => e.WorkEntity)
-                                                                                                );
+                                                                                               );
             List<ConsultProfileDto> profiles = ProfileList.Select(p => new ConsultProfileDto()
             {
                 IdUser = p.IdUser,
@@ -187,6 +187,33 @@ namespace Lab.Domain.Services
 
             return await _unitOfWork.Save() > 0;
         }
+        public async Task<bool> DeleteSkillToProfile(AddProfileSkillDto profileSkill)
+        {
+            ProfilesSkillsEntity? ProfilesSkills = _unitOfWork.ProfilesSkillsRepository.FindAll( p => p.IdProfile == profileSkill.IdProfile && 
+                                                                                        p.IdSkill == profileSkill.IdSkill).FirstOrDefault();
+
+            if (ProfilesSkills != null)
+            {
+                _unitOfWork.ProfilesSkillsRepository.Delete(ProfilesSkills);
+            }
+
+            return await _unitOfWork.Save() > 0;
+        }
+
+        public async Task<bool> FilterBySkill(ListConsultSkillDto skills)
+        {
+            IEnumerable<ConsultSkllDto> listSkill = skills.Skills;
+
+            IEnumerable<ProfileDto> profiles= _unitOfWork.ProfilesSkillsRepository.FindAllSelect(p => p.IdSkill == listSkill.Select(x => x.Id, p => p.); 
+
+
+            // por cada skill filtrar los perfiles,
+
+
+            return await _unitOfWork.Save() > 0;
+        }
+
+
         #endregion
     }
 }
