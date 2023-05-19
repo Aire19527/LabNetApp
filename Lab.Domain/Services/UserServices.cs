@@ -27,18 +27,14 @@ namespace Lab.Domain.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IConfiguration _configuration;
 
-        public UserServices(IUnitOfWork unitOfWork)
+        public UserServices(IUnitOfWork unitOfWork, IConfiguration configuration)
         {
             _unitOfWork = unitOfWork;
+            _configuration = configuration;
         }
 
 
-
-
-
         #region authentication
-
-
 
         public TokenDto Login(LoginDto login)
         {
