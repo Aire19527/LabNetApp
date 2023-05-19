@@ -9,12 +9,14 @@ using Lab.Domain.Dto.ProfileWork;
 using Lab.Domain.Dto.Skill;
 using Lab.Domain.Dto.Work;
 using Lab.Domain.Services.Interfaces;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,13 +28,16 @@ namespace Lab.Domain.Services
         #region Attributes
         private readonly IUnitOfWork _unitOfWork;
         private readonly IConfiguration _config;
+        private readonly IWebHostEnvironment _webHostEnvironment;
         #endregion
 
         #region Builder
-        public ProfileServices(IUnitOfWork unitOfWork , IConfiguration config)
+        public ProfileServices(IUnitOfWork unitOfWork , IConfiguration config, 
+            IWebHostEnvironment webHostEnvironment)
         {
             _unitOfWork = unitOfWork;
             _config = config;
+            _webHostEnvironment = webHostEnvironment;
         }
         #endregion
 
@@ -144,6 +149,8 @@ namespace Lab.Domain.Services
 
         public async Task<bool> Insert(AddProfileDto add)
         {
+            string urlImg = UploadImage(add.FileImage);
+            
             ProfileEntity profile = new ProfileEntity()
             {
                 IdUser = add.IdUser,
@@ -151,7 +158,8 @@ namespace Lab.Domain.Services
                 LastName = add.LastName,
                 DNI = add.DNI,
                 BirthDate = add.BirthDate,
-                Mail = add.Mail
+                Mail = add.Mail,
+                Photo = urlImg
             };
             _unitOfWork.ProfileRepository.Insert(profile);
 
@@ -213,22 +221,43 @@ namespace Lab.Domain.Services
             return path;
         }
 
-        //private string UploadImage(IFormFile fileImage)
-        //{
-        //    if (fileImage.Length > 3000000)
-        //        throw new Exception("The file size is too big!: [max 3 MB]");
+        private string UploadImage(IFormFile fileImage)
+        {
+            if (fileImage.Length > 3000000)
+                throw new Exception("The file size is too big!: [max 3 MB]");
 
-        //    //Comprobar que el archivo sea una imagen
-        //    string extension = Path.GetExtension(fileImage.FileName);
+            if (fileImage == null || fileImage.Length == 0)
+            {
+                string defaultImg = $"/{_config.GetSection("PathFiles").GetSection("NoImage").Value}";
+                string pathFinalDefault = Path.Combine(_webHostEnvironment.WebRootPath, defaultImg);
+                return pathFinalDefault;
+            }
 
-        //    if (!ImageHelper.ValidImageExtension(extension))
-        //        throw new Exception("Extension invalida");
+            //Comprobar que el archivo sea una imagen
+            string extension = Path.GetExtension(fileImage.FileName);
 
-        //    string path = $"/{_config.GetSection("PathFiles").GetSection("ProfilePicture").Value}";
-        //    string uploads = Path.Combine(_environment.WebRootPath, path);
+            if (!ImageHelper.ValidImageExtension(extension))
+                throw new Exception("Extension invalida");
 
+            string path = $"/{_config.GetSection("PathFiles").GetSection("ProfilePicture").Value}";
 
-        //}
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+
+            
+            string uploads = Path.Combine(_webHostEnvironment.WebRootPath, path);
+            string uniqueFileName = ImageHelper.GetUniqueFileName(fileImage.FileName);
+            string pathFinal = $"{uploads}/{uniqueFileName}";
+
+            using (var stream = new FileStream(pathFinal, FileMode.Create))
+            {
+               fileImage.CopyTo(stream);
+            }
+
+            return $"{path}/{uniqueFileName}";
+        }
 
 
         #endregion

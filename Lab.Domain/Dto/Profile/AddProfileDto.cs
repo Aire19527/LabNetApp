@@ -1,4 +1,5 @@
 ﻿using Infraestructure.Entity.Models;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -27,6 +28,6 @@ namespace Lab.Domain.Dto.Profile
         [Required]
         public string Mail { get; set; }
 
-
+        public IFormFile FileImage { get; set; }
     }
 }
