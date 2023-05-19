@@ -23,6 +23,5 @@ namespace Lab.Domain.Dto.Profile
         public int IdJobPosition { get; set; }
         //public string JobPositionDescription { get; set; }
 
-        public IFormFile FileImage { get; set; }
     }
 }

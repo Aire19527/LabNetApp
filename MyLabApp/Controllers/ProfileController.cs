@@ -8,6 +8,8 @@ using Lab.Domain.Dto.Profile;
 using Common.Resources;
 using Microsoft.AspNetCore.Cors;
 using System;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using Lab.Domain.Dto.ProfileImage;
 
 namespace MyLabApp.Controllers
 {
@@ -128,6 +130,30 @@ namespace MyLabApp.Controllers
             };
 
             if (result)
+                action = Ok(response);
+            else
+                action = BadRequest(response);
+
+            return action;
+        }
+
+        [HttpPut]
+        [Route("UpdateImage")]
+        [Consumes("multipart/form-data")] // Add this attribute to specify the request content type
+
+        public async Task<IActionResult> UpdateImage([FromForm] ProfileImageDto updateImage)
+        {
+            IActionResult action;
+
+            string result = await _profileServices.UpdateImage(updateImage);
+            ResponseDto response = new ResponseDto()
+            {
+                IsSuccess = !string.IsNullOrEmpty(result),
+                Result = result,
+                Message = !string.IsNullOrEmpty(result) ? "Imagen Actualizada satisfatoriamente" : "Imagen Actualizada satisfatoriamente"
+            };
+
+            if (!string.IsNullOrEmpty(result))
                 action = Ok(response);
             else
                 action = BadRequest(response);

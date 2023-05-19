@@ -1,4 +1,5 @@
 ﻿using Lab.Domain.Dto.Profile;
+using Lab.Domain.Dto.ProfileImage;
 using Lab.Domain.Dto.ProfileSkill;
 using Lab.Domain.Dto.Skill;
 using System;
@@ -22,6 +23,6 @@ namespace Lab.Domain.Services.Interfaces
 
 
         ConsultProfileDto GetById(int id);
-
+        Task<string> UpdateImage(ProfileImageDto updateImage);
     }
 }

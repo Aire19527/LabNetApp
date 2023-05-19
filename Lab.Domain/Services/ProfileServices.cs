@@ -4,6 +4,7 @@ using Infraestructure.Core.UnitOfWork.Interface;
 using Infraestructure.Entity.Models;
 using Lab.Domain.Dto.Education;
 using Lab.Domain.Dto.Profile;
+using Lab.Domain.Dto.ProfileImage;
 using Lab.Domain.Dto.ProfileSkill;
 using Lab.Domain.Dto.ProfileWork;
 using Lab.Domain.Dto.Skill;
@@ -11,6 +12,7 @@ using Lab.Domain.Dto.Work;
 using Lab.Domain.Services.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -181,13 +183,36 @@ namespace Lab.Domain.Services
                 profile.IdAdress = update.IdAdress;
                 profile.IdJobPosition = update.IdJobPosition;
 
-
-
                 _unitOfWork.ProfileRepository.Update(profile);
 
                 return await _unitOfWork.Save() > 0;
             }
             return false;
+        }
+
+        public async Task<string> UpdateImage(ProfileImageDto updateImage)
+        {
+            string urlImage = string.Empty;
+            if (updateImage.FileImage != null)
+                urlImage = UploadImage(updateImage.FileImage);
+
+            else
+                throw new Exception("La img es requerida");
+
+
+            ProfileEntity profile = _unitOfWork.ProfileRepository.FirstOrDefault(x => x.IdUser == updateImage.Id);
+
+            if (!string.IsNullOrEmpty(profile.Photo))
+            {
+                DeleteImage(profile.Photo);
+            }
+
+            profile.Photo = urlImage;
+            _unitOfWork.ProfileRepository.Update(profile);
+
+            await _unitOfWork.Save();
+            return urlImage;
+
         }
 
         public async Task<bool> AddWorkProfile(AddProfileWorkDto addProfileWorkDto)
@@ -224,7 +249,7 @@ namespace Lab.Domain.Services
 
         private string UploadImage(IFormFile fileImage)
         {
-
+            //TODO: esto no
             if (fileImage == null || fileImage.Length == 0)
             {
                 string defaultImg = $"/{_config.GetSection("PathFiles").GetSection("NoImage").Value}";
@@ -261,47 +286,7 @@ namespace Lab.Domain.Services
             return $"{path}/{uniqueFileName}";
         }
 
-        public async Task<string> UpdateImage(ModifyProfileDto modifyProfileDto)
-        {
-            string urlImage = string.Empty;
-            if (modifyProfileDto.FileImage != null)
-                urlImage = UploadImage(modifyProfileDto.FileImage);
 
-            else
-                throw new Exception("La img es requerida");
-
-
-            ConsultProfileDto consultProfileDto = GetById(modifyProfileDto.IdUser);
-
-            ProfileEntity profileEntity = new ProfileEntity()
-            {
-                Id = consultProfileDto.IdUser,
-                Name = consultProfileDto.Name,
-                LastName = consultProfileDto.LastName,
-                DNI= consultProfileDto.DNI,
-                BirthDate = consultProfileDto.BirthDate,
-                Mail = consultProfileDto.Mail,
-                Description = consultProfileDto.Description,
-                Phone = consultProfileDto.Phone,
-                Photo = consultProfileDto.Photo,
-                CV = consultProfileDto.CV,
-                IdAdress = consultProfileDto.IdAdress,
-                IdDniType = consultProfileDto.IdDniType,
-                IdJobPosition = consultProfileDto.IdJobPosition,
-                
-            };
-
-            if (!string.IsNullOrEmpty(profileEntity.Photo)) 
-            {
-                DeleteImage(profileEntity.Photo);
-            }
-
-            profileEntity.Photo = urlImage;
-            _unitOfWork.ProfileRepository.Update(profileEntity);
-
-            await _unitOfWork.Save();
-            return urlImage;
-        }
 
         public void DeleteImage(string path)
         {
