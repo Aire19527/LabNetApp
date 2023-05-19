@@ -6,11 +6,14 @@ using Lab.Domain.Services;
 using Lab.Domain.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Common.Exceptions;
+using MyLabApp.Handlers;
 
 namespace MyLabApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [TypeFilter(typeof(CustomSkillHandler))]
     public class SkillController : ControllerBase
     {
         #region Attributes
@@ -46,10 +49,10 @@ namespace MyLabApp.Controllers
         {
             IActionResult action;
 
-            bool result = false;
-
-            if (_skillServices.Getall().Find(x => x.Description.Equals(skill.Description)) == null)
-                result = await _skillServices.Insert(skill);
+            if (_skillServices.Getall().Find(x => x.Description.Equals(skill.Description)) != null)
+                throw new DuplicatedInsertException("No se puede insertar un registro duplicado");
+            
+            bool result = await _skillServices.Insert(skill);
             
             ResponseDto response = new ResponseDto()
             {
