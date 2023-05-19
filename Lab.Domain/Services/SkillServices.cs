@@ -25,7 +25,7 @@ namespace Lab.Domain.Services
             SkillEntity skill = new SkillEntity()
             {
                 Description = dto.Description,
-
+                IsVisible = true,
             };
             _unitOfWork.SkillRepository.Insert(skill);
 
@@ -34,7 +34,7 @@ namespace Lab.Domain.Services
 
         public List<ConsultSkllDto> Getall()
         {
-            IEnumerable<SkillEntity> skillList = _unitOfWork.SkillRepository.FindAll((skill) => skill.IsVisible == true);
+            IEnumerable<SkillEntity> skillList = _unitOfWork.SkillRepository.GetAll();
             
             List<ConsultSkllDto> skills = skillList.Select(x => new ConsultSkllDto()
             {

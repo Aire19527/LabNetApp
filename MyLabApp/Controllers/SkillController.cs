@@ -30,7 +30,7 @@ namespace MyLabApp.Controllers
         [Route("GetAll")]
         public IActionResult GetAll()
         {
-            List<ConsultSkllDto> result = _skillServices.Getall();
+            List<ConsultSkllDto> result = _skillServices.Getall().FindAll((skill) => skill.IsVisible == true);
 
             return Ok(new ResponseDto()
             {
