@@ -43,7 +43,7 @@ namespace MyLabApp.Controllers
             });
         }
 
-        [HttpGet]
+        /*[HttpGet]
         [Route("Get/{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -64,7 +64,7 @@ namespace MyLabApp.Controllers
             else
                 action = BadRequest(rpdto);
             return action;
-        }
+        }*/
 
 
         [HttpPost]

@@ -48,7 +48,7 @@ namespace MyLabApp.Controllers
 
             bool result = false;
 
-            if (_skillServices.Getall().Find(x => x.Description == skill.Description) != null)
+            if (_skillServices.Getall().Find(x => x.Description.Equals(skill.Description)) == null)
                 result = await _skillServices.Insert(skill);
             
             ResponseDto response = new ResponseDto()
