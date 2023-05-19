@@ -50,7 +50,7 @@ namespace MyLabApp.Controllers
             IActionResult action;
 
             if (_skillServices.Getall().Find(x => x.Description.Equals(skill.Description)) != null)
-                throw new DuplicatedInsertException("No se puede insertar un registro duplicado");
+                throw new DuplicatedSkillException("No se puede insertar un registro duplicado");
             
             bool result = await _skillServices.Insert(skill);
             

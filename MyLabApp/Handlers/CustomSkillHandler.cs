@@ -13,7 +13,7 @@ namespace MyLabApp.Handlers
 
             ResponseDto response = new ResponseDto();
 
-            if (context.Exception is DuplicatedInsertException) {
+            if (context.Exception is DuplicatedSkillException) {
                 responseException.Status = StatusCodes.Status406NotAcceptable;
                 response.Message = context.Exception.Message;
                 context.ExceptionHandled = true;
