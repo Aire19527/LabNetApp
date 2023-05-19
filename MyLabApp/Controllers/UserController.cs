@@ -32,7 +32,7 @@ namespace MyLabApp.Controllers
             ResponseDto response = new ResponseDto()
             {
                 IsSuccess = result,
-                Result = result,
+                Result = String.Empty,
                 Message = result ? GeneralMessages.ItemInserted : GeneralMessages.ItemNoInserted
             };
 

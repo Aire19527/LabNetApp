@@ -1,4 +1,5 @@
-﻿using Infraestructure.Core.UnitOfWork.Interface;
+﻿using Common;
+using Infraestructure.Core.UnitOfWork.Interface;
 using Infraestructure.Entity.Models;
 using Lab.Domain.Dto.Skill;
 using Lab.Domain.Dto.User;
@@ -46,16 +47,28 @@ namespace Lab.Domain.Services
 
         public async Task<bool> Insert(AddUserDto dto)
         {
-            UserEntity user = new UserEntity()
+            if (Utils.ValidateEmail(dto.Email))
             {
-                Mail = dto.Email,
-                Password = dto.Password,
-                IdState = dto.IdState,
-                IdRole = dto.IdRole
-            };
-            _unitOfWork.UserRepository.Insert(user);
+                if (_unitOfWork.UserRepository.FirstOrDefault(x => x.Mail == dto.Email) == null)
+                {
+                    UserEntity user = new UserEntity()
+                    {
+                        Mail = dto.Email,
+                        Password = "12345678",
+                        IdState = 1,
+                        IdRole = dto.IdRole
+                    };
+                    _unitOfWork.UserRepository.Insert(user);
 
-            return await _unitOfWork.Save() > 0;
+                    return await _unitOfWork.Save() > 0;
+                }
+                else {
+                    return false;
+                }
+            }
+            else { 
+                return false;
+            }
         }
 
 
