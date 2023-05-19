@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Common.Exceptions
 {
-    public class DuplicatedInsertException : Exception
+    public class DuplicatedSkillException : Exception
     {
-        public DuplicatedInsertException(string? message) : base(message)
+        public DuplicatedSkillException(string? message) : base(message)
         {
         }
     }
