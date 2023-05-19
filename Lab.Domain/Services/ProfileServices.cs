@@ -193,11 +193,15 @@ namespace Lab.Domain.Services
         public async Task<string> UpdateImage(ProfileImageDto updateImage)
         {
             string urlImage = string.Empty;
+
+
             if (updateImage.FileImage != null)
                 urlImage = UploadImage(updateImage.FileImage);
+            else if (!string.IsNullOrEmpty(updateImage.UrlPhoto))
+                urlImage = updateImage.UrlPhoto;
+            else throw new Exception("La img es requerida");
 
-            else
-                throw new Exception("La img es requerida");
+
 
 
             ProfileEntity profile = _unitOfWork.ProfileRepository.FirstOrDefault(x => x.IdUser == updateImage.Id);
