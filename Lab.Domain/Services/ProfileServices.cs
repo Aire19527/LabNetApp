@@ -11,7 +11,6 @@ using Lab.Domain.Dto.Work;
 using Lab.Domain.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -27,7 +26,6 @@ namespace Lab.Domain.Services
         #region Attributes
         private readonly IUnitOfWork _unitOfWork;
         private readonly IConfiguration _config;
-        //private readonly IHostingEnvironment _environment;\
         #endregion
 
         #region Builder
