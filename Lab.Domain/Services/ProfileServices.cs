@@ -1,4 +1,5 @@
-﻿using Infraestructure.Core.UnitOfWork;
+﻿using Common.Utils.Helpers;
+using Infraestructure.Core.UnitOfWork;
 using Infraestructure.Core.UnitOfWork.Interface;
 using Infraestructure.Entity.Models;
 using Lab.Domain.Dto.Education;
@@ -10,8 +11,10 @@ using Lab.Domain.Dto.Work;
 using Lab.Domain.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -24,6 +27,7 @@ namespace Lab.Domain.Services
         #region Attributes
         private readonly IUnitOfWork _unitOfWork;
         private readonly IConfiguration _config;
+        //private readonly IHostingEnvironment _environment;\
         #endregion
 
         #region Builder
@@ -215,6 +219,17 @@ namespace Lab.Domain.Services
         //{
         //    if (fileImage.Length > 3000000)
         //        throw new Exception("The file size is too big!: [max 3 MB]");
+
+        //    //Comprobar que el archivo sea una imagen
+        //    string extension = Path.GetExtension(fileImage.FileName);
+
+        //    if (!ImageHelper.ValidImageExtension(extension))
+        //        throw new Exception("Extension invalida");
+
+        //    string path = $"/{_config.GetSection("PathFiles").GetSection("ProfilePicture").Value}";
+        //    string uploads = Path.Combine(_environment.WebRootPath, path);
+
+
         //}
 
 
