@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -21,5 +22,7 @@ namespace Lab.Domain.Dto.Profile
         //public string AdressDescription { get; set; }
         public int IdJobPosition { get; set; }
         //public string JobPositionDescription { get; set; }
+
+        public IFormFile FileImage { get; set; }
     }
 }

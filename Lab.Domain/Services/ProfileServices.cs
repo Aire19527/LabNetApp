@@ -20,6 +20,7 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Lab.Domain.Services
 {
@@ -260,6 +261,56 @@ namespace Lab.Domain.Services
             return $"{path}/{uniqueFileName}";
         }
 
+        public async Task<string> UpdateImage(ModifyProfileDto modifyProfileDto)
+        {
+            string urlImage = string.Empty;
+            if (modifyProfileDto.FileImage != null)
+                urlImage = UploadImage(modifyProfileDto.FileImage);
+
+            else
+                throw new Exception("La img es requerida");
+
+
+            ConsultProfileDto consultProfileDto = GetById(modifyProfileDto.IdUser);
+
+            ProfileEntity profileEntity = new ProfileEntity()
+            {
+                Id = consultProfileDto.IdUser,
+                Name = consultProfileDto.Name,
+                LastName = consultProfileDto.LastName,
+                DNI= consultProfileDto.DNI,
+                BirthDate = consultProfileDto.BirthDate,
+                Mail = consultProfileDto.Mail,
+                Description = consultProfileDto.Description,
+                Phone = consultProfileDto.Phone,
+                Photo = consultProfileDto.Photo,
+                CV = consultProfileDto.CV,
+                IdAdress = consultProfileDto.IdAdress,
+                IdDniType = consultProfileDto.IdDniType,
+                IdJobPosition = consultProfileDto.IdJobPosition,
+                
+            };
+
+            if (!string.IsNullOrEmpty(profileEntity.Photo)) 
+            {
+                DeleteImage(profileEntity.Photo);
+            }
+
+            profileEntity.Photo = urlImage;
+            _unitOfWork.ProfileRepository.Update(profileEntity);
+
+            await _unitOfWork.Save();
+            return urlImage;
+        }
+
+        public void DeleteImage(string path)
+        {
+            string pathFull = Path.Combine(_webHostEnvironment.WebRootPath, path);
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+            }
+        }
 
         #endregion
 
