@@ -18,5 +18,7 @@ namespace Lab.Domain.Dto.Work
         [MaxLength(100)]
         public string Role { get; set; }
 
+
+
     }
 }

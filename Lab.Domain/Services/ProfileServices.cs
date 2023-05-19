@@ -8,6 +8,8 @@ using Lab.Domain.Dto.ProfileWork;
 using Lab.Domain.Dto.Skill;
 using Lab.Domain.Dto.Work;
 using Lab.Domain.Services.Interfaces;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,12 +23,14 @@ namespace Lab.Domain.Services
     {
         #region Attributes
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IConfiguration _config;
         #endregion
 
         #region Builder
-        public ProfileServices(IUnitOfWork unitOfWork)
+        public ProfileServices(IUnitOfWork unitOfWork , IConfiguration config)
         {
             _unitOfWork = unitOfWork;
+            _config = config;
         }
         #endregion
 
@@ -64,8 +68,7 @@ namespace Lab.Domain.Services
                     Id = x.WorkEntity.Id,
                     Company = x.WorkEntity.Company,
                     Role = x.WorkEntity.Role
-                }                            
-                ).ToList(),
+                } ).ToList(),
 
                 EducationEntities = p.ProfileEducationEntity.Select(x => new EducationDto
                 {
@@ -74,8 +77,7 @@ namespace Lab.Domain.Services
                     Degree = x.EducationEntity.Degree,
                     AdmissionDate = x.EducationEntity.AdmissionDate,
                     ExpeditionDate = x.EducationEntity.ExpeditionDate,
-                    IdInstitutionType = x.EducationEntity.InstitutionTypeEntity.Id,
-                    DescriptionInstitutionType = x.EducationEntity.InstitutionTypeEntity.Description
+                    IdInstitutionType = x.EducationEntity.InstitutionTypeEntity.Id
                 }).ToList(),
 
             }).ToList();
@@ -89,7 +91,8 @@ namespace Lab.Domain.Services
                                                                                 a => a.AdressEntity,
                                                                                 j => j.JobPositionEntity,
                                                                                 d => d.DniTypeEntity,
-                                                                                r => r.ProfileWorkEntity.Select(e => e.WorkEntity));
+                                                                                r => r.ProfileWorkEntity.Select(e => e.WorkEntity),
+                                                                                e => e.ProfileEducationEntity.Select(b => b.EducationEntity));
 
             if (profile == null)
                 throw new Exception("No existe el perfil seleccinado");
@@ -112,12 +115,23 @@ namespace Lab.Domain.Services
                 JobPositionDescription = profile.JobPositionEntity?.Description,
                 IdDniType = profile.DniTypeEntity?.id,
                 DniDescrption = profile.DniTypeEntity?.Description,
+
                 WorkEntities = profile.ProfileWorkEntity.Select(x => new WorkDto
                 {
                     Id = x.WorkEntity.Id,
                     Company = x.WorkEntity.Company,
                     Role = x.WorkEntity.Role
                 }).ToList(),
+                EducationEntities = profile.ProfileEducationEntity.Select(x => new EducationDto
+                {
+                    Id = x.EducationEntity.Id,
+                    InstitutionName = x.EducationEntity.InstitutionName,
+                    Degree = x.EducationEntity.Degree,
+                    AdmissionDate = x.EducationEntity.AdmissionDate,
+                    ExpeditionDate = x.EducationEntity.ExpeditionDate,
+                    IdInstitutionType = x.EducationEntity.IdInstitutionType
+                }).ToList()
+
             };
 
             return consultProfileDto;
@@ -178,6 +192,28 @@ namespace Lab.Domain.Services
 
             return await _unitOfWork.Save() > 0;
         }
+
+        //  ======== IMAGE-RELATED STUFF ========= 
+        public string getImage(string img)
+        {
+            string path = string.Empty;
+            if (string.IsNullOrEmpty(img))
+            {
+                path = $"/{_config.GetSection("PathFiles").GetSection("NoImage").Value}";
+            }
+            else
+            {
+                path = $"/{img}";
+            }
+            return path;
+        }
+
+        //private string UploadImage(IFormFile fileImage)
+        //{
+        //    if (fileImage.Length > 3000000)
+        //        throw new Exception("The file size is too big!: [max 3 MB]");
+        //}
+
 
         #endregion
 
