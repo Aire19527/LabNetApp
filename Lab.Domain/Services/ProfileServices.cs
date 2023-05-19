@@ -202,13 +202,15 @@ namespace Lab.Domain.Services
 
         public IEnumerable<ProfilesDto> FilterBySkill(List<int> skills)
         {
-         
-            var perfilSkills = _unitOfWork.ProfilesSkillsRepository.FindAll(x => skills.Any(s => s == x.IdSkill), p => p.ProfileEntity); 
+            if (skills.Count() == 0)
+                return null;
 
-            IEnumerable<ProfilesDto> agrupacion = (
+            IEnumerable<ProfilesSkillsEntity> perfilSkills = _unitOfWork.ProfilesSkillsRepository.FindAll(x => skills.Any(s => s == x.IdSkill), p => p.ProfileEntity); 
+
+            IEnumerable<ProfilesDto> profiles = (
                                 from p in perfilSkills 
-                                group p by p.IdProfile 
-                                into perf
+                                group p by p.IdProfile into perf
+                                where perf.Count() == skills.Count()
                                 select new ProfilesDto 
                                 { 
                                     Profile = perf.Select(x => new ProfileDto
@@ -217,12 +219,14 @@ namespace Lab.Domain.Services
                                         Name = x.ProfileEntity.Name,
                                         LastName = x.ProfileEntity.LastName,
                                         Mail = x.ProfileEntity.Mail,
-                                    }),
+                                    }).
+                                    FirstOrDefault(),
                                     Key = perf.Key,
                                     Count = perf.Select(x => x.IdSkill)
                                     .Count()
                                 }).ToList();
-            return agrupacion;
+
+            return profiles;
         }
         #endregion
     }

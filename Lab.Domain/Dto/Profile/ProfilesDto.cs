@@ -8,7 +8,7 @@ namespace Lab.Domain.Dto.Profile
 {
     public class ProfilesDto
     {
-        public IEnumerable<ProfileDto> Profile { get; set; }
+        public ProfileDto Profile { get; set; }
 
         public int Key { get; set; }
 
