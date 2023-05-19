@@ -223,8 +223,6 @@ namespace Lab.Domain.Services
 
         private string UploadImage(IFormFile fileImage)
         {
-            if (fileImage.Length > 3000000)
-                throw new Exception("The file size is too big!: [max 3 MB]");
 
             if (fileImage == null || fileImage.Length == 0)
             {
@@ -232,6 +230,9 @@ namespace Lab.Domain.Services
                 string pathFinalDefault = Path.Combine(_webHostEnvironment.WebRootPath, defaultImg);
                 return pathFinalDefault;
             }
+
+            if (fileImage.Length > 3000000)
+                throw new Exception("The file size is too big!: [max 3 MB]");
 
             //Comprobar que el archivo sea una imagen
             string extension = Path.GetExtension(fileImage.FileName);

@@ -28,6 +28,6 @@ namespace Lab.Domain.Dto.Profile
         [Required]
         public string Mail { get; set; }
 
-        public IFormFile FileImage { get; set; }
+        public IFormFile? FileImage { get; set; }
     }
 }
