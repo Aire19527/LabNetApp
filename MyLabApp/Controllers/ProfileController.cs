@@ -67,8 +67,8 @@ namespace MyLabApp.Controllers
         }
 
         [HttpGet]
-        [Route("Get/FilterSkills/{skills}")]
-        public IActionResult FilterProfileBySkills(List<int> skills)
+        [Route("FilterSkills")]
+        public IActionResult FilterProfileBySkills([FromQuery(Name = "skills")]List<int> skills)
         {
             IActionResult action;
 

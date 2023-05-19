@@ -202,15 +202,14 @@ namespace Lab.Domain.Services
 
         public IEnumerable<ProfilesDto> FilterBySkill(List<int> skills)
         {
-            //IEnumerable<ConsultSkllDto> listSkill = skills.Skills;
-
-            //IEnumerable<ProfileDto> profiles= _unitOfWork.ProfilesSkillsRepository.FindAllSelect(p => p.IdSkill == listSkill.Select(x => x.Id, p => p.); 
-
+         
             var perfilSkills = _unitOfWork.ProfilesSkillsRepository.FindAll(x => skills.Any(s => s == x.IdSkill), p => p.ProfileEntity); 
+
             IEnumerable<ProfilesDto> agrupacion = (
                                 from p in perfilSkills 
                                 group p by p.IdProfile 
-                                into perf select new ProfilesDto
+                                into perf
+                                select new ProfilesDto 
                                 { 
                                     Profile = perf.Select(x => new ProfileDto
                                     {
