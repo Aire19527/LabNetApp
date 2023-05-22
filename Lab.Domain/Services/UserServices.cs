@@ -47,15 +47,12 @@ namespace Lab.Domain.Services
 
             string userEnteredPassword = login.Password;
             string hashedPasswordFromDatabase = user.Password;
-            bool isMatch = BCrypt.Net.BCrypt.Verify(userEnteredPassword, hashedPasswordFromDatabase);
+           // bool isMatch = Common.Helpers.Utils.VerifyPassword(userEnteredPassword, hashedPasswordFromDatabase);
 
-            if (userEnteredPassword== hashedPasswordFromDatabase)
-            {
-                return GenerateTokenJWT(user);
-            }
-            else {
+            if (!Common.Helpers.Utils.VerifyPassword(userEnteredPassword, hashedPasswordFromDatabase))
                 throw new BusinessException("La contraseña es incorrecta");
-            }
+           
+                return GenerateTokenJWT(user);
 
         }
 
