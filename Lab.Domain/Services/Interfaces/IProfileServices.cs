@@ -23,6 +23,8 @@ namespace Lab.Domain.Services.Interfaces
 
 
         ConsultProfileDto GetById(int id);
-        Task<string> UpdateImage(ProfileImageDto updateImage);
+        Task<string> UpdateImage(ProfileFileDto updateImage);
+
+        Task<string> UpdateResumee(ProfileFileDto profileResumee);
     }
 }

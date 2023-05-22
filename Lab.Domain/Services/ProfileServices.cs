@@ -63,7 +63,7 @@ namespace Lab.Domain.Services
                 Name = p.Name,
                 Mail = p.Mail,
                 DNI = p.DNI,
-                CV = p.CV,
+                CV = getResumee(p.CV),
                 Photo = getImage(p.Photo),
                 Phone = p.Phone,
                 BirthDate = p.BirthDate,
@@ -117,7 +117,7 @@ namespace Lab.Domain.Services
                 Name = profile.Name,
                 Mail = profile.Mail,
                 DNI = profile.DNI,
-                CV = profile.CV,
+                CV = getResumee(profile.CV),
                 Photo = getImage(profile.Photo),
                 Phone = profile.Phone,
                 BirthDate = profile.BirthDate,
@@ -192,35 +192,6 @@ namespace Lab.Domain.Services
             return false;
         }
 
-        public async Task<string> UpdateImage(ProfileImageDto updateImage)
-        {
-            string urlImage = string.Empty;
-
-
-            if (updateImage.FileImage != null)
-                urlImage = UploadImage(updateImage.FileImage);
-            else if (!string.IsNullOrEmpty(updateImage.UrlPhoto))
-                urlImage = updateImage.UrlPhoto;
-            else throw new Exception("La img es requerida");
-
-
-
-
-            ProfileEntity profile = _unitOfWork.ProfileRepository.FirstOrDefault(x => x.IdUser == updateImage.Id);
-
-            if (!string.IsNullOrEmpty(profile.Photo))
-            {
-                DeleteImage(profile.Photo);
-            }
-
-            profile.Photo = urlImage;
-            _unitOfWork.ProfileRepository.Update(profile);
-
-            await _unitOfWork.Save();
-            return urlImage;
-
-        }
-
         public async Task<bool> AddWorkProfile(AddProfileWorkDto addProfileWorkDto)
         {
             ProfileEntity Profile = _unitOfWork.ProfileRepository.FirstOrDefault(x => x.Id == addProfileWorkDto.IdProfile);
@@ -239,7 +210,7 @@ namespace Lab.Domain.Services
         }
 
         //  ======== IMAGE-RELATED STUFF ========= 
-        public string getImage(string img)
+        public string getImage(string? img)
         {
             string path = string.Empty;
             if (string.IsNullOrEmpty(img))
@@ -262,10 +233,10 @@ namespace Lab.Domain.Services
             //Comprobar que el archivo sea una imagen
             string extension = Path.GetExtension(fileImage.FileName);
 
-            if (!ImageHelper.ValidImageExtension(extension))
+            if (!FileHelper.ValidExtension(extension,false))
                 throw new Exception("Extension invalida");
 
-            string path = $"/{_config.GetSection("PathFiles").GetSection("ProfilePicture").Value}";
+            string path = $"{_config.GetSection("PathFiles").GetSection("ProfilePicture").Value}";
 
             if (!Directory.Exists(path))
             {
@@ -274,7 +245,7 @@ namespace Lab.Domain.Services
 
             
             string uploads = Path.Combine(_webHostEnvironment.WebRootPath, path);
-            string uniqueFileName = ImageHelper.GetUniqueFileName(fileImage.FileName);
+            string uniqueFileName = FileHelper.GetUniqueFileName(fileImage.FileName);
             string pathFinal = $"{uploads}/{uniqueFileName}";
 
             using (var stream = new FileStream(pathFinal, FileMode.Create))
@@ -286,8 +257,35 @@ namespace Lab.Domain.Services
         }
 
 
+        public async Task<string> UpdateImage(ProfileFileDto updateImage)
+        {
+            string urlImage = string.Empty;
 
-        public void DeleteImage(string path)
+
+            if (updateImage.File != null)
+                urlImage = UploadImage(updateImage.File);
+            else throw new Exception("La img es requerida");
+
+
+            ProfileEntity profile = _unitOfWork.ProfileRepository.FirstOrDefault(x => x.IdUser == updateImage.Id);
+
+            if (!string.IsNullOrEmpty(profile.Photo))
+            {
+                DeleteFile(profile.Photo);
+            }
+
+            profile.Photo = urlImage;
+
+
+            _unitOfWork.ProfileRepository.Update(profile);
+
+            await _unitOfWork.Save();
+            return urlImage;
+
+        }
+
+
+        public void DeleteFile(string path)
         {
             string pathFull = Path.Combine(_webHostEnvironment.WebRootPath, path);
             if (File.Exists(path))
@@ -295,6 +293,86 @@ namespace Lab.Domain.Services
                 File.Delete(path);
             }
         }
+
+
+        // ============ CV - RELATED STUFF ==================
+        public string getResumee(string? resumee)
+        {
+            string path = string.Empty;
+            if (string.IsNullOrEmpty(resumee))
+            {
+                path = "";
+            }
+            else
+            {
+                path = $"/{resumee}";
+            }
+            return path;
+        }
+
+        private string UploadResumee(IFormFile resumeeFile)
+        {
+
+            if (resumeeFile.Length > 3000000)
+                throw new Exception("The file size is too big!: [max 3 MB]");
+
+            //Comprobar que el archivo sea una imagen
+            string extension = Path.GetExtension(resumeeFile.FileName);
+
+            if (!FileHelper.ValidExtension(extension,false))
+                throw new Exception("Extension invalida");
+
+            string path = $"/{_config.GetSection("PathFiles").GetSection("resumee").Value}";
+
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+
+
+            string uploads = Path.Combine(_webHostEnvironment.WebRootPath, path);
+            string uniqueFileName = FileHelper.GetUniqueFileName(resumeeFile.FileName);
+            string pathFinal = $"{uploads}/{uniqueFileName}";
+
+            using (var stream = new FileStream(pathFinal, FileMode.Create))
+            {
+                resumeeFile.CopyTo(stream);
+            }
+
+            return $"{path}/{uniqueFileName}";
+        }
+
+        public async Task<string> UpdateResumee(ProfileFileDto updateResumee)
+        {
+            string urlResumee = string.Empty;
+
+
+            if (updateResumee.File != null)
+                urlResumee = UploadImage(updateResumee.File);
+            else throw new Exception("La img es requerida");
+
+
+            ProfileEntity profile = _unitOfWork.ProfileRepository.FirstOrDefault(x => x.IdUser == updateResumee.Id);
+
+            if (!string.IsNullOrEmpty(profile.CV))
+            {
+                DeleteFile(profile.CV);
+            }
+
+
+            profile.CV = urlResumee; 
+
+            _unitOfWork.ProfileRepository.Update(profile);
+
+            await _unitOfWork.Save();
+            return urlResumee;
+
+        }
+
+
+
+
+
 
         #endregion
 

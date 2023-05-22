@@ -14,10 +14,10 @@ namespace Lab.Domain.Dto.Profile
         [Key]
         public int IdUser { get; set; }
 
-        public string Description { get; set; }
-        public string Phone { get; set; }
-        public string Photo { get; set; }
-        public byte[]? CV { get; set; }
+        public string? Description { get; set; }
+        public string? Phone { get; set; }
+        public string? Photo { get; set; }
+        public string? CV { get; set; }
         public int IdAdress { get; set; }
         //public string AdressDescription { get; set; }
         public int IdJobPosition { get; set; }

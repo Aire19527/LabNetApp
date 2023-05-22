@@ -31,7 +31,8 @@ namespace Infraestructure.Entity.Models
         public string? Photo { get; set; }
         [Required]
         public string Mail { get; set; }
-        public byte[]? CV { get; set; }
+
+        public string? CV { get; set; }
         public UserEntity UserEntity { get; set; }
         public int IdUser { get; set; }
 

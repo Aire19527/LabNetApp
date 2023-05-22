@@ -4,11 +4,6 @@ using Lab.Domain.Dto.Profile;
 using Lab.Domain.Dto.ProfileSkill;
 using Lab.Domain.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Lab.Domain.Dto.Profile;
-using Common.Resources;
-using Microsoft.AspNetCore.Cors;
-using System;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using Lab.Domain.Dto.ProfileImage;
 
 namespace MyLabApp.Controllers
@@ -139,9 +134,8 @@ namespace MyLabApp.Controllers
 
         [HttpPut]
         [Route("UpdateImage")]
-        [Consumes("multipart/form-data")] // Add this attribute to specify the request content type
 
-        public async Task<IActionResult> UpdateImage([FromForm] ProfileImageDto updateImage)
+        public async Task<IActionResult> UpdateImage([FromForm] ProfileFileDto updateImage )
         {
             IActionResult action;
 
@@ -151,6 +145,31 @@ namespace MyLabApp.Controllers
                 IsSuccess = !string.IsNullOrEmpty(result),
                 Result = result,
                 Message = !string.IsNullOrEmpty(result) ? "Imagen Actualizada satisfatoriamente" : "Imagen Actualizada satisfatoriamente"
+            };
+
+            if (!string.IsNullOrEmpty(result))
+                action = Ok(response);
+            else
+                action = BadRequest(response);
+
+            return action;
+        }
+
+        [HttpPut]
+        [Route("UpdateResumee")]
+        [Consumes("multipart/form-data")]
+
+
+        public async Task<IActionResult> UpdateResumee([FromForm] ProfileFileDto updateResumee)
+        {
+            IActionResult action;
+
+            string result = await _profileServices.UpdateResumee(updateResumee);
+            ResponseDto response = new ResponseDto()
+            {
+                IsSuccess = !string.IsNullOrEmpty(result),
+                Result = result,
+                Message = !string.IsNullOrEmpty(result) ? "CV Actualizado satisfatoriamente" : "El CV no pudo ser actualizado.."
             };
 
             if (!string.IsNullOrEmpty(result))

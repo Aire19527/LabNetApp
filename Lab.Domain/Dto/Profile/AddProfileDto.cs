@@ -29,5 +29,6 @@ namespace Lab.Domain.Dto.Profile
         public string Mail { get; set; }
 
         public IFormFile? FileImage { get; set; }
+        public IFormFile? FileResumee { get; set; }
     }
 }

@@ -17,7 +17,7 @@ namespace Lab.Domain.Dto.Profile
 
         //TODO: STRING URL
         public string? Photo { get; set; }
-        public byte[]? CV { get; set; }
+        public string? CV { get; set; }
 
         //TODO: POR EJEMPLO ID TIPO DNI Y DESCRIPCION TIPO DNI
         public int? IdAdress { get; set; }
