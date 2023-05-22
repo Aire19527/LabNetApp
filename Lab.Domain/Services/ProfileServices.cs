@@ -1,4 +1,5 @@
-﻿using Common.Utils.Helpers;
+﻿using Common.Utils.Exceptions;
+using Common.Utils.Helpers;
 using Infraestructure.Core.UnitOfWork;
 using Infraestructure.Core.UnitOfWork.Interface;
 using Infraestructure.Entity.Models;
@@ -107,7 +108,7 @@ namespace Lab.Domain.Services
                                                                                 e => e.ProfileEducationEntity.Select(b => b.EducationEntity));
 
             if (profile == null)
-                throw new Exception("No existe el perfil seleccinado");
+                throw new BusinessException("El id no existe");
 
             ConsultProfileDto consultProfileDto = new ConsultProfileDto()
             {
@@ -192,22 +193,22 @@ namespace Lab.Domain.Services
             return false;
         }
 
-        public async Task<bool> AddWorkProfile(AddProfileWorkDto addProfileWorkDto)
-        {
-            ProfileEntity Profile = _unitOfWork.ProfileRepository.FirstOrDefault(x => x.Id == addProfileWorkDto.IdProfile);
-            WorkEntity Work = _unitOfWork.WorkRepository.FirstOrDefault(x => x.Id == addProfileWorkDto.IdWork);
+        //public async Task<bool> AddWorkProfile(AddProfileWorkDto addProfileWorkDto)
+        //{
+        //    ProfileEntity Profile = _unitOfWork.ProfileRepository.FirstOrDefault(x => x.Id == addProfileWorkDto.IdProfile);
+        //    WorkEntity Work = _unitOfWork.WorkRepository.FirstOrDefault(x => x.Id == addProfileWorkDto.IdWork);
 
-            if (Profile != null && Work != null)
-            {
-                _unitOfWork.ProfilesWorkRepository.Insert(new ProfileWorkEntity()
-                {
-                    IdProfile = addProfileWorkDto.IdProfile,
-                    IdWork = addProfileWorkDto.IdWork
-                });
-            }
+        //    if (Profile != null && Work != null)
+        //    {
+        //        _unitOfWork.ProfilesWorkRepository.Insert(new ProfileWorkEntity()
+        //        {
+        //            IdProfile = addProfileWorkDto.IdProfile,
+        //            IdWork = addProfileWorkDto.IdWork
+        //        });
+        //    }
 
-            return await _unitOfWork.Save() > 0;
-        }
+        //    return await _unitOfWork.Save() > 0;
+        //}
 
         //  ======== IMAGE-RELATED STUFF ========= 
         public string getImage(string? img)
@@ -228,13 +229,13 @@ namespace Lab.Domain.Services
         {
 
             if (fileImage.Length > 3000000)
-                throw new Exception("The file size is too big!: [max 3 MB]");
+                throw new BusinessException("The file size is too big!: [max 3 MB]");
 
             //Comprobar que el archivo sea una imagen
             string extension = Path.GetExtension(fileImage.FileName);
 
             if (!FileHelper.ValidExtension(extension,false))
-                throw new Exception("Extension invalida");
+                throw new BusinessException("Extension invalida");
 
             string path = $"{_config.GetSection("PathFiles").GetSection("ProfilePicture").Value}";
 
@@ -264,7 +265,7 @@ namespace Lab.Domain.Services
 
             if (updateImage.File != null)
                 urlImage = UploadImage(updateImage.File);
-            else throw new Exception("La img es requerida");
+            else throw new BusinessException("La img es requerida");
 
 
             ProfileEntity profile = _unitOfWork.ProfileRepository.FirstOrDefault(x => x.IdUser == updateImage.Id);
@@ -314,13 +315,13 @@ namespace Lab.Domain.Services
         {
 
             if (resumeeFile.Length > 3000000)
-                throw new Exception("The file size is too big!: [max 3 MB]");
+                throw new BusinessException("The file size is too big!: [max 3 MB]");
 
             //Comprobar que el archivo sea una imagen
             string extension = Path.GetExtension(resumeeFile.FileName);
 
             if (!FileHelper.ValidExtension(extension,false))
-                throw new Exception("Extension invalida");
+                throw new BusinessException("Extension invalida");
 
             string path = $"{_config.GetSection("PathFiles").GetSection("resumee").Value}";
 
@@ -349,7 +350,7 @@ namespace Lab.Domain.Services
 
             if (updateResumee.File != null)
                 urlResumee = UploadResumee(updateResumee.File);
-            else throw new Exception("El Cv es requerido");
+            else throw new BusinessException("El Cv es requerido");
 
 
             ProfileEntity profile = _unitOfWork.ProfileRepository.FirstOrDefault(x => x.IdUser == updateResumee.Id);

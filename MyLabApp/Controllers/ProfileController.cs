@@ -5,11 +5,13 @@ using Lab.Domain.Dto.ProfileSkill;
 using Lab.Domain.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Lab.Domain.Dto.ProfileImage;
+using MyLabApp.Handlers;
 
 namespace MyLabApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [TypeFilter(typeof(CustomExceptionHandler))]
     public class ProfileController : ControllerBase
     {
         #region Attributes
