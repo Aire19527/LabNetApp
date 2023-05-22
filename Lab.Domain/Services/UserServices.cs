@@ -166,7 +166,8 @@ namespace Lab.Domain.Services
 
             if (userExistente != null)
             {
-                if (Common.Helpers.Utils.IsValidPassword(Common.Helpers.Utils.PassEncrypt(newPassword)))
+   
+                if (Common.Helpers.Utils.IsValidPassword(newPassword))
                 {
                     userExistente.Password = Common.Helpers.Utils.PassEncrypt(newPassword);
                     _unitOfWork.UserRepository.Update(userExistente);
