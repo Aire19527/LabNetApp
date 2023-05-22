@@ -1,11 +1,13 @@
 ﻿using Common.Exceptions;
+using Common.Resources;
 using Lab.Domain.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Newtonsoft.Json;
 
 namespace MyLabApp.Handlers
 {
-    public class CustomSkillHandler : ExceptionFilterAttribute
+    public class CustomExceptionHandler : ExceptionFilterAttribute
     {
         public override void OnException(ExceptionContext context)
         {
@@ -13,9 +15,17 @@ namespace MyLabApp.Handlers
 
             ResponseDto response = new ResponseDto();
 
-            if (context.Exception is DuplicatedSkillException) {
+            if (context.Exception is DuplicatedSkillException)
+            {
                 responseException.Status = StatusCodes.Status406NotAcceptable;
                 response.Message = context.Exception.Message;
+                context.ExceptionHandled = true;
+            }
+            else
+            { 
+                responseException.Status = StatusCodes.Status500InternalServerError;
+                response.Result = JsonConvert.SerializeObject(context.Exception);
+                response.Message = GeneralMessages.Error500;
                 context.ExceptionHandled = true;
             }
 

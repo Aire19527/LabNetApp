@@ -13,7 +13,7 @@ namespace MyLabApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [TypeFilter(typeof(CustomSkillHandler))]
+    [TypeFilter(typeof(CustomExceptionHandler))]
     public class SkillController : ControllerBase
     {
         #region Attributes
@@ -33,7 +33,7 @@ namespace MyLabApp.Controllers
         [Route("GetAll")]
         public IActionResult GetAll()
         {
-            List<ConsultSkllDto> result = _skillServices.Getall().FindAll((skill) => skill.IsVisible == true);
+            List<ConsultSkllDto> result = _skillServices.Getall();
 
             return Ok(new ResponseDto()
             {
