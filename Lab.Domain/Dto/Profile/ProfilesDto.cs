@@ -10,7 +10,7 @@ namespace Lab.Domain.Dto.Profile
     {
         public ProfileDto Profile { get; set; }
 
-        public int Key { get; set; }
+        public int? Key { get; set; }
 
         public int Count { get; set; }
     }

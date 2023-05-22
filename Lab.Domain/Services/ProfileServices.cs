@@ -1,4 +1,5 @@
-﻿using Infraestructure.Core.UnitOfWork;
+﻿using Common.Utils.Exceptions;
+using Infraestructure.Core.UnitOfWork;
 using Infraestructure.Core.UnitOfWork.Interface;
 using Infraestructure.Entity.Models;
 using Lab.Domain.Dto.Profile;
@@ -172,6 +173,9 @@ namespace Lab.Domain.Services
 
         public async Task<bool> AddSkillToProfile(AddProfileSkillDto profileSkill)
         {
+            if (profileSkill.IdProfile == null || profileSkill.IdSkill == null)
+                throw new BusinessException("No se ha indicado skill o perfil.");
+
             ProfileEntity Profile = _unitOfWork.ProfileRepository.FirstOrDefault(x => x.Id == profileSkill.IdProfile);
             SkillEntity Skill = _unitOfWork.SkillRepository.FirstOrDefault(x => x.Id == profileSkill.IdSkill);
 
@@ -182,28 +186,32 @@ namespace Lab.Domain.Services
                     IdProfile = profileSkill.IdProfile,
                     IdSkill = profileSkill.IdSkill
                 });
-
             }
+            else
+                throw new BusinessException("Perfil o skill no existente.");
 
             return await _unitOfWork.Save() > 0;
         }
         public async Task<bool> DeleteSkillToProfile(AddProfileSkillDto profileSkill)
         {
+            if (profileSkill.IdProfile == null || profileSkill.IdSkill == null)
+                throw new BusinessException("No se ha indicado skill o perfil.");
+
             ProfilesSkillsEntity? ProfilesSkills = _unitOfWork.ProfilesSkillsRepository.FindAll( p => p.IdProfile == profileSkill.IdProfile && 
                                                                                         p.IdSkill == profileSkill.IdSkill).FirstOrDefault();
 
             if (ProfilesSkills != null)
-            {
                 _unitOfWork.ProfilesSkillsRepository.Delete(ProfilesSkills);
-            }
-
+            else
+                throw new BusinessException();
+            
             return await _unitOfWork.Save() > 0;
         }
 
         public IEnumerable<ProfilesDto> FilterBySkill(List<int> skills)
         {
             if (skills.Count() == 0)
-                return null;
+                throw new BusinessException("No hay skills para filtrar.");
 
             IEnumerable<ProfilesSkillsEntity> perfilSkills = _unitOfWork.ProfilesSkillsRepository.FindAll(x => skills.Any(s => s == x.IdSkill), p => p.ProfileEntity); 
 
@@ -225,7 +233,6 @@ namespace Lab.Domain.Services
                                     Count = perf.Select(x => x.IdSkill)
                                     .Count()
                                 }).ToList();
-
             return profiles;
         }
         #endregion
