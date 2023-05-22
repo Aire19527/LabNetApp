@@ -123,7 +123,7 @@ namespace Lab.Domain.Services
                 UserEntity user = new UserEntity()
                 {
                     Mail = dto.Email,
-                    Password = Common.Helpers.Utils.PassEncrypt("12345678"),
+                    Password = Common.Helpers.Utils.PassEncrypt("Test_678"),
                     IsActive = true,
                     IdRole = dto.IdRole
                 };
@@ -166,9 +166,13 @@ namespace Lab.Domain.Services
 
             if (userExistente != null)
             {
-                userExistente.Password = Common.Helpers.Utils.PassEncrypt(newPassword);
-                _unitOfWork.UserRepository.Update(userExistente);
-                return await _unitOfWork.Save() > 0;
+                if (Common.Helpers.Utils.IsValidPassword(Common.Helpers.Utils.PassEncrypt(newPassword)))
+                {
+                    userExistente.Password = Common.Helpers.Utils.PassEncrypt(newPassword);
+                    _unitOfWork.UserRepository.Update(userExistente);
+                    return await _unitOfWork.Save() > 0;
+
+                }        
             }
             return false;
         }

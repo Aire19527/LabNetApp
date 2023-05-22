@@ -10,7 +10,7 @@ namespace Infraestructure.Entity.Models
         public int Id { get; set; }
         [Required]
         [MaxLength(100)]
-        //[EmailAddress(ErrorMessage ="el campo ingresado debe ser un email")]
+        [EmailAddress(ErrorMessage ="el campo ingresado debe ser un email")]
         public string Mail { get; set; }
         [Required]
         [MaxLength(70)]
@@ -18,11 +18,8 @@ namespace Infraestructure.Entity.Models
 
         public bool IsActive { get; set; }
 
-
         public ProfileEntity ProfileEntity { get; set; }
    
-
-
         [ForeignKey("RoleEntity")]
         public int IdRole { get; set; }
         public RoleEntity RoleEntity { get; set; }

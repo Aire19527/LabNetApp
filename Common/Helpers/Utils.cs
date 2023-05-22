@@ -29,6 +29,12 @@ namespace Common.Helpers
             return BCrypt.Net.BCrypt.Verify(enteredPassword, hashedPassword);
         }
 
+        public static bool IsValidPassword(string password)
+        {
+            var validationAttribute = new ValidPasswordAttribute();
+            return validationAttribute.IsValid(password);
+        }
+
     }
 
 

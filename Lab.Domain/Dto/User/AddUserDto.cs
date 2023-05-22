@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Common.Helpers;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -16,7 +17,8 @@ namespace Lab.Domain.Dto.User
         [EmailAddress(ErrorMessage ="El campo debe ser un correo valido")]
         public string Email { get; set; }
 
-      
+        [ValidPassword(ErrorMessage = "El password debe contener al menos 8 caracteres, una mayuscula," +
+            " una minuscula, un numero y un caracter especial")]
         public string Password { get; set; }
 
 
