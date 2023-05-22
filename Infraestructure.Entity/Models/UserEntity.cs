@@ -13,8 +13,7 @@ namespace Infraestructure.Entity.Models
         //[EmailAddress(ErrorMessage ="el campo ingresado debe ser un email")]
         public string Mail { get; set; }
         [Required]
-        [MinLength(8)]
-        [MaxLength(20)]
+        [MaxLength(70)]
         public string Password { get; set; }
 
         public bool IsActive { get; set; }

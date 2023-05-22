@@ -37,6 +37,7 @@ namespace MyLabApp.Handlers
                 context.ExceptionHandled = true;
             }
 
+            //responseException.Value = response.Message; consultar 
             context.Result = new ObjectResult(responseException.Value)
             {
                 StatusCode = responseException.Status,

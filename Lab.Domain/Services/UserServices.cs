@@ -7,6 +7,7 @@ using Lab.Domain.Dto;
 using Lab.Domain.Dto.Skill;
 using Lab.Domain.Dto.User;
 using Lab.Domain.Services.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -39,14 +40,23 @@ namespace Lab.Domain.Services
 
         public TokenDto Login(LoginDto login)
         {
-            UserEntity user = _unitOfWork.UserRepository.FirstOrDefault(x => x.Mail == login.UserName
-                                                                           && x.Password == login.Password,
+            UserEntity user = _unitOfWork.UserRepository.FirstOrDefault(x => x.Mail == login.UserName,
                                                                           r => r.RoleEntity);
             if (user == null)
                 throw new BusinessException("El usuario ingresado no existe");
 
-            //TOKEN
-            return GenerateTokenJWT(user);
+            string userEnteredPassword = login.Password;
+            string hashedPasswordFromDatabase = user.Password;
+            bool isMatch = BCrypt.Net.BCrypt.Verify(userEnteredPassword, hashedPasswordFromDatabase);
+
+            if (userEnteredPassword== hashedPasswordFromDatabase)
+            {
+                return GenerateTokenJWT(user);
+            }
+            else {
+                throw new BusinessException("La contraseña es incorrecta");
+            }
+
         }
 
         public TokenDto GenerateTokenJWT(UserEntity userEntity)
@@ -120,7 +130,7 @@ namespace Lab.Domain.Services
                     UserEntity user = new UserEntity()
                     {
                         Mail = dto.Email,
-                        Password = "12345678",
+                        Password = Common.Helpers.Utils.PassEncrypt("12345678"),
                         IsActive = true,
                         IdRole = dto.IdRole
                     };
