@@ -322,7 +322,7 @@ namespace Lab.Domain.Services
             if (!FileHelper.ValidExtension(extension,false))
                 throw new Exception("Extension invalida");
 
-            string path = $"/{_config.GetSection("PathFiles").GetSection("resumee").Value}";
+            string path = $"{_config.GetSection("PathFiles").GetSection("resumee").Value}";
 
             if (!Directory.Exists(path))
             {
@@ -348,8 +348,8 @@ namespace Lab.Domain.Services
 
 
             if (updateResumee.File != null)
-                urlResumee = UploadImage(updateResumee.File);
-            else throw new Exception("La img es requerida");
+                urlResumee = UploadResumee(updateResumee.File);
+            else throw new Exception("El Cv es requerido");
 
 
             ProfileEntity profile = _unitOfWork.ProfileRepository.FirstOrDefault(x => x.IdUser == updateResumee.Id);
