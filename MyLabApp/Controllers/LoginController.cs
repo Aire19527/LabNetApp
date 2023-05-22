@@ -4,11 +4,13 @@ using Lab.Domain.Dto;
 using Lab.Domain.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MyLabApp.Handlers;
 
 namespace MyLabApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [TypeFilter(typeof(CustomExceptionHandler))]
     public class LoginController : ControllerBase
     {
         private readonly IUserServices _userServices;

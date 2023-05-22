@@ -1,5 +1,6 @@
 ﻿using Common.Helpers;
 using Common.Resources;
+using Common.Utils.Exceptions;
 using Infraestructure.Core.UnitOfWork.Interface;
 using Infraestructure.Entity.Models;
 using Lab.Domain.Dto;
@@ -42,7 +43,7 @@ namespace Lab.Domain.Services
                                                                            && x.Password == login.Password,
                                                                           r => r.RoleEntity);
             if (user == null)
-                throw new Exception("el usuario no existe");
+                throw new BusinessException("El usuario ingresado no existe");
 
             //TOKEN
             return GenerateTokenJWT(user);
@@ -87,10 +88,6 @@ namespace Lab.Domain.Services
 
 
         #endregion
-
-
-
-
 
 
         public List<GetUserDto> GetAll()
