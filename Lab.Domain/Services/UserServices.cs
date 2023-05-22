@@ -47,12 +47,11 @@ namespace Lab.Domain.Services
 
             string userEnteredPassword = login.Password;
             string hashedPasswordFromDatabase = user.Password;
-           // bool isMatch = Common.Helpers.Utils.VerifyPassword(userEnteredPassword, hashedPasswordFromDatabase);
 
             if (!Common.Helpers.Utils.VerifyPassword(userEnteredPassword, hashedPasswordFromDatabase))
                 throw new BusinessException("La contraseña es incorrecta");
-           
-                return GenerateTokenJWT(user);
+
+            return GenerateTokenJWT(user);
 
         }
 
@@ -93,24 +92,23 @@ namespace Lab.Domain.Services
             return token;
         }
 
-
         #endregion
 
 
         public List<GetUserDto> GetAll()
         {
-            IEnumerable<UserEntity> userQuery = _unitOfWork.UserRepository.GetAll(x=> x.RoleEntity);
-                                                                        //.FindAll(x=> & | ) para separar las condiciones
+            IEnumerable<UserEntity> userQuery = _unitOfWork.UserRepository.GetAll(x => x.RoleEntity);
+            //.FindAll(x=> & | ) para separar las condiciones
 
 
             List<GetUserDto> usuarios = userQuery.Select(x => new GetUserDto()
             {
                 Id = x.Id,
-                Email=x.Mail,
-                Password=x.Password,
-                IdRole=x.IdRole, 
-                Role=x.RoleEntity.Description,
-                IsActive =x.IsActive
+                Email = x.Mail,
+                Password = x.Password,
+                IdRole = x.IdRole,
+                Role = x.RoleEntity.Description,
+                IsActive = x.IsActive
             })
             .ToList();
 
@@ -120,26 +118,24 @@ namespace Lab.Domain.Services
 
         public async Task<bool> Insert(AddUserDto dto)
         {
-          
-            
-                if (_unitOfWork.UserRepository.FirstOrDefault(x => x.Mail == dto.Email) == null)
+            if (_unitOfWork.UserRepository.FirstOrDefault(x => x.Mail == dto.Email) == null)
+            {
+                UserEntity user = new UserEntity()
                 {
-                    UserEntity user = new UserEntity()
-                    {
-                        Mail = dto.Email,
-                        Password = Common.Helpers.Utils.PassEncrypt("12345678"),
-                        IsActive = true,
-                        IdRole = dto.IdRole
-                    };
-                    _unitOfWork.UserRepository.Insert(user);
+                    Mail = dto.Email,
+                    Password = Common.Helpers.Utils.PassEncrypt("12345678"),
+                    IsActive = true,
+                    IdRole = dto.IdRole
+                };
+                _unitOfWork.UserRepository.Insert(user);
 
-                    return await _unitOfWork.Save() > 0;
-                }
-                else
-                {
-                    return false;
-                }
-        
+                return await _unitOfWork.Save() > 0;
+            }
+            else
+            {
+                return false;
+            }
+
         }
 
 
@@ -148,15 +144,34 @@ namespace Lab.Domain.Services
             UserEntity? userEntity = _unitOfWork.UserRepository.FindAll((user) => user.Id == id).SingleOrDefault();
 
             if (userEntity != null)
-            {   
+            {
                 userEntity.IsActive = false;
                 _unitOfWork.UserRepository.Update(userEntity);
-                await _unitOfWork.Save();
-                return true;
+                return await _unitOfWork.Save() > 0;
             }
             return false;
         }
 
-     
+        public async Task<bool> Update(TokenDto tokenDto, string newPassword)
+        {
+            JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+            JwtSecurityToken jwtToken = (JwtSecurityToken)tokenHandler.ReadToken(tokenDto.Token);
+
+            Claim emailClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == TypeClaims.Email);
+            if (emailClaim == null)
+                throw new BusinessException("El token no contiene la información necesaria");
+
+
+            UserEntity? userExistente = _unitOfWork.UserRepository.FindAll((user) => user.Mail == emailClaim.Value).SingleOrDefault();
+
+            if (userExistente != null)
+            {
+                userExistente.Password = Common.Helpers.Utils.PassEncrypt(newPassword);
+                _unitOfWork.UserRepository.Update(userExistente);
+                return await _unitOfWork.Save() > 0;
+            }
+            return false;
+        }
     }
+       
 }

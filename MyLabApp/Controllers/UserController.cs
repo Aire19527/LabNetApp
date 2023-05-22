@@ -72,5 +72,19 @@ namespace MyLabApp.Controllers
             });
         }
 
+        [HttpPut]
+        [Route("update")]
+        public async Task<IActionResult> Update(TokenDto tokenDto, string newPass) 
+        {
+            bool result = await _userServices.Update(tokenDto,newPass);
+
+            return Ok(new ResponseDto()
+            {
+                IsSuccess = result,
+                Message = string.Empty,
+                Result = result ? GeneralMessages.ItemUpdated : GeneralMessages.ItemNoUpdated
+            }) ;
+        }
+
     }
 }
