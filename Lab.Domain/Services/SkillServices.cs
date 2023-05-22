@@ -54,7 +54,7 @@ namespace Lab.Domain.Services
         public async Task<bool> Delete(int id)
         {
             SkillEntity? skillEntity = _unitOfWork.SkillRepository.FindAll((skill) => skill.Id == id).FirstOrDefault();
-            if (skillEntity != null)
+            if (skillEntity != null && skillEntity.IsVisible)
             {
                 skillEntity.IsVisible = false;
                 _unitOfWork.SkillRepository.Update(skillEntity);
