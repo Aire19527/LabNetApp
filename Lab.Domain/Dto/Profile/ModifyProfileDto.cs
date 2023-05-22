@@ -19,9 +19,7 @@ namespace Lab.Domain.Dto.Profile
         public string? Photo { get; set; }
         public string? CV { get; set; }
         public int IdAdress { get; set; }
-        //public string AdressDescription { get; set; }
         public int IdJobPosition { get; set; }
-        //public string JobPositionDescription { get; set; }
 
     }
 }

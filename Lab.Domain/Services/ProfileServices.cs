@@ -192,24 +192,6 @@ namespace Lab.Domain.Services
             }
             return false;
         }
-
-        //public async Task<bool> AddWorkProfile(AddProfileWorkDto addProfileWorkDto)
-        //{
-        //    ProfileEntity Profile = _unitOfWork.ProfileRepository.FirstOrDefault(x => x.Id == addProfileWorkDto.IdProfile);
-        //    WorkEntity Work = _unitOfWork.WorkRepository.FirstOrDefault(x => x.Id == addProfileWorkDto.IdWork);
-
-        //    if (Profile != null && Work != null)
-        //    {
-        //        _unitOfWork.ProfilesWorkRepository.Insert(new ProfileWorkEntity()
-        //        {
-        //            IdProfile = addProfileWorkDto.IdProfile,
-        //            IdWork = addProfileWorkDto.IdWork
-        //        });
-        //    }
-
-        //    return await _unitOfWork.Save() > 0;
-        //}
-
         //  ======== IMAGE-RELATED STUFF ========= 
         public string getImage(string? img)
         {
@@ -234,7 +216,7 @@ namespace Lab.Domain.Services
             //Comprobar que el archivo sea una imagen
             string extension = Path.GetExtension(fileImage.FileName);
 
-            if (!FileHelper.ValidExtension(extension,false))
+            if (!FileHelper.ValidExtension(extension,true))
                 throw new BusinessException("Extension invalida");
 
             string path = $"{_config.GetSection("PathFiles").GetSection("ProfilePicture").Value}";
