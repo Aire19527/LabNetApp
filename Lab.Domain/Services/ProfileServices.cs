@@ -64,7 +64,7 @@ namespace Lab.Domain.Services
                 Mail = p.Mail,
                 DNI = p.DNI,
                 CV = p.CV,
-                Photo = p.Photo,
+                Photo = getImage(p.Photo),
                 Phone = p.Phone,
                 BirthDate = p.BirthDate,
                 IdAdress = p.AdressEntity?.Id,
@@ -118,7 +118,7 @@ namespace Lab.Domain.Services
                 Mail = profile.Mail,
                 DNI = profile.DNI,
                 CV = profile.CV,
-                Photo = profile.Photo,
+                Photo = getImage(profile.Photo),
                 Phone = profile.Phone,
                 BirthDate = profile.BirthDate,
                 IdAdress = profile.AdressEntity?.Id,
@@ -152,7 +152,9 @@ namespace Lab.Domain.Services
 
         public async Task<bool> Insert(AddProfileDto add)
         {
-            string urlImg = UploadImage(add.FileImage);
+            string urlImg = String.Empty;
+            if (add.FileImage!=null)
+                urlImg = UploadImage(add.FileImage);
             
             ProfileEntity profile = new ProfileEntity()
             {
@@ -253,13 +255,6 @@ namespace Lab.Domain.Services
 
         private string UploadImage(IFormFile fileImage)
         {
-            //TODO: esto no
-            if (fileImage == null || fileImage.Length == 0)
-            {
-                string defaultImg = $"/{_config.GetSection("PathFiles").GetSection("NoImage").Value}";
-                string pathFinalDefault = Path.Combine(_webHostEnvironment.WebRootPath, defaultImg);
-                return pathFinalDefault;
-            }
 
             if (fileImage.Length > 3000000)
                 throw new Exception("The file size is too big!: [max 3 MB]");
