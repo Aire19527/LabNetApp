@@ -240,10 +240,11 @@ namespace Lab.Domain.Services
         public IEnumerable<ConsultSkllDto> GetProfileSkill(int id)
         {
 
-            //IEnumerable<ProfilesSkillsEntity> Skills = _unitOfWork.ProfilesSkillsRepository.GetAll(p => p.IdSkill == id, s => s.SkillEntity);
-
             ProfileEntity profile = _unitOfWork.ProfileRepository.FirstOrDefaultSelect(x => x.Id == id,
                                                                                r => r.ProfilesSkillsEntity.Select(e => e.SkillEntity));
+
+            if (profile == null)
+                throw new BusinessException("No existe el perfil seleccinado");
 
             IEnumerable<ConsultSkllDto> listSkill = profile.ProfilesSkillsEntity.Select(x => new ConsultSkllDto
             {
