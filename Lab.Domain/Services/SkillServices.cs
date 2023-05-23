@@ -46,7 +46,7 @@ namespace Lab.Domain.Services
                 Description = x.Description,
                 IsVisible = x.IsVisible
 
-            }).ToList().FindAll((skill) => skill.IsVisible == true); ;
+            }).ToList().FindAll((skill) => skill.IsVisible == true);
 
             return skills;
         }
