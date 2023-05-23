@@ -26,7 +26,14 @@ namespace Common.Helpers
 
         public static bool VerifyPassword(string enteredPassword, string hashedPassword)
         {
-            return BCrypt.Net.BCrypt.Verify(enteredPassword, hashedPassword);
+            if (BCrypt.Net.BCrypt.Verify(enteredPassword, hashedPassword))
+            {
+                return true;
+            }
+            else {
+                return false;
+            }
+            
         }
 
         public static bool IsValidPassword(string password)

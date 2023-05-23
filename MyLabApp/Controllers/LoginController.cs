@@ -1,10 +1,14 @@
-﻿using Infraestructure.Core.UnitOfWork;
+﻿using Common.Resources;
+using Infraestructure.Core.UnitOfWork;
 using Infraestructure.Core.UnitOfWork.Interface;
 using Lab.Domain.Dto;
 using Lab.Domain.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MyLabApp.Handlers;
+using System;
+using System.Reflection.Metadata.Ecma335;
+using static System.Collections.Specialized.BitVector32;
 
 namespace MyLabApp.Controllers
 {
@@ -14,7 +18,7 @@ namespace MyLabApp.Controllers
     public class LoginController : ControllerBase
     {
         private readonly IUserServices _userServices;
-
+        private IActionResult action;
         public LoginController(IUserServices userServices)
         {
             _userServices = userServices;
@@ -25,14 +29,24 @@ namespace MyLabApp.Controllers
         public IActionResult Login(LoginDto login)
         {
             TokenDto result = _userServices.Login(login);
-            ResponseDto response = new ResponseDto()
-            {
-                IsSuccess = true,
-                Result = result,
-                Message = string.Empty
-            };
+            ResponseDto response = new ResponseDto();
 
-            return Ok(response);
+            if (result != null)
+            {
+                response.IsSuccess = true;
+                response.Result = result;
+                response.Message = String.Empty;
+                return action = Ok(response);
+            }
+
+            else
+            {
+                response.IsSuccess = false;
+                response.Message = string.Empty;
+                response.Result = result;
+                return action = BadRequest(response);
+            }
+
         }
     }
 }
