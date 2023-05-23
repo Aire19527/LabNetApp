@@ -141,7 +141,7 @@ namespace Lab.Domain.Services
 
         public async Task<bool> Delete(int id)
         {
-            UserEntity? userEntity = _unitOfWork.UserRepository.FindAll((user) => user.Id == id).SingleOrDefault();
+            UserEntity? userEntity = _unitOfWork.UserRepository.FirstOrDefault((user) => user.Id == id);
 
             if (userEntity != null)
             {
