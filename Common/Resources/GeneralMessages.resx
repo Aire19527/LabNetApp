@@ -141,6 +141,9 @@
   <data name="ItemNoDeleted" xml:space="preserve">
     <value>No fue posible eliminar el registro, por favor intentalo de nuevo.</value>
   </data>
+  <data name="ItemNoFound" xml:space="preserve">
+    <value>Item no encontrado, por favor verificar los registros enviados.</value>
+  </data>
   <data name="ItemNoInserted" xml:space="preserve">
     <value>No fue posible guardar el registro, por favor intentalo de nuevo.</value>
   </data>
