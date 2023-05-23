@@ -30,7 +30,7 @@ namespace MyLabApp.Controllers
        #region Services
 
         [HttpGet]
-        
+        [Route("GetAll")]
         public IActionResult GetAll()
         {
             List<ConsultSkllDto> result = _skillServices.Getall();
@@ -44,7 +44,7 @@ namespace MyLabApp.Controllers
         }
 
         [HttpPost]
-        
+        [Route("Insert")]
         public async Task<IActionResult> Insert(AddSkilDto skill)
         {
             IActionResult action;
