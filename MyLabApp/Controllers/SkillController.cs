@@ -27,10 +27,10 @@ namespace MyLabApp.Controllers
         }
         #endregion
 
-        #region Services
+       #region Services
 
         [HttpGet]
-        [Route("GetAll")]
+        
         public IActionResult GetAll()
         {
             List<ConsultSkllDto> result = _skillServices.Getall();
@@ -44,7 +44,7 @@ namespace MyLabApp.Controllers
         }
 
         [HttpPost]
-        [Route("Insert")]
+        
         public async Task<IActionResult> Insert(AddSkilDto skill)
         {
             IActionResult action;
@@ -67,7 +67,7 @@ namespace MyLabApp.Controllers
         }
 
         [HttpDelete]
-        [Route("delete/{id}")]
+        [Route("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
            bool res = await _skillServices.Delete(id);
