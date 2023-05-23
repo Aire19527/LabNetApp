@@ -8,6 +8,7 @@ using Lab.Domain.Dto.Profile;
 using Common.Resources;
 using Microsoft.AspNetCore.Cors;
 using System;
+using Lab.Domain.Dto.Skill;
 
 namespace MyLabApp.Controllers
 {
@@ -149,6 +150,28 @@ namespace MyLabApp.Controllers
             else
                 action = BadRequest(response);
 
+            return action;
+        }
+
+        [HttpGet]
+        [Route("GetProfileSkill/{id}")]
+        public IActionResult GetProfileSkill(int id)
+        {
+            IActionResult action;
+
+            IEnumerable<ConsultSkllDto> result = _profileServices.GetProfileSkill(id);
+
+            ResponseDto rpdto = new ResponseDto()
+            {
+                IsSuccess = true,
+                Message = string.Empty,
+                Result = result
+            };
+
+            if (result != null)
+                action = Ok(rpdto);
+            else
+                action = BadRequest(rpdto);
             return action;
         }
 

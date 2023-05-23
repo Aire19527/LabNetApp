@@ -235,6 +235,26 @@ namespace Lab.Domain.Services
                                 }).ToList();
             return profiles;
         }
+
+
+        public IEnumerable<ConsultSkllDto> GetProfileSkill(int id)
+        {
+
+            //IEnumerable<ProfilesSkillsEntity> Skills = _unitOfWork.ProfilesSkillsRepository.GetAll(p => p.IdSkill == id, s => s.SkillEntity);
+
+            ProfileEntity profile = _unitOfWork.ProfileRepository.FirstOrDefaultSelect(x => x.Id == id,
+                                                                               r => r.ProfilesSkillsEntity.Select(e => e.SkillEntity));
+
+            IEnumerable<ConsultSkllDto> listSkill = profile.ProfilesSkillsEntity.Select(x => new ConsultSkllDto
+            {
+                Id = x.SkillEntity.Id,
+                Description = x.SkillEntity.Description,
+                IsVisible = x.SkillEntity.IsVisible,
+            }).ToList();
+            
+            return listSkill;
+        }
+
         #endregion
     }
 }

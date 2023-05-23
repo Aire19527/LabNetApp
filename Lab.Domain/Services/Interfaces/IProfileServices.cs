@@ -24,5 +24,7 @@ namespace Lab.Domain.Services.Interfaces
         ConsultProfileDto GetById(int id);
 
         IEnumerable<ProfilesDto> FilterBySkill(List<int> skills);
+
+        IEnumerable<ConsultSkllDto> GetProfileSkill(int id);
     }
 }
