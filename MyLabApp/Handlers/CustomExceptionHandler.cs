@@ -20,9 +20,14 @@ namespace MyLabApp.Handlers
                 responseException.Status = StatusCodes.Status406NotAcceptable;
                 response.Message = context.Exception.Message;
                 context.ExceptionHandled = true;
+            } else if (context.Exception is SkillNotFoundException)
+            {
+                responseException.Status = StatusCodes.Status400BadRequest;
+                response.Message = context.Exception.Message;
+                context.ExceptionHandled = true;
             }
             else
-            { 
+            {
                 responseException.Status = StatusCodes.Status500InternalServerError;
                 response.Result = JsonConvert.SerializeObject(context.Exception);
                 response.Message = GeneralMessages.Error500;

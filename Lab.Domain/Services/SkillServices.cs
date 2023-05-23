@@ -23,7 +23,7 @@ namespace Lab.Domain.Services
         #region Methods
         public async Task<bool> Insert(AddSkilDto dto)
         {
-            if (Getall().Find(x => x.Description.Equals(dto.Description)) != null)
+            if (_unitOfWork.SkillRepository.FirstOrDefault(x => x.Description.Equals(dto.Description)) != null)
                 throw new DuplicatedSkillException();
 
             SkillEntity skill = new SkillEntity()
@@ -53,15 +53,16 @@ namespace Lab.Domain.Services
 
         public async Task<bool> Delete(int id)
         {
-            SkillEntity? skillEntity = _unitOfWork.SkillRepository.FindAll((skill) => skill.Id == id).FirstOrDefault();
-            if (skillEntity != null && skillEntity.IsVisible)
-            {
-                skillEntity.IsVisible = false;
-                _unitOfWork.SkillRepository.Update(skillEntity);
-                await _unitOfWork.Save();
-                return true;
-            }
-            return false;
+            SkillEntity? skillEntity = _unitOfWork.SkillRepository.FirstOrDefault((skill) => skill.Id == id);
+            
+            if (skillEntity == null)
+                throw new SkillNotFoundException();
+
+            _unitOfWork.SkillRepository.Delete(skillEntity);
+            
+            return await _unitOfWork.Save() > 0;
+            
+            
         }
 
         #endregion
