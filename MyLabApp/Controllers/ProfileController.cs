@@ -44,7 +44,7 @@ namespace MyLabApp.Controllers
             });
         }
 
-        [HttpGet]
+        /*[HttpGet]
         [Route("Get/{id}")]
         public IActionResult GetById(int id)
         {
@@ -65,7 +65,7 @@ namespace MyLabApp.Controllers
             else
                 action = BadRequest(rpdto);
             return action;
-        }
+        }*/
 
         [HttpGet]
         [Route("FilterSkills")]

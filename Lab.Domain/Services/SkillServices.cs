@@ -1,4 +1,5 @@
-﻿using Infraestructure.Core.UnitOfWork.Interface;
+﻿using Common.Exceptions;
+using Infraestructure.Core.UnitOfWork.Interface;
 using Infraestructure.Entity.Models;
 using Lab.Domain.Dto.Skill;
 using Lab.Domain.Services.Interfaces;
@@ -22,10 +23,13 @@ namespace Lab.Domain.Services
         #region Methods
         public async Task<bool> Insert(AddSkilDto dto)
         {
+            if (_unitOfWork.SkillRepository.FirstOrDefault(x => x.Description.Equals(dto.Description)) != null)
+                throw new DuplicatedSkillException();
+
             SkillEntity skill = new SkillEntity()
             {
                 Description = dto.Description,
-
+                IsVisible = true,
             };
             _unitOfWork.SkillRepository.Insert(skill);
 
@@ -34,7 +38,7 @@ namespace Lab.Domain.Services
 
         public List<ConsultSkllDto> Getall()
         {
-            IEnumerable<SkillEntity> skillList = _unitOfWork.SkillRepository.FindAll((skill) => skill.IsVisible == true);
+            IEnumerable<SkillEntity> skillList = _unitOfWork.SkillRepository.GetAll();
             
             List<ConsultSkllDto> skills = skillList.Select(x => new ConsultSkllDto()
             {
@@ -42,22 +46,23 @@ namespace Lab.Domain.Services
                 Description = x.Description,
                 IsVisible = x.IsVisible
 
-            }).ToList();
+            }).ToList().FindAll((skill) => skill.IsVisible == true);
 
             return skills;
         }
 
         public async Task<bool> Delete(int id)
         {
-            SkillEntity? skillEntity = _unitOfWork.SkillRepository.FindAll((skill) => skill.Id == id).FirstOrDefault();
-            if (skillEntity != null)
-            {
-                skillEntity.IsVisible = false;
-                _unitOfWork.SkillRepository.Update(skillEntity);
-                await _unitOfWork.Save();
-                return true;
-            }
-            return false;
+            SkillEntity? skillEntity = _unitOfWork.SkillRepository.FirstOrDefault((skill) => skill.Id == id);
+            
+            if (skillEntity == null)
+                throw new SkillNotFoundException();
+
+            _unitOfWork.SkillRepository.Delete(skillEntity);
+            
+            return await _unitOfWork.Save() > 0;
+            
+            
         }
 
         #endregion

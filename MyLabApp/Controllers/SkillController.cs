@@ -6,11 +6,14 @@ using Lab.Domain.Services;
 using Lab.Domain.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Common.Exceptions;
+using MyLabApp.Handlers;
 
 namespace MyLabApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [TypeFilter(typeof(CustomExceptionHandler))]
     public class SkillController : ControllerBase
     {
         #region Attributes
@@ -24,7 +27,7 @@ namespace MyLabApp.Controllers
         }
         #endregion
 
-        #region Services
+       #region Services
 
         [HttpGet]
         [Route("GetAll")]
@@ -47,6 +50,7 @@ namespace MyLabApp.Controllers
             IActionResult action;
 
             bool result = await _skillServices.Insert(skill);
+            
             ResponseDto response = new ResponseDto()
             {
                 IsSuccess = result,
@@ -63,7 +67,7 @@ namespace MyLabApp.Controllers
         }
 
         [HttpDelete]
-        [Route("delete/{id}")]
+        [Route("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
            bool res = await _skillServices.Delete(id);
@@ -76,8 +80,6 @@ namespace MyLabApp.Controllers
             });
         }
         #endregion
-
-
 
     }
 }
