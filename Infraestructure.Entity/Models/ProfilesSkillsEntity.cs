@@ -15,10 +15,10 @@ namespace Infraestructure.Entity.Models
         public int Id { get; set; }
 
         [ForeignKey("ProfileEntity")]
-        public int? IdProfile { get; set; }
+        public int IdProfile { get; set; }
 
         [ForeignKey("SkillEntity")]
-        public int? IdSkill { get; set; }
+        public int IdSkill { get; set; }
 
         public SkillEntity SkillEntity { get; set; }
 

@@ -1,5 +1,4 @@
 ﻿using Common.Utils.Exceptions;
-using Infraestructure.Core.UnitOfWork;
 using Infraestructure.Core.UnitOfWork.Interface;
 using Infraestructure.Entity.Models;
 using Lab.Domain.Dto.Profile;
@@ -8,12 +7,6 @@ using Lab.Domain.Dto.ProfileWork;
 using Lab.Domain.Dto.Skill;
 using Lab.Domain.Dto.Work;
 using Lab.Domain.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Lab.Domain.Services
 {
@@ -169,7 +162,7 @@ namespace Lab.Domain.Services
 
         #endregion
 
-        #region Nico-benja
+        #region ProfileSkill
 
         public async Task<bool> AddSkillToProfile(AddProfileSkillDto profileSkill)
         {
@@ -179,17 +172,16 @@ namespace Lab.Domain.Services
             ProfileEntity Profile = _unitOfWork.ProfileRepository.FirstOrDefault(x => x.Id == profileSkill.IdProfile);
             SkillEntity Skill = _unitOfWork.SkillRepository.FirstOrDefault(x => x.Id == profileSkill.IdSkill);
 
-            if (Profile != null && Skill != null)
-            {
-                _unitOfWork.ProfilesSkillsRepository.Insert(new ProfilesSkillsEntity()
-                {
-                    IdProfile = profileSkill.IdProfile,
-                    IdSkill = profileSkill.IdSkill
-                });
-            }
-            else
+            if (Profile == null || Skill == null)
                 throw new BusinessException("Perfil o skill no existente.");
 
+            
+            _unitOfWork.ProfilesSkillsRepository.Insert(new ProfilesSkillsEntity()
+            {
+                IdProfile = profileSkill.IdProfile,
+                IdSkill = profileSkill.IdSkill
+            });
+            
             return await _unitOfWork.Save() > 0;
         }
         public async Task<bool> DeleteSkillToProfile(AddProfileSkillDto profileSkill)
@@ -197,14 +189,15 @@ namespace Lab.Domain.Services
             if (profileSkill.IdProfile == null || profileSkill.IdSkill == null)
                 throw new BusinessException("No se ha indicado skill o perfil.");
 
-            ProfilesSkillsEntity? ProfilesSkills = _unitOfWork.ProfilesSkillsRepository.FindAll( p => p.IdProfile == profileSkill.IdProfile && 
-                                                                                        p.IdSkill == profileSkill.IdSkill).FirstOrDefault();
+            ProfilesSkillsEntity? ProfilesSkills = _unitOfWork.ProfilesSkillsRepository.FirstOrDefault(p => p.IdProfile == profileSkill.IdProfile &&
+                                                                                        p.IdSkill == profileSkill.IdSkill);
 
-            if (ProfilesSkills != null)
-                _unitOfWork.ProfilesSkillsRepository.Delete(ProfilesSkills);
-            else
+            if (ProfilesSkills == null)
                 throw new BusinessException();
-            
+                
+            _unitOfWork.ProfilesSkillsRepository.Delete(ProfilesSkills);
+           
+
             return await _unitOfWork.Save() > 0;
         }
 
@@ -213,10 +206,12 @@ namespace Lab.Domain.Services
             if (skills.Count() == 0)
                 throw new BusinessException("No hay skills para filtrar.");
 
-            IEnumerable<ProfilesSkillsEntity> perfilSkills = _unitOfWork.ProfilesSkillsRepository.FindAll(x => skills.Any(s => s == x.IdSkill), p => p.ProfileEntity); 
+            List<ProfilesSkillsEntity> perfilSkills = _unitOfWork.ProfilesSkillsRepository.FindAll(
+                                                                            x => skills.Any(s => s.Equals(x.IdSkill)),
+                                                                            p => p.ProfileEntity).ToList();
 
             IEnumerable<ProfilesDto> profiles = (
-                                from p in perfilSkills 
+                                from p in perfilSkills.ToList() 
                                 group p by p.IdProfile into perf
                                 where perf.Count() == skills.Count()
                                 select new ProfilesDto 
@@ -230,8 +225,7 @@ namespace Lab.Domain.Services
                                     }).
                                     FirstOrDefault(),
                                     Key = perf.Key,
-                                    Count = perf.Select(x => x.IdSkill)
-                                    .Count()
+                                    Count = perf.Select(x => x.IdSkill).Count()
                                 }).ToList();
             return profiles;
         }
