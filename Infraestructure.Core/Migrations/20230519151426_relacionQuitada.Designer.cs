@@ -4,6 +4,7 @@ using Infraestructure.Core.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infraestructure.Core.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230519151426_relacionQuitada")]
+    partial class relacionQuitada
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -551,8 +553,11 @@ namespace Infraestructure.Core.Migrations
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasMaxLength(70)
-                        .HasColumnType("nvarchar(70)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<int?>("StateEntityId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -560,6 +565,8 @@ namespace Infraestructure.Core.Migrations
 
                     b.HasIndex("Mail")
                         .IsUnique();
+
+                    b.HasIndex("StateEntityId");
 
                     b.ToTable("User");
                 });
@@ -786,6 +793,10 @@ namespace Infraestructure.Core.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Infraestructure.Entity.Models.StateEntity", null)
+                        .WithMany("UserEntities")
+                        .HasForeignKey("StateEntityId");
+
                     b.Navigation("RoleEntity");
                 });
 
@@ -855,6 +866,11 @@ namespace Infraestructure.Core.Migrations
             modelBuilder.Entity("Infraestructure.Entity.Models.SkillEntity", b =>
                 {
                     b.Navigation("ProfilesSkillsEntity");
+                });
+
+            modelBuilder.Entity("Infraestructure.Entity.Models.StateEntity", b =>
+                {
+                    b.Navigation("UserEntities");
                 });
 
             modelBuilder.Entity("Infraestructure.Entity.Models.UserEntity", b =>
