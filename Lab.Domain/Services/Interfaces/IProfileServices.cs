@@ -15,13 +15,16 @@ namespace Lab.Domain.Services.Interfaces
 
         Task<List<ConsultProfileDto>> Getall();
 
-
         Task<bool> Update(ModifyProfileDto update);
 
         Task<bool> AddSkillToProfile(AddProfileSkillDto profileSkill);
 
+        Task<bool> DeleteSkillToProfile(int idProfile, int idSkill);
 
         ConsultProfileDto GetById(int id);
 
+        IEnumerable<ProfilesDto> FilterBySkill(List<int> skills);
+
+        IEnumerable<ConsultSkllDto> GetProfileSkill(int id);
     }
 }

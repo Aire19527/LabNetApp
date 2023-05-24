@@ -2,17 +2,16 @@
 using Lab.Domain.Dto;
 using Lab.Domain.Dto.Profile;
 using Lab.Domain.Dto.ProfileSkill;
+using Lab.Domain.Dto.Skill;
 using Lab.Domain.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Lab.Domain.Dto.Profile;
-using Common.Resources;
-using Microsoft.AspNetCore.Cors;
-using System;
+using MyLabApp.Handlers;
 
 namespace MyLabApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [TypeFilter(typeof(CustomExceptionHandler))]
     public class ProfileController : ControllerBase
     {
         #region Attributes
@@ -45,14 +44,14 @@ namespace MyLabApp.Controllers
 
         [HttpGet]
         [Route("Get/{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public IActionResult GetById(int id)
         {
 
             IActionResult action;
 
-            ConsultProfileDto result = await _profileServices.GetById(id);
+            ConsultProfileDto result = _profileServices.GetById(id);
 
-            ResponseDto rpdto =  new ResponseDto()
+            ResponseDto rpdto = new ResponseDto()
             {
                 IsSuccess = true,
                 Message = string.Empty,
@@ -66,6 +65,26 @@ namespace MyLabApp.Controllers
             return action;
         }
 
+        [HttpGet]
+        [Route("FilterSkills")]
+        public IActionResult FilterProfileBySkills([FromQuery(Name = "skills")]List<int> skills)
+        {
+            IActionResult action;
+
+            IEnumerable<ProfilesDto> result = _profileServices.FilterBySkill(skills);
+            ResponseDto rpdto = new ResponseDto()
+            {
+                IsSuccess = true,
+                Message = string.Empty,
+                Result = result
+            };
+
+            if (result != null)
+                action = Ok(rpdto);
+            else
+                action = BadRequest(rpdto);
+            return action;
+        }
 
         [HttpPost]
         [Route("Insert")]
@@ -89,7 +108,7 @@ namespace MyLabApp.Controllers
             return action;
         }
 
-        [HttpPut]
+        [HttpPost]
         [Route("AddSkillToProfile")]
         public async Task<IActionResult> AddSkillToProfile(AddProfileSkillDto addProfileSkillDto)
         {
@@ -109,7 +128,49 @@ namespace MyLabApp.Controllers
                 action = BadRequest(response);
 
             return action;
+        }
+        [HttpDelete]
+        [Route("DeleteSkillToProfile/{idProfile}/{idSkill}")]
+        public async Task<IActionResult> DeleteSkillToProfile(int idProfile,int idSkill)
+        {
+            IActionResult action;
 
+            bool result = await _profileServices.DeleteSkillToProfile(idProfile,idSkill);
+            ResponseDto response = new ResponseDto()
+            {
+                IsSuccess = result,
+                Result = result,
+                Message = result ? GeneralMessages.ItemDeleted : GeneralMessages.ItemNoDeleted
+            };
+
+            if (result)
+                action = Ok(response);
+            else
+                action = BadRequest(response);
+
+            return action;
+        }
+
+        [HttpGet]
+        [Route("GetProfileSkill/{id}")]
+        public IActionResult GetProfileSkill(int id)
+        {
+            IActionResult action;
+
+            IEnumerable<ConsultSkllDto> result = _profileServices.GetProfileSkill(id);
+
+            ResponseDto rpdto = new ResponseDto()
+            {
+                IsSuccess = true,
+                Message = string.Empty,
+                Result = result
+            };
+
+            if (result != null)
+                action = Ok(rpdto);
+            else
+                action = BadRequest(rpdto);
+            return action;
         }
 
 
