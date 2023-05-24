@@ -318,8 +318,8 @@ namespace Infraestructure.Core.Migrations
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<byte[]>("CV")
-                        .HasColumnType("varbinary(max)");
+                    b.Property<string>("CV")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("DNI")
                         .HasMaxLength(8)

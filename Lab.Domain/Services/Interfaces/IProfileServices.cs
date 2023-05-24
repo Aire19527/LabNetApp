@@ -1,4 +1,5 @@
 ﻿using Lab.Domain.Dto.Profile;
+using Lab.Domain.Dto.ProfileImage;
 using Lab.Domain.Dto.ProfileSkill;
 using Lab.Domain.Dto.Skill;
 using System;
@@ -22,6 +23,8 @@ namespace Lab.Domain.Services.Interfaces
         Task<bool> DeleteSkillToProfile(int idProfile, int idSkill);
 
         ConsultProfileDto GetById(int id);
+        Task<string> UpdateImage(ProfileFileDto updateImage);
+        Task<string> UpdateResumee(ProfileFileDto profileResumee);
 
         IEnumerable<ProfilesDto> FilterBySkill(List<int> skills);
 

@@ -1,4 +1,5 @@
 ﻿using Infraestructure.Entity.Models;
+using Lab.Domain.Dto.Education;
 using Lab.Domain.Dto.Work;
 using System;
 using System.Collections.Generic;
@@ -11,12 +12,12 @@ namespace Lab.Domain.Dto.Profile
 {
     public class ConsultProfileDto : AddProfileDto
     {
-        public string Description { get; set; }
-        public string Phone { get; set; }
+        public string? Description { get; set; }
+        public string? Phone { get; set; }
 
         //TODO: STRING URL
-        public string Photo { get; set; }
-        public byte[]? CV { get; set; }
+        public string? Photo { get; set; }
+        public string? CV { get; set; }
 
         //TODO: POR EJEMPLO ID TIPO DNI Y DESCRIPCION TIPO DNI
         public int? IdAdress { get; set; }
@@ -26,7 +27,8 @@ namespace Lab.Domain.Dto.Profile
         public int? IdJobPosition { get; set; }
         public string? JobPositionDescription { get; set; }
 
-        public IEnumerable<WorkDto>? workEntities { get; set; }
+        public IEnumerable<WorkDto>? WorkEntities { get; set; }
+        public IEnumerable<EducationDto>? EducationEntities { get; set; }
 
     }
 }

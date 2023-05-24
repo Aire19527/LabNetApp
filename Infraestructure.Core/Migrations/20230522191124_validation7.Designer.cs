@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infraestructure.Core.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230518144916_EditCamposNulleables")]
-    partial class EditCamposNulleables
+    [Migration("20230522191124_validation7")]
+    partial class validation7
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -320,8 +320,8 @@ namespace Infraestructure.Core.Migrations
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<byte[]>("CV")
-                        .HasColumnType("varbinary(max)");
+                    b.Property<string>("CV")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("DNI")
                         .HasMaxLength(8)
@@ -330,13 +330,13 @@ namespace Infraestructure.Core.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("IdAdress")
+                    b.Property<int?>("IdAdress")
                         .HasColumnType("int");
 
-                    b.Property<int>("IdDniType")
+                    b.Property<int?>("IdDniType")
                         .HasColumnType("int");
 
-                    b.Property<int>("IdJobPosition")
+                    b.Property<int?>("IdJobPosition")
                         .HasColumnType("int");
 
                     b.Property<int>("IdUser")
@@ -689,21 +689,15 @@ namespace Infraestructure.Core.Migrations
                 {
                     b.HasOne("Infraestructure.Entity.Models.AdressEntity", "AdressEntity")
                         .WithMany("ProfileEntity")
-                        .HasForeignKey("IdAdress")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("IdAdress");
 
                     b.HasOne("Infraestructure.Entity.Models.DniTypeEntity", "DniTypeEntity")
                         .WithMany("ProfileEntity")
-                        .HasForeignKey("IdDniType")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("IdDniType");
 
                     b.HasOne("Infraestructure.Entity.Models.JobPositionEntity", "JobPositionEntity")
                         .WithMany("ProfileEntity")
-                        .HasForeignKey("IdJobPosition")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("IdJobPosition");
 
                     b.HasOne("Infraestructure.Entity.Models.UserEntity", "UserEntity")
                         .WithOne("ProfileEntity")

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyLabApp", "MyLabApp\MyLabApp.csproj", "{88537607-3F51-428A-94CE-17A9CD84B6FB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyLabApp", "MyLabApp\MyLabApp.csproj", "{88537607-3F51-428A-94CE-17A9CD84B6FB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1. App", "1. App", "{672EEC35-D6F0-40D2-AE60-BEEC2FE4A8E0}"
 EndProject
@@ -13,13 +13,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3. Infraestructure", "3. In
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4. Common", "4. Common", "{15D20D78-2E66-4599-961E-058F91C46013}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab.Domain", "Lab.Domain\Lab.Domain.csproj", "{97AF7395-0DA8-497F-A595-50B442161A98}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lab.Domain", "Lab.Domain\Lab.Domain.csproj", "{97AF7395-0DA8-497F-A595-50B442161A98}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infraestructure.Entity", "Infraestructure.Entity\Infraestructure.Entity.csproj", "{B62ADE00-35E1-4BF7-8F68-4CA64C5BE9AC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infraestructure.Entity", "Infraestructure.Entity\Infraestructure.Entity.csproj", "{B62ADE00-35E1-4BF7-8F68-4CA64C5BE9AC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infraestructure.Core", "Infraestructure.Core\Infraestructure.Core.csproj", "{623916BD-B9EB-432F-95D7-CFCC38E3293E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infraestructure.Core", "Infraestructure.Core\Infraestructure.Core.csproj", "{623916BD-B9EB-432F-95D7-CFCC38E3293E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{EAC91296-4C4D-4205-963D-369A42408CAB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{EAC91296-4C4D-4205-963D-369A42408CAB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

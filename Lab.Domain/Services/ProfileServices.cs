@@ -1,12 +1,31 @@
-﻿using Common.Utils.Exceptions;
+using Common.Utils.Exceptions;
+using Common.Utils.Helpers;
+using Infraestructure.Core.UnitOfWork;
+
 using Infraestructure.Core.UnitOfWork.Interface;
 using Infraestructure.Entity.Models;
+using Lab.Domain.Dto.Education;
 using Lab.Domain.Dto.Profile;
+using Lab.Domain.Dto.ProfileImage;
 using Lab.Domain.Dto.ProfileSkill;
 using Lab.Domain.Dto.ProfileWork;
 using Lab.Domain.Dto.Skill;
 using Lab.Domain.Dto.Work;
 using Lab.Domain.Services.Interfaces;
+
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Security.Cryptography.X509Certificates;
+using System.Text;
+using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Lab.Domain.Services
 {
@@ -14,12 +33,17 @@ namespace Lab.Domain.Services
     {
         #region Attributes
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IConfiguration _config;
+        private readonly IWebHostEnvironment _webHostEnvironment;
         #endregion
 
         #region Builder
-        public ProfileServices(IUnitOfWork unitOfWork)
+        public ProfileServices(IUnitOfWork unitOfWork , IConfiguration config, 
+            IWebHostEnvironment webHostEnvironment)
         {
             _unitOfWork = unitOfWork;
+            _config = config;
+            _webHostEnvironment = webHostEnvironment;
         }
         #endregion
 
@@ -31,9 +55,10 @@ namespace Lab.Domain.Services
             IEnumerable<ProfileEntity> ProfileList = _unitOfWork.ProfileRepository.GetAllSelect(x => x.AdressEntity,
                                                                                                 j => j.JobPositionEntity,
                                                                                                 d => d.DniTypeEntity,
-                                                                                                r => r.ProfileWorkEntity,
-                                                                                                r => r.ProfileWorkEntity.Select(e => e.WorkEntity)
-                                                                                               );
+                                                                                                //r => r.ProfileWorkEntity,
+                                                                                                r => r.ProfileWorkEntity.Select(e => e.WorkEntity),
+                                                                                                e => e.ProfileEducationEntity.Select(b => b.EducationEntity.InstitutionTypeEntity));
+
             List<ConsultProfileDto> profiles = ProfileList.Select(p => new ConsultProfileDto()
             {
                 IdUser = p.IdUser,
@@ -42,8 +67,8 @@ namespace Lab.Domain.Services
                 Name = p.Name,
                 Mail = p.Mail,
                 DNI = p.DNI,
-                CV = p.CV,
-                Photo = p.Photo,
+                CV = getResumee(p.CV),
+                Photo = getImage(p.Photo),
                 Phone = p.Phone,
                 BirthDate = p.BirthDate,
                 IdAdress = p.AdressEntity?.Id,
@@ -52,11 +77,24 @@ namespace Lab.Domain.Services
                 JobPositionDescription = p.JobPositionEntity?.Description,
                 IdDniType = p.DniTypeEntity?.id,
                 DniDescrption = p.JobPositionEntity?.Description,
-                workEntities = p.ProfileWorkEntity.Select(x => new WorkDto
-                {
+
+                WorkEntities = p.ProfileWorkEntity.Select(x => new WorkDto
+                { 
                     Id = x.WorkEntity.Id,
                     Company = x.WorkEntity.Company,
                     Role = x.WorkEntity.Role
+                } ).ToList(),
+
+                EducationEntities = p.ProfileEducationEntity.Select(x => new EducationDto
+                {
+                    Id = x.EducationEntity.Id,
+                    InstitutionName = x.EducationEntity.InstitutionName,
+                    Degree = x.EducationEntity.Degree,
+                    AdmissionDate = x.EducationEntity.AdmissionDate,
+                    ExpeditionDate = x.EducationEntity.ExpeditionDate,
+                    IdInstitutionType = x.EducationEntity.InstitutionTypeEntity.Id,
+                    DescriptionInstitutionType = x.EducationEntity.InstitutionTypeEntity.Description
+
                 }).ToList(),
 
             }).ToList();
@@ -70,10 +108,12 @@ namespace Lab.Domain.Services
                                                                                 a => a.AdressEntity,
                                                                                 j => j.JobPositionEntity,
                                                                                 d => d.DniTypeEntity,
-                                                                                r => r.ProfileWorkEntity.Select(e => e.WorkEntity));
+                                                                                r => r.ProfileWorkEntity.Select(e => e.WorkEntity),
+                                                                                e => e.ProfileEducationEntity.Select(b => b.EducationEntity));
+
 
             if (profile == null)
-                throw new Exception("No existe el perfil seleccinado");
+                throw new BusinessException("El id no existe");
 
             ConsultProfileDto consultProfileDto = new ConsultProfileDto()
             {
@@ -83,8 +123,8 @@ namespace Lab.Domain.Services
                 Name = profile.Name,
                 Mail = profile.Mail,
                 DNI = profile.DNI,
-                CV = profile.CV,
-                Photo = profile.Photo,
+                CV = getResumee(profile.CV),
+                Photo = getImage(profile.Photo),
                 Phone = profile.Phone,
                 BirthDate = profile.BirthDate,
                 IdAdress = profile.AdressEntity?.Id,
@@ -93,12 +133,23 @@ namespace Lab.Domain.Services
                 JobPositionDescription = profile.JobPositionEntity?.Description,
                 IdDniType = profile.DniTypeEntity?.id,
                 DniDescrption = profile.DniTypeEntity?.Description,
-                workEntities = profile.ProfileWorkEntity.Select(x => new WorkDto
+                WorkEntities = profile.ProfileWorkEntity.Select(x => new WorkDto
                 {
                     Id = x.WorkEntity.Id,
                     Company = x.WorkEntity.Company,
                     Role = x.WorkEntity.Role
                 }).ToList(),
+                EducationEntities = profile.ProfileEducationEntity.Select(x => new EducationDto
+                {
+                    Id = x.EducationEntity.Id,
+                    InstitutionName = x.EducationEntity.InstitutionName,
+                    Degree = x.EducationEntity.Degree,
+                    AdmissionDate = x.EducationEntity.AdmissionDate,
+                    ExpeditionDate = x.EducationEntity.ExpeditionDate,
+                    IdInstitutionType = x.EducationEntity.IdInstitutionType,
+                    DescriptionInstitutionType = x.EducationEntity.InstitutionTypeEntity.Description
+                }).ToList()
+
             };
 
             return consultProfileDto;
@@ -106,6 +157,10 @@ namespace Lab.Domain.Services
 
         public async Task<bool> Insert(AddProfileDto add)
         {
+            string urlImg = String.Empty;
+            if (add.FileImage!=null)
+                urlImg = UploadImage(add.FileImage);
+            
             ProfileEntity profile = new ProfileEntity()
             {
                 IdUser = add.IdUser,
@@ -113,7 +168,8 @@ namespace Lab.Domain.Services
                 LastName = add.LastName,
                 DNI = add.DNI,
                 BirthDate = add.BirthDate,
-                Mail = add.Mail
+                Mail = add.Mail,
+                Photo = urlImg
             };
             _unitOfWork.ProfileRepository.Insert(profile);
 
@@ -129,12 +185,10 @@ namespace Lab.Domain.Services
 
                 profile.Description = update.Description;
                 profile.Phone = update.Phone;
-                profile.CV = update?.CV;
+                profile.CV = update.CV;
                 profile.Photo = update.Photo;
                 profile.IdAdress = update.IdAdress;
                 profile.IdJobPosition = update.IdJobPosition;
-
-
 
                 _unitOfWork.ProfileRepository.Update(profile);
 
@@ -142,6 +196,170 @@ namespace Lab.Domain.Services
             }
             return false;
         }
+        //  ======== IMAGE-RELATED STUFF ========= 
+        public string getImage(string? img)
+        {
+            string path = string.Empty;
+            if (string.IsNullOrEmpty(img))
+            {
+                path = $"/{_config.GetSection("PathFiles").GetSection("NoImage").Value}";
+            }
+            else
+            {
+                path = $"/{img}";
+            }
+            return path;
+        }
+
+        private string UploadImage(IFormFile fileImage)
+        {
+
+            if (fileImage.Length > 3000000)
+                throw new BusinessException("The file size is too big!: [max 3 MB]");
+
+            //Comprobar que el archivo sea una imagen
+            string extension = Path.GetExtension(fileImage.FileName);
+
+            if (!FileHelper.ValidExtension(extension,true))
+                throw new BusinessException("Extension invalida");
+
+            string path = $"{_config.GetSection("PathFiles").GetSection("ProfilePicture").Value}";
+
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+
+            
+            string uploads = Path.Combine(_webHostEnvironment.WebRootPath, path);
+            string uniqueFileName = FileHelper.GetUniqueFileName(fileImage.FileName);
+            string pathFinal = $"{uploads}/{uniqueFileName}";
+
+            using (var stream = new FileStream(pathFinal, FileMode.Create))
+            {
+               fileImage.CopyTo(stream);
+            }
+
+            return $"{path}/{uniqueFileName}";
+        }
+
+
+        public async Task<string> UpdateImage(ProfileFileDto updateImage)
+        {
+            string urlImage = string.Empty;
+
+
+            if (updateImage.File != null)
+                urlImage = UploadImage(updateImage.File);
+            else throw new BusinessException("La img es requerida");
+
+
+            ProfileEntity profile = _unitOfWork.ProfileRepository.FirstOrDefault(x => x.IdUser == updateImage.Id);
+
+            if (!string.IsNullOrEmpty(profile.Photo))
+            {
+                DeleteFile(profile.Photo);
+            }
+
+            profile.Photo = urlImage;
+
+
+            _unitOfWork.ProfileRepository.Update(profile);
+
+            await _unitOfWork.Save();
+            return urlImage;
+
+        }
+
+
+        public void DeleteFile(string path)
+        {
+            string pathFull = Path.Combine(_webHostEnvironment.WebRootPath, path);
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+            }
+        }
+
+
+        // ============ CV - RELATED STUFF ==================
+        public string getResumee(string? resumee)
+        {
+            string path = string.Empty;
+            if (string.IsNullOrEmpty(resumee))
+            {
+                path = "";
+            }
+            else
+            {
+                path = $"/{resumee}";
+            }
+            return path;
+        }
+
+        private string UploadResumee(IFormFile resumeeFile)
+        {
+
+            if (resumeeFile.Length > 3000000)
+                throw new BusinessException("The file size is too big!: [max 3 MB]");
+
+            //Comprobar que el archivo sea una imagen
+            string extension = Path.GetExtension(resumeeFile.FileName);
+
+            if (!FileHelper.ValidExtension(extension,false))
+                throw new BusinessException("Extension invalida");
+
+            string path = $"{_config.GetSection("PathFiles").GetSection("resumee").Value}";
+
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+
+
+            string uploads = Path.Combine(_webHostEnvironment.WebRootPath, path);
+            string uniqueFileName = FileHelper.GetUniqueFileName(resumeeFile.FileName);
+            string pathFinal = $"{uploads}/{uniqueFileName}";
+
+            using (var stream = new FileStream(pathFinal, FileMode.Create))
+            {
+                resumeeFile.CopyTo(stream);
+            }
+
+            return $"{path}/{uniqueFileName}";
+        }
+
+        public async Task<string> UpdateResumee(ProfileFileDto updateResumee)
+        {
+            string urlResumee = string.Empty;
+
+
+            if (updateResumee.File != null)
+                urlResumee = UploadResumee(updateResumee.File);
+            else throw new BusinessException("El Cv es requerido");
+
+
+            ProfileEntity profile = _unitOfWork.ProfileRepository.FirstOrDefault(x => x.IdUser == updateResumee.Id);
+
+            if (!string.IsNullOrEmpty(profile.CV))
+            {
+                DeleteFile(profile.CV);
+            }
+
+
+            profile.CV = urlResumee; 
+
+            _unitOfWork.ProfileRepository.Update(profile);
+
+            await _unitOfWork.Save();
+            return urlResumee;
+
+        }
+
+
+
+
+
 
         public async Task<bool> AddWorkProfile(AddProfileWorkDto addProfileWorkDto)
         {
@@ -249,6 +467,7 @@ namespace Lab.Domain.Services
             
             return listSkill;
         }
+
 
         #endregion
     }
