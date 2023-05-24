@@ -1,5 +1,6 @@
 ﻿using Common.Exceptions;
 using Common.Helpers;
+using Common.Resources;
 using Infraestructure.Core.UnitOfWork.Interface;
 using Infraestructure.Entity.Models;
 using Lab.Domain.Dto;
@@ -40,7 +41,7 @@ namespace Lab.Domain.Services
             string hashedPasswordFromDatabase = user.Password;
 
             if (!Common.Helpers.Utils.VerifyPassword(userEnteredPassword, hashedPasswordFromDatabase))
-                throw new BusinessException("La contraseña es incorrecta");
+                throw new BusinessException(GeneralMessages.PasswordIncorrect);
 
             return GenerateTokenJWT(user);
 
@@ -85,6 +86,8 @@ namespace Lab.Domain.Services
 
         #endregion
 
+        private UserEntity Get(int idUser) => _unitOfWork.UserRepository.FirstOrDefault(x => x.Id == idUser);
+
 
         public List<GetUserDto> GetAll()
         {
@@ -109,24 +112,19 @@ namespace Lab.Domain.Services
 
         public async Task<bool> Insert(AddUserDto dto)
         {
-            if (_unitOfWork.UserRepository.FirstOrDefault(x => x.Mail == dto.Email) == null)
-            {
-                UserEntity user = new UserEntity()
-                {
-                    Mail = dto.Email,
-                    Password = Common.Helpers.Utils.PassEncrypt("Test_678"),
-                    IsActive = true,
-                    IdRole = dto.IdRole
-                };
-                _unitOfWork.UserRepository.Insert(user);
+            if (_unitOfWork.UserRepository.FirstOrDefault(x => x.Mail == dto.Email) != null)
+                throw new BusinessException(GeneralMessages.RegisteredEmail);
 
-                return await _unitOfWork.Save() > 0;
-            }
-            else
+            UserEntity user = new UserEntity()
             {
-                return false;
-            }
+                Mail = dto.Email,
+                Password = Common.Helpers.Utils.PassEncrypt(dto.Password),
+                IsActive = true,
+                IdRole = dto.IdRole
+            };
+            _unitOfWork.UserRepository.Insert(user);
 
+            return await _unitOfWork.Save() > 0;
         }
 
 
@@ -134,38 +132,56 @@ namespace Lab.Domain.Services
         {
             UserEntity? userEntity = _unitOfWork.UserRepository.FirstOrDefault((user) => user.Id == id);
 
-            if (userEntity != null)
-            {
-                userEntity.IsActive = false;
-                _unitOfWork.UserRepository.Update(userEntity);
-                return await _unitOfWork.Save() > 0;
-            }
-            return false;
+            if (userEntity == null)
+                throw new BusinessException(GeneralMessages.ItemNoFound);
+
+            userEntity.IsActive = false;
+            _unitOfWork.UserRepository.Update(userEntity);
+
+            return await _unitOfWork.Save() > 0;
         }
+
+
+        public async Task<bool> UpdatePassword(UserPasswordDto password, int idUser)
+        {
+            UserEntity userExist= Get(idUser);
+            if (userExist == null)
+                throw new BusinessException(GeneralMessages.ItemNoFound);
+
+            string userEnteredPassword = password.Password;
+            string hashedPasswordFromDatabase = userExist.Password;
+
+            if (!Utils.VerifyPassword(userEnteredPassword, hashedPasswordFromDatabase))
+                throw new BusinessException(GeneralMessages.PasswordIncorrect);
+
+            userExist.Password = Common.Helpers.Utils.PassEncrypt(password.NewPassword);
+            _unitOfWork.UserRepository.Update(userExist);
+
+            return await _unitOfWork.Save() > 0;
+        }
+
 
         public async Task<bool> Update(TokenDto tokenDto, string newPassword)
         {
-            JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
-            JwtSecurityToken jwtToken = (JwtSecurityToken)tokenHandler.ReadToken(tokenDto.Token);
+            //JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+            //JwtSecurityToken jwtToken = (JwtSecurityToken)tokenHandler.ReadToken(tokenDto.Token);
 
-            Claim emailClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == TypeClaims.Email);
-            if (emailClaim == null)
-                throw new BusinessException("El token no contiene la información necesaria");
+            //Claim emailClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == TypeClaims.Email);
+            //if (emailClaim == null)
+            //    throw new BusinessException("El token no contiene la información necesaria");
 
 
-            UserEntity? userExistente = _unitOfWork.UserRepository.FindAll((user) => user.Mail == emailClaim.Value).SingleOrDefault();
+            //UserEntity? userExistente = _unitOfWork.UserRepository.FindAll((user) => user.Mail == emailClaim.Value).SingleOrDefault();
 
-            if (userExistente != null)
-            {
+            //if (userExistente != null && Common.Helpers.Utils.IsValidPassword(newPassword))
+            //{
+            //    userExistente.Password = Common.Helpers.Utils.PassEncrypt(newPassword);
+            //    _unitOfWork.UserRepository.Update(userExistente);
+            //    return await _unitOfWork.Save() > 0;
 
-                if (Common.Helpers.Utils.IsValidPassword(newPassword))
-                {
-                    userExistente.Password = Common.Helpers.Utils.PassEncrypt(newPassword);
-                    _unitOfWork.UserRepository.Update(userExistente);
-                    return await _unitOfWork.Save() > 0;
+            //}
 
-                }
-            }
+
             return false;
         }
     }
