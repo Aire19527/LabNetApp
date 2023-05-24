@@ -29,5 +29,6 @@ namespace Lab.Domain.Dto.Profile
 
         public IEnumerable<WorkDto>? WorkEntities { get; set; }
         public IEnumerable<EducationDto>? EducationEntities { get; set; }
+
     }
 }

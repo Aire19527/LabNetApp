@@ -1,6 +1,7 @@
-﻿using Common.Utils.Exceptions;
+using Common.Utils.Exceptions;
 using Common.Utils.Helpers;
 using Infraestructure.Core.UnitOfWork;
+
 using Infraestructure.Core.UnitOfWork.Interface;
 using Infraestructure.Entity.Models;
 using Lab.Domain.Dto.Education;
@@ -11,6 +12,7 @@ using Lab.Domain.Dto.ProfileWork;
 using Lab.Domain.Dto.Skill;
 using Lab.Domain.Dto.Work;
 using Lab.Domain.Services.Interfaces;
+
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -56,6 +58,7 @@ namespace Lab.Domain.Services
                                                                                                 //r => r.ProfileWorkEntity,
                                                                                                 r => r.ProfileWorkEntity.Select(e => e.WorkEntity),
                                                                                                 e => e.ProfileEducationEntity.Select(b => b.EducationEntity.InstitutionTypeEntity));
+
             List<ConsultProfileDto> profiles = ProfileList.Select(p => new ConsultProfileDto()
             {
                 IdUser = p.IdUser,
@@ -74,6 +77,7 @@ namespace Lab.Domain.Services
                 JobPositionDescription = p.JobPositionEntity?.Description,
                 IdDniType = p.DniTypeEntity?.id,
                 DniDescrption = p.JobPositionEntity?.Description,
+
                 WorkEntities = p.ProfileWorkEntity.Select(x => new WorkDto
                 { 
                     Id = x.WorkEntity.Id,
@@ -90,7 +94,7 @@ namespace Lab.Domain.Services
                     ExpeditionDate = x.EducationEntity.ExpeditionDate,
                     IdInstitutionType = x.EducationEntity.InstitutionTypeEntity.Id,
                     DescriptionInstitutionType = x.EducationEntity.InstitutionTypeEntity.Description
-                    
+
                 }).ToList(),
 
             }).ToList();
@@ -106,6 +110,7 @@ namespace Lab.Domain.Services
                                                                                 d => d.DniTypeEntity,
                                                                                 r => r.ProfileWorkEntity.Select(e => e.WorkEntity),
                                                                                 e => e.ProfileEducationEntity.Select(b => b.EducationEntity));
+
 
             if (profile == null)
                 throw new BusinessException("El id no existe");
@@ -128,7 +133,6 @@ namespace Lab.Domain.Services
                 JobPositionDescription = profile.JobPositionEntity?.Description,
                 IdDniType = profile.DniTypeEntity?.id,
                 DniDescrption = profile.DniTypeEntity?.Description,
-
                 WorkEntities = profile.ProfileWorkEntity.Select(x => new WorkDto
                 {
                     Id = x.WorkEntity.Id,
@@ -357,27 +361,114 @@ namespace Lab.Domain.Services
 
 
 
-        #endregion
-
-        #region Nico-benja
-
-        public async Task<bool> AddSkillToProfile(AddProfileSkillDto profileSkill)
+        public async Task<bool> AddWorkProfile(AddProfileWorkDto addProfileWorkDto)
         {
-            ProfileEntity Profile = _unitOfWork.ProfileRepository.FirstOrDefault(x => x.Id == profileSkill.IdProfile);
-            SkillEntity Skill = _unitOfWork.SkillRepository.FirstOrDefault(x => x.Id == profileSkill.IdSkill);
+            ProfileEntity Profile = _unitOfWork.ProfileRepository.FirstOrDefault(x => x.Id == addProfileWorkDto.IdProfile);
+            WorkEntity Work = _unitOfWork.WorkRepository.FirstOrDefault(x => x.Id == addProfileWorkDto.IdWork);
 
-            if (Profile != null && Skill != null)
+            if (Profile != null && Work != null)
             {
-                _unitOfWork.ProfilesSkillsRepository.Insert(new ProfilesSkillsEntity()
+                _unitOfWork.ProfilesWorkRepository.Insert(new ProfileWorkEntity()
                 {
-                    IdProfile = profileSkill.IdProfile,
-                    IdSkill = profileSkill.IdSkill
+                    IdProfile = addProfileWorkDto.IdProfile,
+                    IdWork = addProfileWorkDto.IdWork
                 });
-
             }
 
             return await _unitOfWork.Save() > 0;
         }
+
+        #endregion
+
+        #region ProfileSkill
+
+        public async Task<bool> AddSkillToProfile(AddProfileSkillDto profileSkill)
+        {
+            if (profileSkill.IdProfile == null || profileSkill.IdSkill == null)
+                throw new BusinessException("No se ha indicado skill o perfil.");
+
+            ProfileEntity Profile = _unitOfWork.ProfileRepository.FirstOrDefault(x => x.Id == profileSkill.IdProfile);
+            SkillEntity Skill = _unitOfWork.SkillRepository.FirstOrDefault(x => x.Id == profileSkill.IdSkill);
+
+            if (Profile == null || Skill == null)
+                throw new BusinessException("Perfil o skill no existente.");
+
+            
+            _unitOfWork.ProfilesSkillsRepository.Insert(new ProfilesSkillsEntity()
+            {
+                IdProfile = profileSkill.IdProfile,
+                IdSkill = profileSkill.IdSkill
+            });
+            
+            return await _unitOfWork.Save() > 0;
+        }
+        public async Task<bool> DeleteSkillToProfile(int idProfile, int idSkill)
+        {
+            if (idProfile == null || idSkill == null)
+                throw new BusinessException("No se ha indicado skill o perfil.");
+
+            ProfilesSkillsEntity? ProfilesSkills = _unitOfWork.ProfilesSkillsRepository.FirstOrDefault(p => p.IdProfile == idProfile &&
+                                                                                        p.IdSkill == idSkill);
+
+            if (ProfilesSkills == null)
+                throw new BusinessException();
+                
+            _unitOfWork.ProfilesSkillsRepository.Delete(ProfilesSkills);
+           
+
+            return await _unitOfWork.Save() > 0;
+        }
+
+        public IEnumerable<ProfilesDto> FilterBySkill(List<int> skills)
+        {
+            if (skills.Count() == 0)
+                throw new BusinessException("No hay skills para filtrar.");
+
+            List<ProfilesSkillsEntity> perfilSkills = _unitOfWork.ProfilesSkillsRepository.FindAll(
+                                                                            x => skills.Any(s => s.Equals(x.IdSkill)),
+                                                                            p => p.ProfileEntity).ToList();
+
+            IEnumerable<ProfilesDto> profiles = (
+                                from p in perfilSkills.ToList() 
+                                group p by p.IdProfile into perf
+                                where perf.Count() == skills.Count()
+                                select new ProfilesDto 
+                                { 
+                                    Profile = perf.Select(x => new ProfileDto
+                                    {
+                                        IdUser = x.ProfileEntity.Id,
+                                        Name = x.ProfileEntity.Name,
+                                        LastName = x.ProfileEntity.LastName,
+                                        Mail = x.ProfileEntity.Mail,
+                                    }).
+                                    FirstOrDefault(),
+                                    Key = perf.Key,
+                                    Count = perf.Select(x => x.IdSkill).Count()
+                                }).ToList();
+            return profiles;
+        }
+
+
+        public IEnumerable<ConsultSkllDto> GetProfileSkill(int id)
+        {
+
+            ProfileEntity profile = _unitOfWork.ProfileRepository.FirstOrDefaultSelect(x => x.Id == id,
+                                                                               r => r.ProfilesSkillsEntity.Select(e => e.SkillEntity));
+
+            if (profile == null)
+                throw new BusinessException("No existe el perfil seleccinado");
+
+            IEnumerable<ConsultSkllDto> listSkill = profile.ProfilesSkillsEntity.Select(x => new ConsultSkllDto
+            {
+                Id = x.SkillEntity.Id,
+                Description = x.SkillEntity.Description,
+                IsVisible = x.SkillEntity.IsVisible,
+            }).ToList();
+            
+            return listSkill;
+        }
+
+
         #endregion
     }
 }
