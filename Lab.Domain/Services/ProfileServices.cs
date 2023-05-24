@@ -1,7 +1,5 @@
-using Common.Utils.Exceptions;
-using Common.Utils.Helpers;
-using Infraestructure.Core.UnitOfWork;
-
+using Common.Exceptions;
+using Common.Helpers;
 using Infraestructure.Core.UnitOfWork.Interface;
 using Infraestructure.Entity.Models;
 using Lab.Domain.Dto.Education;
@@ -12,20 +10,9 @@ using Lab.Domain.Dto.ProfileWork;
 using Lab.Domain.Dto.Skill;
 using Lab.Domain.Dto.Work;
 using Lab.Domain.Services.Interfaces;
-
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Lab.Domain.Services
 {
@@ -38,7 +25,7 @@ namespace Lab.Domain.Services
         #endregion
 
         #region Builder
-        public ProfileServices(IUnitOfWork unitOfWork , IConfiguration config, 
+        public ProfileServices(IUnitOfWork unitOfWork, IConfiguration config,
             IWebHostEnvironment webHostEnvironment)
         {
             _unitOfWork = unitOfWork;
@@ -79,11 +66,11 @@ namespace Lab.Domain.Services
                 DniDescrption = p.JobPositionEntity?.Description,
 
                 WorkEntities = p.ProfileWorkEntity.Select(x => new WorkDto
-                { 
+                {
                     Id = x.WorkEntity.Id,
                     Company = x.WorkEntity.Company,
                     Role = x.WorkEntity.Role
-                } ).ToList(),
+                }).ToList(),
 
                 EducationEntities = p.ProfileEducationEntity.Select(x => new EducationDto
                 {
@@ -158,9 +145,9 @@ namespace Lab.Domain.Services
         public async Task<bool> Insert(AddProfileDto add)
         {
             string urlImg = String.Empty;
-            if (add.FileImage!=null)
+            if (add.FileImage != null)
                 urlImg = UploadImage(add.FileImage);
-            
+
             ProfileEntity profile = new ProfileEntity()
             {
                 IdUser = add.IdUser,
@@ -220,7 +207,7 @@ namespace Lab.Domain.Services
             //Comprobar que el archivo sea una imagen
             string extension = Path.GetExtension(fileImage.FileName);
 
-            if (!FileHelper.ValidExtension(extension,true))
+            if (!FileHelper.ValidExtension(extension, true))
                 throw new BusinessException("Extension invalida");
 
             string path = $"{_config.GetSection("PathFiles").GetSection("ProfilePicture").Value}";
@@ -230,14 +217,14 @@ namespace Lab.Domain.Services
                 Directory.CreateDirectory(path);
             }
 
-            
+
             string uploads = Path.Combine(_webHostEnvironment.WebRootPath, path);
             string uniqueFileName = FileHelper.GetUniqueFileName(fileImage.FileName);
             string pathFinal = $"{uploads}/{uniqueFileName}";
 
             using (var stream = new FileStream(pathFinal, FileMode.Create))
             {
-               fileImage.CopyTo(stream);
+                fileImage.CopyTo(stream);
             }
 
             return $"{path}/{uniqueFileName}";
@@ -306,7 +293,7 @@ namespace Lab.Domain.Services
             //Comprobar que el archivo sea una imagen
             string extension = Path.GetExtension(resumeeFile.FileName);
 
-            if (!FileHelper.ValidExtension(extension,false))
+            if (!FileHelper.ValidExtension(extension, false))
                 throw new BusinessException("Extension invalida");
 
             string path = $"{_config.GetSection("PathFiles").GetSection("resumee").Value}";
@@ -347,7 +334,7 @@ namespace Lab.Domain.Services
             }
 
 
-            profile.CV = urlResumee; 
+            profile.CV = urlResumee;
 
             _unitOfWork.ProfileRepository.Update(profile);
 
@@ -393,13 +380,13 @@ namespace Lab.Domain.Services
             if (Profile == null || Skill == null)
                 throw new BusinessException("Perfil o skill no existente.");
 
-            
+
             _unitOfWork.ProfilesSkillsRepository.Insert(new ProfilesSkillsEntity()
             {
                 IdProfile = profileSkill.IdProfile,
                 IdSkill = profileSkill.IdSkill
             });
-            
+
             return await _unitOfWork.Save() > 0;
         }
         public async Task<bool> DeleteSkillToProfile(int idProfile, int idSkill)
@@ -412,9 +399,9 @@ namespace Lab.Domain.Services
 
             if (ProfilesSkills == null)
                 throw new BusinessException();
-                
+
             _unitOfWork.ProfilesSkillsRepository.Delete(ProfilesSkills);
-           
+
 
             return await _unitOfWork.Save() > 0;
         }
@@ -429,19 +416,18 @@ namespace Lab.Domain.Services
                                                                             p => p.ProfileEntity).ToList();
 
             IEnumerable<ProfilesDto> profiles = (
-                                from p in perfilSkills.ToList() 
+                                from p in perfilSkills.ToList()
                                 group p by p.IdProfile into perf
                                 where perf.Count() == skills.Count()
-                                select new ProfilesDto 
-                                { 
+                                select new ProfilesDto
+                                {
                                     Profile = perf.Select(x => new ProfileDto
                                     {
                                         IdUser = x.ProfileEntity.Id,
                                         Name = x.ProfileEntity.Name,
                                         LastName = x.ProfileEntity.LastName,
                                         Mail = x.ProfileEntity.Mail,
-                                    }).
-                                    FirstOrDefault(),
+                                    }).FirstOrDefault(),
                                     Key = perf.Key,
                                     Count = perf.Select(x => x.IdSkill).Count()
                                 }).ToList();
@@ -464,7 +450,7 @@ namespace Lab.Domain.Services
                 Description = x.SkillEntity.Description,
                 IsVisible = x.SkillEntity.IsVisible,
             }).ToList();
-            
+
             return listSkill;
         }
 

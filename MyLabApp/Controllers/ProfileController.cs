@@ -44,13 +44,13 @@ namespace MyLabApp.Controllers
             });
         }
 
-        /*[HttpGet]
+        [HttpGet]
         [Route("Get/{id}")]
         public IActionResult GetById(int id)
         {
 
             IActionResult action;
-            ConsultProfileDto result =  _profileServices.GetById(id);
+            ConsultProfileDto result = _profileServices.GetById(id);
 
 
             ResponseDto rpdto = new ResponseDto()
@@ -65,7 +65,7 @@ namespace MyLabApp.Controllers
             else
                 action = BadRequest(rpdto);
             return action;
-        }*/
+        }
 
         [HttpGet]
         [Route("FilterSkills")]

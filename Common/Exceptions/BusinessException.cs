@@ -6,9 +6,12 @@ using System.Threading.Tasks;
 
 namespace Common.Exceptions
 {
-    public class DuplicatedSkillException : Exception
+    public class BusinessException : Exception
     {
-        public DuplicatedSkillException() : base("No se puede insertar un registro duplicado")
+        public BusinessException() : base()
+        {
+        }
+        public BusinessException(string message) : base(message)
         {
         }
     }

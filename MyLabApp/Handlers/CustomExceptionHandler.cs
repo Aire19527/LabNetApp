@@ -1,11 +1,8 @@
 
-﻿using Common.Exceptions;
+using Common.Exceptions;
 using Common.Resources;
 using Lab.Domain.Dto;
-
-using Common.Utils.Exceptions;
 using Microsoft.AspNetCore.Http.Features;
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Newtonsoft.Json;
@@ -20,23 +17,14 @@ namespace MyLabApp.Handlers
 
             ResponseDto response = new ResponseDto();
 
-            if (context.Exception is DuplicatedSkillException)
-            {
-                responseException.Status = StatusCodes.Status406NotAcceptable;
-                response.Message = context.Exception.Message;
-                context.ExceptionHandled = true;
-            } else if (context.Exception is SkillNotFoundException)
-            {
-                responseException.Status = StatusCodes.Status400BadRequest;
-                response.Message = context.Exception.Message;
-             }
+
             if (context.Exception is BusinessException)
             {
                 responseException.Status = StatusCodes.Status400BadRequest;
                 response.Message = context.Exception.Message;
                 context.ExceptionHandled = true;
             }
-            else if (context.Exception is UnauthorizedAccessException) 
+            else if (context.Exception is UnauthorizedAccessException)
             {
                 responseException.Status = StatusCodes.Status401Unauthorized;
                 response.Message = "Usuario no autenticado correctamente";

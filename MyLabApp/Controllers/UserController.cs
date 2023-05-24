@@ -75,7 +75,7 @@ namespace MyLabApp.Controllers
             ResponseDto response = new ResponseDto()
             {
                 IsSuccess = result,
-                Result = String.Empty,
+                Result = string.Empty,
                 Message = result ? GeneralMessages.ItemDeleted : GeneralMessages.ItemNoDeleted
             };
             if (result)
@@ -95,7 +95,7 @@ namespace MyLabApp.Controllers
             ResponseDto response = new ResponseDto()
             {
                 IsSuccess = result,
-                Result = String.Empty,
+                Result = string.Empty,
                 Message = result ? GeneralMessages.ItemInserted : GeneralMessages.ItemNoUpdated
             };
 

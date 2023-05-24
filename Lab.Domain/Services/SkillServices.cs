@@ -1,4 +1,5 @@
 ﻿using Common.Exceptions;
+using Common.Resources;
 using Infraestructure.Core.UnitOfWork.Interface;
 using Infraestructure.Entity.Models;
 using Lab.Domain.Dto.Skill;
@@ -24,7 +25,7 @@ namespace Lab.Domain.Services
         public async Task<bool> Insert(AddSkilDto dto)
         {
             if (_unitOfWork.SkillRepository.FirstOrDefault(x => x.Description.Equals(dto.Description)) != null)
-                throw new DuplicatedSkillException();
+                throw new BusinessException("No se puede insertar un registro duplicado");
 
             SkillEntity skill = new SkillEntity()
             {
@@ -39,7 +40,7 @@ namespace Lab.Domain.Services
         public List<ConsultSkllDto> Getall()
         {
             IEnumerable<SkillEntity> skillList = _unitOfWork.SkillRepository.GetAll();
-            
+
             List<ConsultSkllDto> skills = skillList.Select(x => new ConsultSkllDto()
             {
                 Id = x.Id,
@@ -54,15 +55,13 @@ namespace Lab.Domain.Services
         public async Task<bool> Delete(int id)
         {
             SkillEntity? skillEntity = _unitOfWork.SkillRepository.FirstOrDefault((skill) => skill.Id == id);
-            
+
             if (skillEntity == null)
-                throw new SkillNotFoundException();
+                throw new BusinessException(GeneralMessages.ItemNoFound);
 
             _unitOfWork.SkillRepository.Delete(skillEntity);
-            
+
             return await _unitOfWork.Save() > 0;
-            
-            
         }
 
         #endregion

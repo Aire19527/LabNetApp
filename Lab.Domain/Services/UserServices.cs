@@ -1,24 +1,15 @@
-﻿using Common.Helpers;
-using Common.Resources;
-using Common.Utils.Exceptions;
+﻿using Common.Exceptions;
+using Common.Helpers;
 using Infraestructure.Core.UnitOfWork.Interface;
 using Infraestructure.Entity.Models;
 using Lab.Domain.Dto;
-using Lab.Domain.Dto.Skill;
 using Lab.Domain.Dto.User;
 using Lab.Domain.Services.Interfaces;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 using static Common.Constant.Const;
 
 namespace Lab.Domain.Services
@@ -166,17 +157,17 @@ namespace Lab.Domain.Services
 
             if (userExistente != null)
             {
-   
+
                 if (Common.Helpers.Utils.IsValidPassword(newPassword))
                 {
                     userExistente.Password = Common.Helpers.Utils.PassEncrypt(newPassword);
                     _unitOfWork.UserRepository.Update(userExistente);
                     return await _unitOfWork.Save() > 0;
 
-                }        
+                }
             }
             return false;
         }
     }
-       
+
 }

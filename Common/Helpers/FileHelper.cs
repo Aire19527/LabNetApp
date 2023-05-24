@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Common.Utils.Helpers
+﻿namespace Common.Helpers
 {
     public class FileHelper
     {
@@ -53,4 +47,5 @@ namespace Common.Utils.Helpers
             return $"{Guid.NewGuid().ToString()}{Path.GetExtension(fileName)}";
         }
     }
+
 }
