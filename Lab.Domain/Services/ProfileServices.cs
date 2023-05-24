@@ -199,19 +199,28 @@ namespace Lab.Domain.Services
         }
 
 
-        private string UploadFile(IFormFile fileImage, bool isImg)
+        private string UploadFile(IFormFile file, bool isImg)
         {
 
-            if (fileImage.Length > 3000000)
+            if (file.Length > 3000000)
                 throw new BusinessException("The file size is too big!: [max 3 MB]");
 
             //Comprobar que el archivo sea una imagen
-            string extension = Path.GetExtension(fileImage.FileName);
+            string extension = Path.GetExtension(file.FileName);
 
             if (!FileHelper.ValidExtension(extension, isImg))
                 throw new BusinessException("Extension invalida");
 
-            string path = $"{_config.GetSection("PathFiles").GetSection("ProfilePicture").Value}";
+            string path = string.Empty;
+
+            if (isImg)
+            {
+                path = $"{_config.GetSection("PathFiles").GetSection("ProfilePicture").Value}";
+            }
+            else
+            {
+                path = $"{_config.GetSection("PathFiles").GetSection("Resumee").Value}";
+            }
 
             if (!Directory.Exists(path))
             {
@@ -220,12 +229,12 @@ namespace Lab.Domain.Services
 
 
             string uploads = Path.Combine(_webHostEnvironment.WebRootPath, path);
-            string uniqueFileName = FileHelper.GetUniqueFileName(fileImage.FileName);
+            string uniqueFileName = FileHelper.GetUniqueFileName(file.FileName);
             string pathFinal = $"{uploads}/{uniqueFileName}";
 
             using (var stream = new FileStream(pathFinal, FileMode.Create))
             {
-                fileImage.CopyTo(stream);
+                file.CopyTo(stream);
             }
 
             return $"{path}/{uniqueFileName}";
