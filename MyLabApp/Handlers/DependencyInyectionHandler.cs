@@ -24,6 +24,8 @@ namespace MyLabApp.Handlers
 
             services.AddTransient<IProfileServices, ProfileServices>();
 
+
+
         }
     }
 }

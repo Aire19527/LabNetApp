@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infraestructure.Core.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230518144916_EditCamposNulleables")]
-    partial class EditCamposNulleables
+    [Migration("20230519152530_editTablaState")]
+    partial class editTablaState
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -330,13 +330,13 @@ namespace Infraestructure.Core.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("IdAdress")
+                    b.Property<int?>("IdAdress")
                         .HasColumnType("int");
 
-                    b.Property<int>("IdDniType")
+                    b.Property<int?>("IdDniType")
                         .HasColumnType("int");
 
-                    b.Property<int>("IdJobPosition")
+                    b.Property<int?>("IdJobPosition")
                         .HasColumnType("int");
 
                     b.Property<int>("IdUser")
@@ -543,8 +543,8 @@ namespace Infraestructure.Core.Migrations
                     b.Property<int>("IdRole")
                         .HasColumnType("int");
 
-                    b.Property<int>("IdState")
-                        .HasColumnType("int");
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Mail")
                         .IsRequired()
@@ -559,8 +559,6 @@ namespace Infraestructure.Core.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("IdRole");
-
-                    b.HasIndex("IdState");
 
                     b.HasIndex("Mail")
                         .IsUnique();
@@ -689,21 +687,15 @@ namespace Infraestructure.Core.Migrations
                 {
                     b.HasOne("Infraestructure.Entity.Models.AdressEntity", "AdressEntity")
                         .WithMany("ProfileEntity")
-                        .HasForeignKey("IdAdress")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("IdAdress");
 
                     b.HasOne("Infraestructure.Entity.Models.DniTypeEntity", "DniTypeEntity")
                         .WithMany("ProfileEntity")
-                        .HasForeignKey("IdDniType")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("IdDniType");
 
                     b.HasOne("Infraestructure.Entity.Models.JobPositionEntity", "JobPositionEntity")
                         .WithMany("ProfileEntity")
-                        .HasForeignKey("IdJobPosition")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("IdJobPosition");
 
                     b.HasOne("Infraestructure.Entity.Models.UserEntity", "UserEntity")
                         .WithOne("ProfileEntity")
@@ -796,15 +788,7 @@ namespace Infraestructure.Core.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Infraestructure.Entity.Models.StateEntity", "StateEntity")
-                        .WithMany("UserEntities")
-                        .HasForeignKey("IdState")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("RoleEntity");
-
-                    b.Navigation("StateEntity");
                 });
 
             modelBuilder.Entity("Infraestructure.Entity.Models.AdressEntity", b =>
@@ -873,11 +857,6 @@ namespace Infraestructure.Core.Migrations
             modelBuilder.Entity("Infraestructure.Entity.Models.SkillEntity", b =>
                 {
                     b.Navigation("ProfilesSkillsEntity");
-                });
-
-            modelBuilder.Entity("Infraestructure.Entity.Models.StateEntity", b =>
-                {
-                    b.Navigation("UserEntities");
                 });
 
             modelBuilder.Entity("Infraestructure.Entity.Models.UserEntity", b =>
