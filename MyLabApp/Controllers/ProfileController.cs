@@ -2,18 +2,16 @@
 using Lab.Domain.Dto;
 using Lab.Domain.Dto.Profile;
 using Lab.Domain.Dto.ProfileSkill;
+using Lab.Domain.Dto.Skill;
 using Lab.Domain.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Lab.Domain.Dto.Profile;
-using Common.Resources;
-using Microsoft.AspNetCore.Cors;
-using System;
-using Lab.Domain.Dto.Skill;
+using MyLabApp.Handlers;
 
 namespace MyLabApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [TypeFilter(typeof(CustomExceptionHandler))]
     public class ProfileController : ControllerBase
     {
         #region Attributes
@@ -132,17 +130,17 @@ namespace MyLabApp.Controllers
             return action;
         }
         [HttpDelete]
-        [Route("DeleteSkillToProfile")]
-        public async Task<IActionResult> DeleteSkillToProfile(AddProfileSkillDto addProfileSkillDto)
+        [Route("DeleteSkillToProfile/{idProfile}/{idSkill}")]
+        public async Task<IActionResult> DeleteSkillToProfile(int idProfile,int idSkill)
         {
             IActionResult action;
 
-            bool result = await _profileServices.DeleteSkillToProfile(addProfileSkillDto);
+            bool result = await _profileServices.DeleteSkillToProfile(idProfile,idSkill);
             ResponseDto response = new ResponseDto()
             {
                 IsSuccess = result,
                 Result = result,
-                Message = result ? GeneralMessages.ItemInserted : GeneralMessages.ItemNoInserted
+                Message = result ? GeneralMessages.ItemDeleted : GeneralMessages.ItemNoDeleted
             };
 
             if (result)

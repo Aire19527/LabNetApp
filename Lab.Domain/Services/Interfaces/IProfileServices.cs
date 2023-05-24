@@ -19,7 +19,7 @@ namespace Lab.Domain.Services.Interfaces
 
         Task<bool> AddSkillToProfile(AddProfileSkillDto profileSkill);
 
-        Task<bool> DeleteSkillToProfile(AddProfileSkillDto profileSkill);
+        Task<bool> DeleteSkillToProfile(int idProfile, int idSkill);
 
         ConsultProfileDto GetById(int id);
 

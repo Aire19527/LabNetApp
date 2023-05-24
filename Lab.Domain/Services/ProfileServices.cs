@@ -184,13 +184,13 @@ namespace Lab.Domain.Services
             
             return await _unitOfWork.Save() > 0;
         }
-        public async Task<bool> DeleteSkillToProfile(AddProfileSkillDto profileSkill)
+        public async Task<bool> DeleteSkillToProfile(int idProfile, int idSkill)
         {
-            if (profileSkill.IdProfile == null || profileSkill.IdSkill == null)
+            if (idProfile == null || idSkill == null)
                 throw new BusinessException("No se ha indicado skill o perfil.");
 
-            ProfilesSkillsEntity? ProfilesSkills = _unitOfWork.ProfilesSkillsRepository.FirstOrDefault(p => p.IdProfile == profileSkill.IdProfile &&
-                                                                                        p.IdSkill == profileSkill.IdSkill);
+            ProfilesSkillsEntity? ProfilesSkills = _unitOfWork.ProfilesSkillsRepository.FirstOrDefault(p => p.IdProfile == idProfile &&
+                                                                                        p.IdSkill == idSkill);
 
             if (ProfilesSkills == null)
                 throw new BusinessException();
