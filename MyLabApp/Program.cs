@@ -1,10 +1,15 @@
 using Infraestructure.Core.Context;
 using Microsoft.AspNetCore.Cors.Infrastructure;
+using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using MyLabApp.Handlers;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var configuration = new ConfigurationBuilder()
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json")
+    .Build();
 
 #region Context SQL Server
 builder.Services.AddDbContext<DataContext>(options =>
@@ -19,7 +24,10 @@ builder.Services.AddDbContext<DataContext>(options =>
 DependencyInyectionHandler.DependencyInyectionConfig(builder.Services);
 #endregion
 
-
+#region JWT
+var tokenAppSetting = configuration.GetSection("Tokens");
+JwtConfigurationHandler.ConfigureJwtAuthentication(builder.Services, tokenAppSetting);
+#endregion
 
 // Add services to the container.
 
@@ -51,6 +59,7 @@ builder.Services.AddCors(opt =>
 
 var app = builder.Build();
 
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -60,14 +69,13 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-
 app.UseCors("CorsPolicy");
 
 //app.UseCors("NewPolicy");
-
 
 app.UseAuthorization();
 
 app.MapControllers();
 
 app.Run();
+

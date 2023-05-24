@@ -1,4 +1,5 @@
-﻿using Lab.Domain.Dto.Skill;
+﻿using Lab.Domain.Dto;
+using Lab.Domain.Dto.Skill;
 using Lab.Domain.Dto.User;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,10 @@ namespace Lab.Domain.Services.Interfaces
     {
         Task<bool> Insert(AddUserDto add);
         List<GetUserDto> GetAll();
-        
+
+        TokenDto Login(LoginDto user);
+
+        Task<bool> Delete(int id);
+        Task<bool> Update(TokenDto tokenDto, string newPass);
     }
 }

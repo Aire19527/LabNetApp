@@ -10,7 +10,7 @@ namespace Lab.Domain.Dto.User
     {
         public int Id { get; set; }
         public string Role { get; set; }
-        public string State { get; set; }
+ 
 
     }
 }
