@@ -69,7 +69,7 @@ namespace MyLabApp.Controllers
         }
 
         [HttpDelete]
-        [Route("{id}")]
+        [Route("Delete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
            bool res = await _skillServices.Delete(id);
