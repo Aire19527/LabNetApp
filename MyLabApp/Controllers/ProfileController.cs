@@ -202,7 +202,6 @@ namespace MyLabApp.Controllers
 
         [HttpPut]
         [Route("UpdateImage")]
-
         public async Task<IActionResult> UpdateImage([FromForm] ProfileFileDto updateImage )
         {
             IActionResult action;
@@ -226,8 +225,6 @@ namespace MyLabApp.Controllers
         [HttpPut]
         [Route("UpdateResumee")]
         [Consumes("multipart/form-data")]
-
-
         public async Task<IActionResult> UpdateResumee([FromForm] ProfileFileDto updateResumee)
         {
             IActionResult action;

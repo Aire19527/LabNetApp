@@ -97,7 +97,7 @@ namespace MyLabApp.Controllers
 
 
         [HttpPut]
-        [Route("update")]
+        [Route("UpdatePassword")]
         public async Task<IActionResult> UpdatePassword(UserPasswordDto password)
         {
             IActionResult action;
