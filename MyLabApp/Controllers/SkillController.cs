@@ -8,11 +8,13 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Common.Exceptions;
 using MyLabApp.Handlers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MyLabApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     [TypeFilter(typeof(CustomExceptionHandler))]
     public class SkillController : ControllerBase
     {

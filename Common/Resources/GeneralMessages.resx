@@ -153,6 +153,9 @@
   <data name="ItemUpdated" xml:space="preserve">
     <value>Registro actualizado satisfactoriamente.</value>
   </data>
+  <data name="PasswordIncorrect" xml:space="preserve">
+    <value>La contraseña es incorrecta</value>
+  </data>
   <data name="RegisteredEmail" xml:space="preserve">
     <value>El Email ya se encentra registrado en nuestro sistema, por favor usar otro Email.</value>
   </data>

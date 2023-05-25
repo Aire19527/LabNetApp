@@ -42,7 +42,7 @@ namespace MyLabApp.Handlers
             context.Result = new ObjectResult(responseException.Value)
             {
                 StatusCode = responseException.Status,
-                Value = responseException.Value
+                Value = response
             };
 
             if (responseException.Status == StatusCodes.Status500InternalServerError)

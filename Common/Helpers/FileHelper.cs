@@ -7,13 +7,12 @@
         {
             bool result = false;
 
-
             if (isImage)
             {
                 string[] validExtensions =
-            {
-                ".jpg",".png",".jpeg"
-            };
+                {
+                    ".jpg",".png",".jpeg"
+                };
 
                 foreach (string extension in validExtensions)
                 {
@@ -23,13 +22,12 @@
 
                 return result;
             }
-
             else
             {
                 string[] validExtensions =
-            {
-                ".pdf",".docx"
-            };
+                {
+                    ".pdf",".docx"
+                };
 
                 foreach (string extension in validExtensions)
                 {

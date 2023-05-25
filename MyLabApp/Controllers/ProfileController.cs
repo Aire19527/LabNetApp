@@ -8,11 +8,13 @@ using Microsoft.AspNetCore.Mvc;
 using Lab.Domain.Dto.ProfileImage;
 
 using MyLabApp.Handlers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MyLabApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     [TypeFilter(typeof(CustomExceptionHandler))]
     public class ProfileController : ControllerBase
     {

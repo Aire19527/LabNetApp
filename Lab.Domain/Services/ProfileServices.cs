@@ -146,7 +146,7 @@ namespace Lab.Domain.Services
         {
             string urlImg = String.Empty;
             if (add.FileImage != null)
-                urlImg = UploadImage(add.FileImage);
+                urlImg = UploadFile(add.FileImage, isImg: true);
 
             ProfileEntity profile = new ProfileEntity()
             {
@@ -198,7 +198,8 @@ namespace Lab.Domain.Services
             return path;
         }
 
-        private string UploadImage(IFormFile fileImage)
+
+        private string UploadFile(IFormFile fileImage, bool isImg)
         {
 
             if (fileImage.Length > 3000000)
@@ -207,7 +208,7 @@ namespace Lab.Domain.Services
             //Comprobar que el archivo sea una imagen
             string extension = Path.GetExtension(fileImage.FileName);
 
-            if (!FileHelper.ValidExtension(extension, true))
+            if (!FileHelper.ValidExtension(extension, isImg))
                 throw new BusinessException("Extension invalida");
 
             string path = $"{_config.GetSection("PathFiles").GetSection("ProfilePicture").Value}";
@@ -230,14 +231,13 @@ namespace Lab.Domain.Services
             return $"{path}/{uniqueFileName}";
         }
 
-
         public async Task<string> UpdateImage(ProfileFileDto updateImage)
         {
             string urlImage = string.Empty;
 
 
             if (updateImage.File != null)
-                urlImage = UploadImage(updateImage.File);
+                urlImage = UploadFile(updateImage.File, isImg: true);
             else throw new BusinessException("La img es requerida");
 
 
@@ -262,10 +262,8 @@ namespace Lab.Domain.Services
         public void DeleteFile(string path)
         {
             string pathFull = Path.Combine(_webHostEnvironment.WebRootPath, path);
-            if (File.Exists(path))
-            {
-                File.Delete(path);
-            }
+            if (File.Exists(pathFull))
+                File.Delete(pathFull);
         }
 
 
@@ -284,45 +282,12 @@ namespace Lab.Domain.Services
             return path;
         }
 
-        private string UploadResumee(IFormFile resumeeFile)
-        {
-
-            if (resumeeFile.Length > 3000000)
-                throw new BusinessException("The file size is too big!: [max 3 MB]");
-
-            //Comprobar que el archivo sea una imagen
-            string extension = Path.GetExtension(resumeeFile.FileName);
-
-            if (!FileHelper.ValidExtension(extension, false))
-                throw new BusinessException("Extension invalida");
-
-            string path = $"{_config.GetSection("PathFiles").GetSection("resumee").Value}";
-
-            if (!Directory.Exists(path))
-            {
-                Directory.CreateDirectory(path);
-            }
-
-
-            string uploads = Path.Combine(_webHostEnvironment.WebRootPath, path);
-            string uniqueFileName = FileHelper.GetUniqueFileName(resumeeFile.FileName);
-            string pathFinal = $"{uploads}/{uniqueFileName}";
-
-            using (var stream = new FileStream(pathFinal, FileMode.Create))
-            {
-                resumeeFile.CopyTo(stream);
-            }
-
-            return $"{path}/{uniqueFileName}";
-        }
-
         public async Task<string> UpdateResumee(ProfileFileDto updateResumee)
         {
             string urlResumee = string.Empty;
 
-
             if (updateResumee.File != null)
-                urlResumee = UploadResumee(updateResumee.File);
+                urlResumee = UploadFile(updateResumee.File, isImg: false);
             else throw new BusinessException("El Cv es requerido");
 
 
