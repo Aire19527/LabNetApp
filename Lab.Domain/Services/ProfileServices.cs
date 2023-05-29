@@ -143,6 +143,19 @@ namespace Lab.Domain.Services
             return consultProfileDto;
         }
 
+        public bool HasProfile(int idUser)
+        {
+            bool result;
+            ProfileEntity profile = _unitOfWork.ProfileRepository.FirstOrDefaultSelect(x => x.IdUser == idUser);
+
+            if (profile == null)
+                result = false;
+
+            else result = true;
+
+            return result;
+        }   
+
         public async Task<bool> Insert(AddProfileDto add)
         {
             string urlImg = String.Empty;
@@ -277,6 +290,8 @@ namespace Lab.Domain.Services
             if (File.Exists(pathFull))
                 File.Delete(pathFull);
         }
+
+
 
 
         // ============ CV - RELATED STUFF ==================

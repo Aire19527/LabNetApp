@@ -14,7 +14,7 @@ namespace MyLabApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     [TypeFilter(typeof(CustomExceptionHandler))]
     public class ProfileController : ControllerBase
     {
@@ -244,6 +244,27 @@ namespace MyLabApp.Controllers
 
             return action;
         }
+
+
+        [HttpGet]
+        [Route("HasProfile")]
+        public IActionResult HasProfile(int idUser)
+        {
+            IActionResult action;
+
+            bool result = _profileServices.HasProfile(idUser);
+            ResponseDto response = new ResponseDto()
+            {
+                IsSuccess = result,
+                Result = result,
+                Message = result ? "Existe el perfil" : GeneralMessages.ItemNoFound
+            };
+
+            action = Ok(response);
+
+            return action;
+        }
+
         #endregion
     }
 }
