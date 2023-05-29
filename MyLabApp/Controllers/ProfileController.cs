@@ -206,7 +206,7 @@ namespace MyLabApp.Controllers
         {
             IActionResult action;
 
-            string result = await _profileServices.UpdateImage(updateImage);
+            string result = await _profileServices.UpdateFile(updateImage, isImg: true);
             ResponseDto response = new ResponseDto()
             {
                 IsSuccess = !string.IsNullOrEmpty(result),
@@ -229,7 +229,7 @@ namespace MyLabApp.Controllers
         {
             IActionResult action;
 
-            string result = await _profileServices.UpdateResumee(updateResumee);
+            string result = await _profileServices.UpdateFile(updateResumee, isImg: false);
             ResponseDto response = new ResponseDto()
             {
                 IsSuccess = !string.IsNullOrEmpty(result),

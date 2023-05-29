@@ -23,8 +23,7 @@ namespace Lab.Domain.Services.Interfaces
         Task<bool> DeleteSkillToProfile(int idProfile, int idSkill);
 
         ConsultProfileDto GetById(int id);
-        Task<string> UpdateImage(ProfileFileDto updateImage);
-        Task<string> UpdateResumee(ProfileFileDto profileResumee);
+        Task<string> UpdateFile(ProfileFileDto updateFile, bool isImg);
 
         IEnumerable<ProfilesDto> FilterBySkill(List<int> skills);
 

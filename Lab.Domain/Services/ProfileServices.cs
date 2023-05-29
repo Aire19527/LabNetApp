@@ -205,7 +205,7 @@ namespace Lab.Domain.Services
             if (file.Length > 3000000)
                 throw new BusinessException("The file size is too big!: [max 3 MB]");
 
-            //Comprobar que el archivo sea una imagen
+            //Comprobar que el archivo sea imagen o documento
             string extension = Path.GetExtension(file.FileName);
 
             if (!FileHelper.ValidExtension(extension, isImg))
@@ -240,30 +240,40 @@ namespace Lab.Domain.Services
             return $"{path}/{uniqueFileName}";
         }
 
-        public async Task<string> UpdateImage(ProfileFileDto updateImage)
+        public async Task<string> UpdateFile(ProfileFileDto updateFile, bool isImg)
         {
-            string urlImage = string.Empty;
+            string urlFile = string.Empty;
 
 
-            if (updateImage.File != null)
-                urlImage = UploadFile(updateImage.File, isImg: true);
-            else throw new BusinessException("La img es requerida");
+            if (updateFile.File != null)
+                urlFile = UploadFile(updateFile.File, isImg);
+            else throw new BusinessException("El archivo es requerido");
 
 
-            ProfileEntity profile = _unitOfWork.ProfileRepository.FirstOrDefault(x => x.IdUser == updateImage.Id);
+            ProfileEntity profile = _unitOfWork.ProfileRepository.FirstOrDefault(x => x.IdUser == updateFile.Id);
 
-            if (!string.IsNullOrEmpty(profile.Photo))
+
+            if (isImg)
             {
-                DeleteFile(profile.Photo);
+                if (!string.IsNullOrEmpty(profile.Photo))
+                    DeleteFile(profile.Photo);
+
+                profile.Photo = urlFile;
             }
 
-            profile.Photo = urlImage;
+            else
+            {
+                if (!string.IsNullOrEmpty(profile.CV))
+                    DeleteFile(profile.CV);
 
+                profile.CV = urlFile;
+
+            }
 
             _unitOfWork.ProfileRepository.Update(profile);
 
             await _unitOfWork.Save();
-            return urlImage;
+            return urlFile;
 
         }
 
@@ -290,37 +300,6 @@ namespace Lab.Domain.Services
             }
             return path;
         }
-
-        public async Task<string> UpdateResumee(ProfileFileDto updateResumee)
-        {
-            string urlResumee = string.Empty;
-
-            if (updateResumee.File != null)
-                urlResumee = UploadFile(updateResumee.File, isImg: false);
-            else throw new BusinessException("El Cv es requerido");
-
-
-            ProfileEntity profile = _unitOfWork.ProfileRepository.FirstOrDefault(x => x.IdUser == updateResumee.Id);
-
-            if (!string.IsNullOrEmpty(profile.CV))
-            {
-                DeleteFile(profile.CV);
-            }
-
-
-            profile.CV = urlResumee;
-
-            _unitOfWork.ProfileRepository.Update(profile);
-
-            await _unitOfWork.Save();
-            return urlResumee;
-
-        }
-
-
-
-
-
 
         public async Task<bool> AddWorkProfile(AddProfileWorkDto addProfileWorkDto)
         {
