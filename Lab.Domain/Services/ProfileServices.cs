@@ -13,6 +13,7 @@ using Lab.Domain.Services.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using System.ComponentModel;
 
 namespace Lab.Domain.Services
 {
@@ -201,6 +202,7 @@ namespace Lab.Domain.Services
 
         private string UploadFile(IFormFile file, bool isImg)
         {
+            string path = string.Empty;
 
             if (file.Length > 3000000)
                 throw new BusinessException("The file size is too big!: [max 3 MB]");
@@ -211,23 +213,15 @@ namespace Lab.Domain.Services
             if (!FileHelper.ValidExtension(extension, isImg))
                 throw new BusinessException("Extension invalida");
 
-            string path = string.Empty;
 
             if (isImg)
-            {
                 path = $"{_config.GetSection("PathFiles").GetSection("ProfilePicture").Value}";
-            }
-            else
-            {
+            else   
                 path = $"{_config.GetSection("PathFiles").GetSection("Resumee").Value}";
-            }
 
             if (!Directory.Exists(path))
-            {
                 Directory.CreateDirectory(path);
-            }
-
-
+ 
             string uploads = Path.Combine(_webHostEnvironment.WebRootPath, path);
             string uniqueFileName = FileHelper.GetUniqueFileName(file.FileName);
             string pathFinal = $"{uploads}/{uniqueFileName}";
@@ -251,7 +245,6 @@ namespace Lab.Domain.Services
 
 
             ProfileEntity profile = _unitOfWork.ProfileRepository.FirstOrDefault(x => x.IdUser == updateFile.Id);
-
 
             if (isImg)
             {
