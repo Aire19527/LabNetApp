@@ -97,7 +97,7 @@ namespace Lab.Domain.Services
                                                                                 j => j.JobPositionEntity,
                                                                                 d => d.DniTypeEntity,
                                                                                 r => r.ProfileWorkEntity.Select(e => e.WorkEntity),
-                                                                                e => e.ProfileEducationEntity.Select(b => b.EducationEntity));
+                                                                                e => e.ProfileEducationEntity.Select(b => b.EducationEntity.InstitutionTypeEntity));
 
 
             if (profile == null)
