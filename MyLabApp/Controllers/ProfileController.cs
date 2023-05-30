@@ -33,6 +33,7 @@ namespace MyLabApp.Controllers
         #region Services
 
         [HttpGet]
+
         [Route("GetAll")]
         public async Task<IActionResult> GetAll()
         {
