@@ -117,8 +117,7 @@ namespace MyLabApp.Controllers
 
             return action;
         }
-        //quiero desarrollar un metodo que me permita traer un usuario pasandole el id del claim
-        //y que me devuelva un objeto de tipo GetUserDto
+        
         [HttpGet]
         [Route("GetUserById")]
         public IActionResult GetUserById()
