@@ -1,5 +1,6 @@
 ﻿using Common.Helpers;
 using Common.Resources;
+using Infraestructure.Entity.Models;
 using Lab.Domain.Dto;
 using Lab.Domain.Dto.Skill;
 using Lab.Domain.Dto.User;
@@ -16,7 +17,7 @@ namespace MyLabApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     [TypeFilter(typeof(CustomExceptionHandler))]
     public class UserController : ControllerBase
     {
@@ -114,6 +115,29 @@ namespace MyLabApp.Controllers
             else
                 action = BadRequest(response);
 
+            return action;
+        }
+        //quiero desarrollar un metodo que me permita traer un usuario pasandole el id del claim
+        //y que me devuelva un objeto de tipo GetUserDto
+        [HttpGet]
+        [Route("GetUserById")]
+        public IActionResult GetUserById()
+        {
+            IActionResult action;
+            string idUser = Utils.GetClaimValue(Request.Headers["Authorization"], TypeClaims.IdUser);
+            
+            GetUserDto result = _userServices.Get(Convert.ToInt32(idUser));
+
+            ResponseDto response = new ResponseDto()
+            {
+                IsSuccess = true,
+                Result = result,
+                Message = string.Empty
+            };
+            if (result != null)
+                action = Ok(response);
+            else
+                action = BadRequest(response);
             return action;
         }
 

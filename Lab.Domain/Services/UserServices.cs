@@ -86,8 +86,20 @@ namespace Lab.Domain.Services
 
         #endregion
 
-        private UserEntity Get(int idUser) => _unitOfWork.UserRepository.FirstOrDefault(x => x.Id == idUser);
-
+        public GetUserDto Get(int idUser) 
+        {
+            UserEntity user = _unitOfWork.UserRepository.FirstOrDefault(x => x.Id == idUser) 
+                ?? throw new BusinessException(GeneralMessages.ItemNoFound);
+            GetUserDto getUser = new GetUserDto()
+            {
+                Id = user.Id,
+                Email = user.Mail,
+                Password = user.Password,
+                IdRole = user.IdRole,
+                IsActive = user.IsActive
+            };
+            return getUser;
+        }
 
         public List<GetUserDto> GetAll()
         {
@@ -142,7 +154,7 @@ namespace Lab.Domain.Services
 
         public async Task<bool> UpdatePassword(UserPasswordDto password, int idUser)
         {
-            UserEntity userExist= Get(idUser);
+            UserEntity userExist = _unitOfWork.UserRepository.FirstOrDefault(x => x.Id == idUser);
             if (userExist == null)
                 throw new BusinessException(GeneralMessages.ItemNoFound);
 
