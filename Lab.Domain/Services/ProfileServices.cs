@@ -203,11 +203,11 @@ namespace Lab.Domain.Services
             string path = string.Empty;
             if (string.IsNullOrEmpty(img))
             {
-                path = $"/{_config.GetSection("PathFiles").GetSection("NoImage").Value}";
+                path = $"{_webHostEnvironment.WebRootPath}/{_config.GetSection("PathFiles").GetSection("NoImage").Value}";
             }
             else
             {
-                path = $"/{img}";
+                path = $"{_webHostEnvironment.WebRootPath}/{img}";
             }
             return path;
         }
