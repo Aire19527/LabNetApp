@@ -18,7 +18,5 @@ namespace Lab.Domain.Services.Interfaces
 
         Task<bool> Delete(int id);
         Task<bool> UpdatePassword(UserPasswordDto password, int idUser);
-
-        Task<bool> Update(TokenDto tokenDto, string newPass);
     }
 }

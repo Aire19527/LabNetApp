@@ -28,6 +28,7 @@ namespace MyLabApp.Controllers
         [Route("Login")]
         public IActionResult Login(LoginDto login)
         {
+            IActionResult action;
             TokenDto result = _userServices.Login(login);
             ResponseDto response = new ResponseDto()
             {
@@ -36,8 +37,13 @@ namespace MyLabApp.Controllers
                 Message = string.Empty
             };
 
-            return Ok(response);
 
+            if (result != null)
+                action = Ok(response);
+            else
+                action = BadRequest(response);
+
+            return action;
         }
     }
 }

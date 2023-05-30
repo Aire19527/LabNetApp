@@ -35,7 +35,7 @@ namespace Lab.Domain.Services
             UserEntity user = _unitOfWork.UserRepository.FirstOrDefault(x => x.Mail == login.UserName,
                                                                           r => r.RoleEntity);
             if (user == null)
-                throw new BusinessException("El usuario ingresado no existe");
+                throw new BusinessException(GeneralMessages.Error401);
 
             string userEnteredPassword = login.Password;
             string hashedPasswordFromDatabase = user.Password;
@@ -92,8 +92,6 @@ namespace Lab.Domain.Services
         public List<GetUserDto> GetAll()
         {
             IEnumerable<UserEntity> userQuery = _unitOfWork.UserRepository.GetAll(x => x.RoleEntity);
-            //.FindAll(x=> & | ) para separar las condiciones
-
 
             List<GetUserDto> usuarios = userQuery.Select(x => new GetUserDto()
             {
@@ -159,31 +157,7 @@ namespace Lab.Domain.Services
 
             return await _unitOfWork.Save() > 0;
         }
-
-
-        public async Task<bool> Update(TokenDto tokenDto, string newPassword)
-        {
-            //JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
-            //JwtSecurityToken jwtToken = (JwtSecurityToken)tokenHandler.ReadToken(tokenDto.Token);
-
-            //Claim emailClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == TypeClaims.Email);
-            //if (emailClaim == null)
-            //    throw new BusinessException("El token no contiene la información necesaria");
-
-
-            //UserEntity? userExistente = _unitOfWork.UserRepository.FindAll((user) => user.Mail == emailClaim.Value).SingleOrDefault();
-
-            //if (userExistente != null && Common.Helpers.Utils.IsValidPassword(newPassword))
-            //{
-            //    userExistente.Password = Common.Helpers.Utils.PassEncrypt(newPassword);
-            //    _unitOfWork.UserRepository.Update(userExistente);
-            //    return await _unitOfWork.Save() > 0;
-
-            //}
-
-
-            return false;
-        }
+       
     }
 
 }

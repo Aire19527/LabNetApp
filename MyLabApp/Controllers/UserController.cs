@@ -56,26 +56,23 @@ namespace MyLabApp.Controllers
             IActionResult action;
 
             List<GetUserDto> result = _userServices.GetAll();
-            ResponseDto response = new ResponseDto();
+            ResponseDto response = new ResponseDto()
+            {
+                IsSuccess = true,
+                Result = result,
+                Message = string.Empty
+            };
 
-            if (result != null)
-            {
-                response.IsSuccess = true;
-                response.Message = string.Empty;
-                response.Result = result;
-                return action = Ok(response);
-            }
+            if (result!=null)
+                action = Ok(response);
             else
-            {
-                response.IsSuccess = false;
-                response.Message = string.Empty;
-                response.Result = result;
-                return action = BadRequest(response);
-            }
+                action = BadRequest(response);
+
+            return action; 
         }
 
         [HttpDelete]
-        [Route("delete/{id}")]
+        [Route("Delete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             IActionResult action;
@@ -120,31 +117,6 @@ namespace MyLabApp.Controllers
             return action;
         }
 
-
-
-        [HttpPut]
-        [Route("update")]
-        public async Task<IActionResult> Update(TokenDto tokenDto, string newPass)
-        {
-            IActionResult action;
-            string idUser = Utils.GetClaimValue(Request.Headers["Authorization"], TypeClaims.IdRol);
-
-            bool result = await _userServices.Update(tokenDto, newPass);
-
-            ResponseDto response = new ResponseDto()
-            {
-                IsSuccess = result,
-                Result = string.Empty,
-                Message = result ? GeneralMessages.ItemInserted : GeneralMessages.ItemNoUpdated
-            };
-
-            if (result)
-                action = Ok(response);
-            else
-                action = BadRequest(response);
-
-            return action;
-        }
 
     }
 }
