@@ -29,6 +29,8 @@ namespace Infraestructure.Core.UnitOfWork
 
         private IRepository<UserEntity>  userRepository;
 
+        private IRepository<RoleEntity>  roleRepository;
+
         private IRepository<ProfileEntity> profileRepository;
         private IRepository<ProfilesSkillsEntity> profileSkillRepository;
         private IRepository<WorkEntity> workRepository;
@@ -103,6 +105,20 @@ namespace Infraestructure.Core.UnitOfWork
                     this.profileWorkRepository = new Repository<ProfileWorkEntity>(_context);
 
                 return profileWorkRepository;
+
+            }
+        }
+
+        public IRepository<RoleEntity> RoleRepository
+        {
+
+
+            get
+            {
+                if (this.roleRepository == null)
+                    this.roleRepository = new Repository<RoleEntity>(_context);
+
+                return roleRepository;
 
             }
         }

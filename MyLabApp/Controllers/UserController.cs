@@ -1,5 +1,6 @@
 ﻿using Common.Helpers;
 using Common.Resources;
+using Infraestructure.Entity.Models;
 using Lab.Domain.Dto;
 using Lab.Domain.Dto.Skill;
 using Lab.Domain.Dto.User;
@@ -16,7 +17,7 @@ namespace MyLabApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     [TypeFilter(typeof(CustomExceptionHandler))]
     public class UserController : ControllerBase
     {
@@ -56,26 +57,23 @@ namespace MyLabApp.Controllers
             IActionResult action;
 
             List<GetUserDto> result = _userServices.GetAll();
-            ResponseDto response = new ResponseDto();
+            ResponseDto response = new ResponseDto()
+            {
+                IsSuccess = true,
+                Result = result,
+                Message = string.Empty
+            };
 
-            if (result != null)
-            {
-                response.IsSuccess = true;
-                response.Message = string.Empty;
-                response.Result = result;
-                return action = Ok(response);
-            }
+            if (result!=null)
+                action = Ok(response);
             else
-            {
-                response.IsSuccess = false;
-                response.Message = string.Empty;
-                response.Result = result;
-                return action = BadRequest(response);
-            }
+                action = BadRequest(response);
+
+            return action; 
         }
 
         [HttpDelete]
-        [Route("delete/{id}")]
+        [Route("Delete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             IActionResult action;
@@ -119,32 +117,29 @@ namespace MyLabApp.Controllers
 
             return action;
         }
-
-
-
-        [HttpPut]
-        [Route("update")]
-        public async Task<IActionResult> Update(TokenDto tokenDto, string newPass)
+        
+        [HttpGet]
+        [Route("GetUserById")]
+        public IActionResult GetUserById()
         {
             IActionResult action;
-            string idUser = Utils.GetClaimValue(Request.Headers["Authorization"], TypeClaims.IdRol);
-
-            bool result = await _userServices.Update(tokenDto, newPass);
+            string idUser = Utils.GetClaimValue(Request.Headers["Authorization"], TypeClaims.IdUser);
+            
+            GetUserDto result = _userServices.Get(Convert.ToInt32(idUser));
 
             ResponseDto response = new ResponseDto()
             {
-                IsSuccess = result,
-                Result = string.Empty,
-                Message = result ? GeneralMessages.ItemInserted : GeneralMessages.ItemNoUpdated
+                IsSuccess = true,
+                Result = result,
+                Message = string.Empty
             };
-
-            if (result)
+            if (result != null)
                 action = Ok(response);
             else
                 action = BadRequest(response);
-
             return action;
         }
+
 
     }
 }

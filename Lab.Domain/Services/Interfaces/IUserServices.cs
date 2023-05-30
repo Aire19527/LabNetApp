@@ -1,4 +1,5 @@
-﻿using Lab.Domain.Dto;
+﻿using Infraestructure.Entity.Models;
+using Lab.Domain.Dto;
 using Lab.Domain.Dto.Skill;
 using Lab.Domain.Dto.User;
 using System;
@@ -14,11 +15,11 @@ namespace Lab.Domain.Services.Interfaces
         Task<bool> Insert(AddUserDto add);
         List<GetUserDto> GetAll();
 
+        GetUserDto Get(int idUser);
+
         TokenDto Login(LoginDto user);
 
         Task<bool> Delete(int id);
         Task<bool> UpdatePassword(UserPasswordDto password, int idUser);
-
-        Task<bool> Update(TokenDto tokenDto, string newPass);
     }
 }

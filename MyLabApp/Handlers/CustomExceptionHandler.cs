@@ -27,7 +27,7 @@ namespace MyLabApp.Handlers
             else if (context.Exception is UnauthorizedAccessException)
             {
                 responseException.Status = StatusCodes.Status401Unauthorized;
-                response.Message = "Usuario no autenticado correctamente";
+                response.Message = GeneralMessages.BadCredentials;
                 context.ExceptionHandled = true;
             }
             else
