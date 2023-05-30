@@ -77,8 +77,8 @@ namespace MyLabApp.Controllers
             return Ok(new ResponseDto()
             {
                 IsSuccess = res,
-                Message = res ? "se ha borrado":"no se ha borrado",
-                Result = res ? GeneralMessages.ItemDeleted : GeneralMessages.ItemNoDeleted
+                Message = res ? GeneralMessages.ItemDeleted : GeneralMessages.ItemNoDeleted,
+                Result = res
             });
         }
         #endregion
