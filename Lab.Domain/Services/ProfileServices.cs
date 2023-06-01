@@ -106,6 +106,7 @@ namespace Lab.Domain.Services
             ConsultProfileDto consultProfileDto = new ConsultProfileDto()
             {
                 IdUser = profile.IdUser,
+                IdProfile = profile.Id,
                 Description = profile.Description,
                 LastName = profile.LastName,
                 Name = profile.Name,
