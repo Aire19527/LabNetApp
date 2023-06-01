@@ -97,7 +97,7 @@ namespace Lab.Domain.Services
                                                                                 j => j.JobPositionEntity,
                                                                                 d => d.DniTypeEntity,
                                                                                 r => r.ProfileWorkEntity.Select(e => e.WorkEntity),
-                                                                                e => e.ProfileEducationEntity.Select(b => b.EducationEntity));
+                                                                                e => e.ProfileEducationEntity.Select(b => b.EducationEntity.InstitutionTypeEntity));
 
 
             if (profile == null)
@@ -142,6 +142,19 @@ namespace Lab.Domain.Services
 
             return consultProfileDto;
         }
+
+        public bool HasProfile(int idUser)
+        {
+            bool result;
+            ProfileEntity profile = _unitOfWork.ProfileRepository.FirstOrDefaultSelect(x => x.IdUser == idUser);
+
+            if (profile == null)
+                result = false;
+
+            else result = true;
+
+            return result;
+        }   
 
         public async Task<bool> Insert(AddProfileDto add)
         {
@@ -190,11 +203,11 @@ namespace Lab.Domain.Services
             string path = string.Empty;
             if (string.IsNullOrEmpty(img))
             {
-                path = $"/{_config.GetSection("PathFiles").GetSection("NoImage").Value}";
+                path = $"{_webHostEnvironment.WebRootPath}/{_config.GetSection("PathFiles").GetSection("NoImage").Value}";
             }
             else
             {
-                path = $"/{img}";
+                path = $"{_webHostEnvironment.WebRootPath}/{img}";
             }
             return path;
         }
@@ -277,6 +290,8 @@ namespace Lab.Domain.Services
             if (File.Exists(pathFull))
                 File.Delete(pathFull);
         }
+
+
 
 
         // ============ CV - RELATED STUFF ==================
