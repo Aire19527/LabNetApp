@@ -48,7 +48,7 @@ namespace Lab.Domain.Services
 
             List<ConsultProfileDto> profiles = ProfileList.Select(p => new ConsultProfileDto()
             {
-                IdUser = p.IdUser,
+                IdUser = p.Id,
                 Description = p.Description,
                 LastName = p.LastName,
                 Name = p.Name,
@@ -388,10 +388,13 @@ namespace Lab.Domain.Services
                                 {
                                     Profile = perf.Select(x => new ProfileDto
                                     {
-                                        IdUser = x.ProfileEntity.Id,
+                                        Id = x.ProfileEntity.Id,
+                                        IdUser = x.ProfileEntity.IdUser,
                                         Name = x.ProfileEntity.Name,
                                         LastName = x.ProfileEntity.LastName,
                                         Mail = x.ProfileEntity.Mail,
+                                        Phone = x.ProfileEntity.Phone,
+                                        Skill = (GetProfileSkill(x.ProfileEntity.Id)),
                                     }).FirstOrDefault(),
                                     Key = perf.Key,
                                     Count = perf.Select(x => x.IdSkill).Count()
