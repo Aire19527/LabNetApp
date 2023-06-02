@@ -4,6 +4,7 @@ using Infraestructure.Core.Repository.Inerface;
 using Infraestructure.Core.UnitOfWork.Interface;
 using Infraestructure.Entity.Models;
 using Microsoft.EntityFrameworkCore.Storage;
+using System.Resources;
 
 namespace Infraestructure.Core.UnitOfWork
 {
@@ -27,15 +28,15 @@ namespace Infraestructure.Core.UnitOfWork
         #region Properties
         private IRepository<SkillEntity> skillRepository;
 
-        private IRepository<UserEntity>  userRepository;
+        private IRepository<UserEntity> userRepository;
 
-        private IRepository<RoleEntity>  roleRepository;
+        private IRepository<RoleEntity> roleRepository;
 
         private IRepository<ProfileEntity> profileRepository;
         private IRepository<ProfilesSkillsEntity> profileSkillRepository;
         private IRepository<WorkEntity> workRepository;
         private IRepository<ProfileWorkEntity> profileWorkRepository;
-
+        private IRepository<JobPositionEntity> jobPositionRepository;
         #endregion
 
         #region Members
@@ -123,7 +124,18 @@ namespace Infraestructure.Core.UnitOfWork
             }
         }
 
-        public IDbContextTransaction BeginTransaction()
+        public IRepository<JobPositionEntity> JobPositionRepository
+        {
+            get
+            {
+                if (this.jobPositionRepository == null)
+                    this.jobPositionRepository = new Repository<JobPositionEntity>(_context);
+
+                return jobPositionRepository;
+            }
+        }
+
+    public IDbContextTransaction BeginTransaction()
         {
             return _context.Database.BeginTransaction();
         }
