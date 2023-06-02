@@ -21,8 +21,8 @@ namespace Lab.Domain.Dto.Profile
         public string? Phone { get; set; }
         public string? Photo { get; set; }
         public string? CV { get; set; }
-        public int IdAdress { get; set; }
-        public int IdJobPosition { get; set; }
+        public int? IdAdress { get; set; }
+        public int? IdJobPosition { get; set; }
 
     }
 }
