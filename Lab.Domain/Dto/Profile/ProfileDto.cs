@@ -1,4 +1,5 @@
-﻿using Lab.Domain.Dto.Skill;
+﻿using Infraestructure.Entity.Models;
+using Lab.Domain.Dto.Skill;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,8 +11,9 @@ namespace Lab.Domain.Dto.Profile
 {
     public class ProfileDto
     {
-        public int IdUser { get; set; }
+        public int Id{ get; set; }
 
+        public int IdUser { get; set; }
         [Required]
         [MaxLength(50)]
         public string Name { get; set; }
@@ -22,6 +24,10 @@ namespace Lab.Domain.Dto.Profile
 
         [Required]
         public string Mail { get; set; }
+
+        public string Phone { get; set; }
+
+        public IEnumerable<ConsultSkllDto> Skill { get; set; }
 
         //public string Photo { get; set; }
     }
