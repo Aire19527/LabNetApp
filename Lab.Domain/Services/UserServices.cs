@@ -34,7 +34,7 @@ namespace Lab.Domain.Services
         {
             UserEntity user = _unitOfWork.UserRepository.FirstOrDefault(x => x.Mail == login.UserName,
                                                                           r => r.RoleEntity);
-            if (user == null)
+            if (user == null || user.IsActive == false)
                 throw new BusinessException(GeneralMessages.Error401);
 
             string userEnteredPassword = login.Password;
