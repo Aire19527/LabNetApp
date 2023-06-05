@@ -18,6 +18,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infraestructure.Entity", "Infraestructure.Entity\Infraestructure.Entity.csproj", "{B62ADE00-35E1-4BF7-8F68-4CA64C5BE9AC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infraestructure.Core", "Infraestructure.Core\Infraestructure.Core.csproj", "{623916BD-B9EB-432F-95D7-CFCC38E3293E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{EAC91296-4C4D-4205-963D-369A42408CAB} = {EAC91296-4C4D-4205-963D-369A42408CAB}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{EAC91296-4C4D-4205-963D-369A42408CAB}"
 EndProject

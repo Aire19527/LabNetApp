@@ -108,6 +108,14 @@ builder.Services.AddCors(opt =>
 
 var app = builder.Build();
 
+#region RunSeeding
+var scopedFactory = app.Services.GetService<IServiceScopeFactory>();
+using (var scope = scopedFactory.CreateScope())
+{
+    var service = scope.ServiceProvider.GetService<SeedDb>();
+    service!.ExecSeedAsync().Wait();
+}
+#endregion
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
