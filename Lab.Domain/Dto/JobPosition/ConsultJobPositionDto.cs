@@ -10,5 +10,6 @@ namespace Lab.Domain.Dto.JobPosition
     public class ConsultJobPositionDto : AddJobPositionDto
     {
         public int IdJobPosition { get; set; }
+
     }
 }

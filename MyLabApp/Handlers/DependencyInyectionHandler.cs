@@ -19,6 +19,8 @@ namespace MyLabApp.Handlers
             services.AddScoped<SeedDb>();
 
             //Domain
+            services.AddTransient<IEducationServices, EducationServices>();
+
             services.AddTransient<ISkillServices, SkillServices>();
 
             services.AddTransient<IUserServices, UserServices>();
