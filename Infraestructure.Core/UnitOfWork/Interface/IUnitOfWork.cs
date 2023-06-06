@@ -17,6 +17,8 @@ namespace Infraestructure.Core.UnitOfWork.Interface
 
         IRepository<JobPositionEntity> JobPositionRepository { get; }
 
+        IRepository<WorkTypeEntity> WorkTypeRepository { get; }
+
 
         void Dispose();
         Task<int> Save();

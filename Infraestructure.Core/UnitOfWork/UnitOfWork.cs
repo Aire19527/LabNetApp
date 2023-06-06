@@ -36,6 +36,7 @@ namespace Infraestructure.Core.UnitOfWork
         private IRepository<ProfilesSkillsEntity> profileSkillRepository;
         private IRepository<WorkEntity> workRepository;
         private IRepository<JobPositionEntity> jobPositionRepository;
+        private IRepository<WorkTypeEntity> workTypeRepository;
         #endregion
 
         #region Members
@@ -49,6 +50,17 @@ namespace Infraestructure.Core.UnitOfWork
                     this.skillRepository = new Repository<SkillEntity>(_context);
 
                 return skillRepository;
+            }
+        }
+
+        public IRepository<WorkTypeEntity> WorkTypeRepository
+        {
+            get
+            {
+                if (this.workTypeRepository == null)
+                    this.workTypeRepository = new Repository<WorkTypeEntity>(_context);
+
+                return workTypeRepository;
             }
         }
 
