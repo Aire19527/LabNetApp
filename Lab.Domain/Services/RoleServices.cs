@@ -15,12 +15,12 @@ namespace Lab.Domain.Services
     public class RoleServices : IRoleServices
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IConfiguration _configuration;
 
-        public RoleServices(IUnitOfWork unitOfWork, IConfiguration configuration)
+
+        public RoleServices(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            _configuration = configuration;
+
         }
         public List<GetRoleDto> GetAll()
         {

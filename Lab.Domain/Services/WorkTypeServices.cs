@@ -15,13 +15,13 @@ namespace Lab.Domain.Services
     public class WorkTypeServices : IWorkTypeServices
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IConfiguration _configuration;
 
 
-        public WorkTypeServices(IUnitOfWork unitOfWork, IConfiguration configuration)
+
+        public WorkTypeServices(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            _configuration = configuration;
+    
 
         }
         public List<GetWorkTypeDto> GetAll()

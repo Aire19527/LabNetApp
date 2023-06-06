@@ -19,6 +19,8 @@ namespace Infraestructure.Entity.Models
             ErrorMessage = "La descripcion solo pueden contener letras y espacios.")]
         public string Description { get; set; }
 
+
+        //revisar
         public IEnumerable<WorkEntity> WorkEntitys { get; set; }
     }
 }
