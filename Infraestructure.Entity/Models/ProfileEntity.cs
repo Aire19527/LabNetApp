@@ -50,11 +50,9 @@ namespace Infraestructure.Entity.Models
         public int? IdAdress { get; set; }
         [ForeignKey("DniTypeEntity")]
         public int? IdDniType { get; set; }
-        [ForeignKey("JobPositionEntity")]
-        public int? IdJobPosition { get; set; }
+
         public AdressEntity? AdressEntity { get; set; }
         public DniTypeEntity? DniTypeEntity { get; set; }
-        public JobPositionEntity? JobPositionEntity { get; set; }
         public IEnumerable<ProfileEducationEntity>? ProfileEducationEntity { get; set; }
         public IEnumerable<ProfilesSkillsEntity>? ProfilesSkillsEntity { get; set; }
         public IEnumerable<ProfileCertificationEntity>? ProfileCertificationEntity { get; set; }

@@ -8,12 +8,16 @@ using System.Threading.Tasks;
 
 namespace Infraestructure.Entity.Models
 {
-    [Table("JobPosition")]
-    public class JobPositionEntity
+    [Table("WorkType")]
+    public class WorkTypeEntity
     {
         [Key]
         public int Id { get; set; }
-        public string? Description { get; set; }
-        public IEnumerable<WorkEntity> WorkEntity { get; set; }
+        [Required]
+        [MaxLength(100)]
+        [RegularExpression(@"^[A-Za-z\s]+$",
+                    ErrorMessage = "La descripcion solo pueden contener letras y espacios.")]
+        public string Description { get; set; }
+
     }
 }

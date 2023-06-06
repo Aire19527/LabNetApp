@@ -26,9 +26,6 @@ namespace Lab.Domain.Dto.Profile
         public string? AdressDescription { get; set; }
         public int? IdDniType { get; set; }
         public string?  DniDescrption { get; set; }
-        public int? IdJobPosition { get; set; }
-        public string? JobPositionDescription { get; set; }
-
         public IEnumerable<WorkDto>? WorkEntities { get; set; }
         public IEnumerable<EducationDto>? EducationEntities { get; set; }
 

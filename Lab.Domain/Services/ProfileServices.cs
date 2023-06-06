@@ -41,7 +41,7 @@ namespace Lab.Domain.Services
         public async Task<List<ConsultProfileDto>> Getall()
         {
             IEnumerable<ProfileEntity> ProfileList = _unitOfWork.ProfileRepository.GetAllSelect(x => x.AdressEntity,
-                                                                                                j => j.JobPositionEntity,
+
                                                                                                 d => d.DniTypeEntity,
                                                                                                 //r => r.ProfileWorkEntity,
                                                                                                 r => r.ProfileWorkEntity.Select(e => e.WorkEntity),
@@ -61,10 +61,7 @@ namespace Lab.Domain.Services
                 BirthDate = p.BirthDate,
                 IdAdress = p.AdressEntity?.Id,
                 AdressDescription = p.AdressEntity?.Description,
-                IdJobPosition = p.JobPositionEntity?.Id,
-                JobPositionDescription = p.JobPositionEntity?.Description,
                 IdDniType = p.DniTypeEntity?.id,
-                DniDescrption = p.JobPositionEntity?.Description,
 
                 WorkEntities = p.ProfileWorkEntity.Select(x => new WorkDto
                 {
@@ -94,7 +91,6 @@ namespace Lab.Domain.Services
         {
             ProfileEntity profile = _unitOfWork.ProfileRepository.FirstOrDefaultSelect(x => x.IdUser == id,
                                                                                 a => a.AdressEntity,
-                                                                                j => j.JobPositionEntity,
                                                                                 d => d.DniTypeEntity,
                                                                                 r => r.ProfileWorkEntity.Select(e => e.WorkEntity),
                                                                                 e => e.ProfileEducationEntity.Select(b => b.EducationEntity.InstitutionTypeEntity));
@@ -118,8 +114,6 @@ namespace Lab.Domain.Services
                 BirthDate = profile.BirthDate,
                 IdAdress = profile.AdressEntity?.Id,
                 AdressDescription = profile.AdressEntity?.Description,
-                IdJobPosition = profile.JobPositionEntity?.Id,
-                JobPositionDescription = profile.JobPositionEntity?.Description,
                 IdDniType = profile.DniTypeEntity?.id,
                 DniDescrption = profile.DniTypeEntity?.Description,
                 WorkEntities = profile.ProfileWorkEntity.Select(x => new WorkDto
@@ -190,7 +184,6 @@ namespace Lab.Domain.Services
                 profile.CV = update.CV;
                 profile.Photo = update.Photo;
                 profile.IdAdress = update.IdAdress;
-                profile.IdJobPosition = update.IdJobPosition;
 
                 _unitOfWork.ProfileRepository.Update(profile);
 

@@ -11,6 +11,9 @@ namespace Infraestructure.Core.Context
         }
        
         public DbSet<AdressEntity> AdressEntity { get; set; }
+        public DbSet<UbicationEntity> UbicationEntity { get; set; }
+        public DbSet<SectorEntity> SectorEntity { get; set; }
+        public DbSet<WorkTypeEntity> WorkTypeEntity { get; set; }
         public DbSet<CertificationEntity> CertificationsEntity { get; set; }
         public DbSet<CityEntity> CitiesEntity { get; set; }
         public DbSet<ConfigEntity> ConfigsEntity { get; set; }

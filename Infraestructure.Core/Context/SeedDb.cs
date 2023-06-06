@@ -32,7 +32,8 @@ namespace Infraestructure.Core.Context
             await CheckCityAsync();
             await CheckAddressAsync();
             await CheckUserAsync();
-
+            await CheckUbicationAsync();
+            await CheckWorkTypeAsync();
         }
 
         private async Task CheckSkillAsync()
@@ -334,6 +335,56 @@ namespace Infraestructure.Core.Context
             }
         }
 
+        private async Task CheckUbicationAsync()
+        {
+            if (!_context.UbicationEntity.Any())
+            {
+                _context.UbicationEntity.AddRange(new List<UbicationEntity>
+                {
+                  new UbicationEntity
+                  {
+                      Description = "Presencial"
+                  },
+                   new UbicationEntity
+                  {
+                      Description = "Remoto"
+                  },
+                    new UbicationEntity
+                  {
+                      Description = "Hibrido"
+                  }
+                });
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        private async Task CheckWorkTypeAsync()
+        {
+            if (!_context.WorkTypeEntity.Any())
+            {
+                _context.WorkTypeEntity.AddRange(new List<WorkTypeEntity>
+                {
+                 
+                    new WorkTypeEntity
+                    {
+                        Description= "Jornada Completa"
+                    },
+                      new WorkTypeEntity
+                    {
+                        Description= "Autonomo"
+                    },
+                       new WorkTypeEntity
+                    {
+                        Description= "Temporal"
+                    },
+                          new WorkTypeEntity
+                    {
+                        Description= "Jornada Parcial"
+                    }
+                });
+                await _context.SaveChangesAsync();
+            }
+        }
 
 
 
