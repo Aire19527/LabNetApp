@@ -26,10 +26,11 @@ namespace Lab.Domain.Services
         public async Task<List<ConsultWorkDto>> Getall()
         {
             IEnumerable<WorkEntity> workEntitie =
-                _unitOfWork.WorkRepository.GetAll();
+                _unitOfWork.WorkRepository.GetAll(s => s.SectorEntity,
+                    u => u.UbicationEntity, wt => wt.WorkTypeEntity
+                );
 
-            List<ConsultWorkDto> consultWorkDtosList = workEntitie.Select(w =>
-            new ConsultWorkDto()
+            List<ConsultWorkDto> consultWorkDtosList = workEntitie.Select(w => new ConsultWorkDto()
             {
                 IdWork = w.Id,
                 Company = w.Company,
@@ -38,15 +39,29 @@ namespace Lab.Domain.Services
                 BossName = w.BossName,
                 BossContact = w.BossContact,
                 BossRole = w.BossRole,
+                UbicationName = w.UbicationEntity.Description,
+                SectorName = w.SectorEntity.Description,
+                WorkTypeName = w.WorkTypeEntity.Description,
 
             }).ToList();
 
             return consultWorkDtosList;
         }
 
-        public Task<bool> Insert(AddWorkEntity addWorkEntity)
+        public async Task<bool> Insert(AddWorkDto addWorkDto)
         {
-            throw new NotImplementedException();
+            WorkEntity workEntity = new WorkEntity()
+            {
+                Company = addWorkDto.Company,
+                Role = addWorkDto.Role,
+                IdProfile = addWorkDto.IdProfile,
+                IdSector = addWorkDto.IdSector,
+                IdUbication = addWorkDto.IdUbication,
+                IdWorkType = addWorkDto.IdWorkType,
+            };
+            _unitOfWork.WorkRepository.Insert(workEntity);
+           
+            return await _unitOfWork.Save() > 0;
         }
 
         public Task<bool> Update(ModifyWorkDto modifyWorkDto)

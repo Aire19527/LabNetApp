@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Lab.Domain.Dto.Work
 {
-    public class AddWorkEntity
+    public class AddWorkDto
     {
         [Required]
         [MaxLength(120)]
@@ -15,5 +15,13 @@ namespace Lab.Domain.Dto.Work
         [Required]
         [MaxLength(100)]
         public string Role { get; set; }
+        [Required]
+        public int IdProfile { get; set; }
+        [Required]
+        public int IdSector { get; set; }
+        [Required]
+        public int IdUbication { get; set; }
+        [Required]
+        public int IdWorkType { get; set; }
     }
 }

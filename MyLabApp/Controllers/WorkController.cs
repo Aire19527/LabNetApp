@@ -1,4 +1,5 @@
-﻿using Lab.Domain.Dto;
+﻿using Common.Resources;
+using Lab.Domain.Dto;
 using Lab.Domain.Dto.Work;
 using Lab.Domain.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -37,6 +38,33 @@ namespace MyLabApp.Controllers
                 Result = consultWorkDtos
             });
         }
+
+        
+        [HttpPost]
+        [Route("Insert")]
+        public async Task<IActionResult> Insert(AddWorkDto addWorkDto)
+        {
+            IActionResult action;
+
+            bool result = await _workServices.Insert(addWorkDto);
+
+            ResponseDto response = new ResponseDto()
+            {
+                IsSuccess = result,
+                Message = result ? GeneralMessages.ItemInserted : GeneralMessages.ItemNoInserted,
+                Result = result
+            };
+
+            if (result)
+                action = Ok(response);
+            else
+                action = BadRequest(response);
+
+            return action;
+        }
+            
+        
+
         #endregion
     }
 }
