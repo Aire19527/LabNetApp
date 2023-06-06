@@ -34,6 +34,7 @@ namespace Infraestructure.Core.Context
             await CheckUserAsync();
             await CheckUbicationAsync();
             await CheckWorkTypeAsync();
+            await CheckInstitutionTypeAsync();
         }
 
         private async Task CheckSkillAsync()
@@ -386,13 +387,29 @@ namespace Infraestructure.Core.Context
             }
         }
 
-
-
-
-        UserEntity user = new UserEntity()
+        private async Task CheckInstitutionTypeAsync()
         {
-            
-        };
+            if (!_context.InstitutionsTypeEntity.Any())
+            {
+                _context.InstitutionsTypeEntity.AddRange(new List<InstitutionTypeEntity>
+                {
+                    new InstitutionTypeEntity
+                    {
+                        Description = "Secundario"
+                    },
+                     new InstitutionTypeEntity
+                    {
+                        Description = "Terciario"
+                    },
+                      new InstitutionTypeEntity
+                      {
+                        Description = "Universitario"
+                      }
+
+                });
+                await _context.SaveChangesAsync();
+            }
+        }
 
     }
 }
