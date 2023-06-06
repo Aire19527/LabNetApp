@@ -17,5 +17,7 @@ namespace Infraestructure.Entity.Models
         [Required]
         public string Ambit { get; set; }
 
+        public IEnumerable<UserEntity> UserEntities { get; set; }
+
     }
 }

@@ -10,8 +10,8 @@ namespace Infraestructure.Entity.Models
         public int Id { get; set; }
         [Required]
         [MaxLength(120)]
-        public string? Name { get; set; }
-        public DateTime? ExpeditionDate { get; set; }
+        public string Name { get; set; }
+        public DateTime ExpeditionDate { get; set; }
         public IEnumerable<ProfileCertificationEntity> ProfileCertificationEntity { get; set; }
     }
 }

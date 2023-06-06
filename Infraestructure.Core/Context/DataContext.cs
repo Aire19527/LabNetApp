@@ -9,11 +9,8 @@ namespace Infraestructure.Core.Context
         {
 
         }
-       
+
         public DbSet<AdressEntity> AdressEntity { get; set; }
-        public DbSet<UbicationEntity> UbicationEntity { get; set; }
-        public DbSet<SectorEntity> SectorEntity { get; set; }
-        public DbSet<WorkTypeEntity> WorkTypeEntity { get; set; }
         public DbSet<CertificationEntity> CertificationsEntity { get; set; }
         public DbSet<CityEntity> CitiesEntity { get; set; }
         public DbSet<ConfigEntity> ConfigsEntity { get; set; }
@@ -56,6 +53,22 @@ namespace Infraestructure.Core.Context
                 })
                 .IsUnique();
 
+            modelBuilder.Entity<ProfileEducationEntity>()
+                .HasIndex(x => new
+                {
+                    x.IdProfile,
+                    x.IdEducation
+                })
+                .IsUnique();
+
+            modelBuilder.Entity<ProfileWorkEntity>()
+               .HasIndex(x => new
+               {
+                   x.IdProfile,
+                   x.IdWork
+               })
+               .IsUnique();
+
             modelBuilder.Entity<ProfileCertificationEntity>()
                .HasIndex(x => new
                {
@@ -63,11 +76,6 @@ namespace Infraestructure.Core.Context
                    x.IdCertification
                })
                .IsUnique();
-
-            modelBuilder.Entity<CountryEntity>().Property(c => c.Id).ValueGeneratedNever();
-            modelBuilder.Entity<ProvinceEntity>().Property(p => p.Id).ValueGeneratedNever();
-            modelBuilder.Entity<CityEntity>().Property(c => c.Id).ValueGeneratedNever();
-            modelBuilder.Entity<RoleEntity>().Property(r => r.Id).ValueGeneratedNever();
         }
     }
 }

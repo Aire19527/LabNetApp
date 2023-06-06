@@ -1,6 +1,4 @@
-﻿using Common.Exceptions;
-using Common.Resources;
-using Infraestructure.Core.UnitOfWork.Interface;
+﻿using Infraestructure.Core.UnitOfWork.Interface;
 using Infraestructure.Entity.Models;
 using Lab.Domain.Dto.Skill;
 using Lab.Domain.Services.Interfaces;
@@ -22,15 +20,11 @@ namespace Lab.Domain.Services
 
 
         #region Methods
-        public async Task<bool> Insert(AddSkilDto dto)
+        public async Task<bool> Insert(AddSkilDto add)
         {
-            if (_unitOfWork.SkillRepository.FirstOrDefault(x => x.Description.Equals(dto.Description)) != null)
-                throw new BusinessException("No se puede insertar un registro duplicado");
-
             SkillEntity skill = new SkillEntity()
             {
-                Description = dto.Description,
-                IsVisible = true,
+                Description = add.Description,
             };
             _unitOfWork.SkillRepository.Insert(skill);
 
@@ -45,25 +39,11 @@ namespace Lab.Domain.Services
             {
                 Id = x.Id,
                 Description = x.Description,
-                IsVisible = x.IsVisible
 
-            }).ToList().FindAll((skill) => skill.IsVisible == true);
+            }).ToList();
 
             return skills;
         }
-
-        public async Task<bool> Delete(int id)
-        {
-            SkillEntity? skillEntity = _unitOfWork.SkillRepository.FirstOrDefault((skill) => skill.Id == id);
-
-            if (skillEntity == null)
-                throw new BusinessException(GeneralMessages.ItemNoFound);
-
-            _unitOfWork.SkillRepository.Delete(skillEntity);
-
-            return await _unitOfWork.Save() > 0;
-        }
-
         #endregion
 
     }

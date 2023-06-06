@@ -4,7 +4,6 @@ using Infraestructure.Core.Repository.Inerface;
 using Infraestructure.Core.UnitOfWork.Interface;
 using Infraestructure.Entity.Models;
 using Microsoft.EntityFrameworkCore.Storage;
-using System.Resources;
 
 namespace Infraestructure.Core.UnitOfWork
 {
@@ -27,15 +26,6 @@ namespace Infraestructure.Core.UnitOfWork
 
         #region Properties
         private IRepository<SkillEntity> skillRepository;
-
-        private IRepository<UserEntity> userRepository;
-
-        private IRepository<RoleEntity> roleRepository;
-
-        private IRepository<ProfileEntity> profileRepository;
-        private IRepository<ProfilesSkillsEntity> profileSkillRepository;
-        private IRepository<WorkEntity> workRepository;
-        private IRepository<JobPositionEntity> jobPositionRepository;
         #endregion
 
         #region Members
@@ -53,76 +43,9 @@ namespace Infraestructure.Core.UnitOfWork
         }
 
 
-        public IRepository<UserEntity> UserRepository
-        {
-            get
-            {
-                if (this.userRepository == null)
-                    this.userRepository = new Repository<UserEntity>(_context);
-
-                return userRepository;
-            }
-        }
-
-        public IRepository<ProfileEntity> ProfileRepository
-        {
-            get
-            {
-                if (this.profileRepository == null)
-                    this.profileRepository = new Repository<ProfileEntity>(_context);
-                return profileRepository;
-            }
-        }
-
-        public IRepository<ProfilesSkillsEntity> ProfilesSkillsRepository
-        {
-            get
-            {
-                if (this.profileSkillRepository == null)
-                    this.profileSkillRepository = new Repository<ProfilesSkillsEntity>(_context);
-
-                return profileSkillRepository;
-
-            }
-        }
-
-        public IRepository<WorkEntity> WorkRepository
-        {
-            get
-            {
-                if (this.workRepository == null)
-                    this.workRepository = new Repository<WorkEntity>(_context);
-
-                return workRepository;
-            }
-        }
-
-        public IRepository<RoleEntity> RoleRepository
-        {
 
 
-            get
-            {
-                if (this.roleRepository == null)
-                    this.roleRepository = new Repository<RoleEntity>(_context);
-
-                return roleRepository;
-
-            }
-        }
-
-        public IRepository<JobPositionEntity> JobPositionRepository
-        {
-            get
-            {
-                if (this.jobPositionRepository == null)
-                    this.jobPositionRepository = new Repository<JobPositionEntity>(_context);
-
-                return jobPositionRepository;
-            }
-        }
-
-    public IDbContextTransaction BeginTransaction()
+        public IDbContextTransaction BeginTransaction()
         {
             return _context.Database.BeginTransaction();
         }
@@ -155,6 +78,7 @@ namespace Infraestructure.Core.UnitOfWork
         }
 
         public async Task<int> Save() => await _context.SaveChangesAsync();
+
 
     }
 
