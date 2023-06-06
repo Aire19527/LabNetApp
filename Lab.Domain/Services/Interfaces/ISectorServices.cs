@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Lab.Domain.Services.Interfaces
 {
-    internal interface ISectorServices
+    public interface ISectorServices
     {
         Task<bool> Insert(AddSectorDto add);
 

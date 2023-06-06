@@ -35,8 +35,31 @@ namespace Infraestructure.Core.Context
             await CheckUbicationAsync();
             await CheckWorkTypeAsync();
             await CheckInstitutionTypeAsync();
+            await CheckSectorTypeAsync();
         }
 
+        private async Task CheckSectorTypeAsync() {
+
+            if (!_context.SectorEntity.Any()) {
+                _context.SectorEntity.AddRange(new List<SectorEntity>
+            {
+                new SectorEntity
+                {
+                  Description="Servicios TI y consultoria de TI"
+                },
+                new SectorEntity
+                {
+                  Description="Servicios de publicidad"
+                },
+                new SectorEntity
+                {
+                  Description="Servicios de información"
+                }
+            });
+    
+                     await _context.SaveChangesAsync();
+            }
+        }
         private async Task CheckSkillAsync()
         {
             if (!_context.SkillsEntity.Any())

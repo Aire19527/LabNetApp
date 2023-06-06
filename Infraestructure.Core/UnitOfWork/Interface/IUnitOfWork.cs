@@ -21,6 +21,8 @@ namespace Infraestructure.Core.UnitOfWork.Interface
 
         IRepository<UbicationEntity> UbicationRepository { get; }
 
+        IRepository<SectorEntity> SectorRepository { get; }
+
 
 
         void Dispose();

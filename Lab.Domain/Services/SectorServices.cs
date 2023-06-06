@@ -1,4 +1,7 @@
-﻿using Lab.Domain.Dto.Sector;
+﻿using Infraestructure.Core.UnitOfWork.Interface;
+using Infraestructure.Entity.Models;
+using Lab.Domain.Dto.Role;
+using Lab.Domain.Dto.Sector;
 using Lab.Domain.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -10,11 +13,26 @@ namespace Lab.Domain.Services
 {
     public class SectorServices : ISectorServices
     {
-       
+        private readonly IUnitOfWork _unitOfWork;
+
+        public SectorServices(IUnitOfWork unitOfWork)
+        {
+            _unitOfWork = unitOfWork;
+        }
 
         public List<GetSectorDto> Getall()
         {
-            throw new NotImplementedException();
+            IEnumerable<SectorEntity> sectorQuery = _unitOfWork.SectorRepository.GetAll();
+
+
+            List<GetSectorDto> sectores = sectorQuery.Select(x => new GetSectorDto()
+            {
+                Id = x.Id,
+                Description = x.Description
+            })
+            .ToList();
+
+            return sectores;
         }
 
         public Task<bool> Insert(AddSectorDto add)

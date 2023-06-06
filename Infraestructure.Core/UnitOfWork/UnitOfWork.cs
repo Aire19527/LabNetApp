@@ -38,6 +38,7 @@ namespace Infraestructure.Core.UnitOfWork
         private IRepository<JobPositionEntity> jobPositionRepository;
         private IRepository<WorkTypeEntity> workTypeRepository;
         private IRepository<UbicationEntity> ubicationRepository;
+        private IRepository<SectorEntity> sectorRepository;
         #endregion
 
         #region Members
@@ -147,7 +148,17 @@ namespace Infraestructure.Core.UnitOfWork
 
         }
 
-        public IDbContextTransaction BeginTransaction()
+        public IRepository<SectorEntity> SectorRepository
+        {
+            get {  
+                if (this.sectorRepository == null)
+                    this.sectorRepository = new Repository<SectorEntity>(_context);
+
+                return sectorRepository;
+            }
+        }
+
+    public IDbContextTransaction BeginTransaction()
         {
             return _context.Database.BeginTransaction();
         }
