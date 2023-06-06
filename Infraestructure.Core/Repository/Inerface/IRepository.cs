@@ -11,14 +11,17 @@ namespace Infraestructure.Core.Repository.Inerface
 
         /// Retorna un objeto del tipo AsQueryable y acepta como parámetro las relaciones a incluir
         IEnumerable<TEntity> GetAll(params Expression<Func<TEntity, object>>[] includeProperties);
+        IEnumerable<TEntity> GetAllSelect(params Expression<Func<TEntity, object>>[] includeProperties);
 
         /// Función que retorna una entidad, a partir de una consulta.
         IEnumerable<TEntity> FindAll(Expression<Func<TEntity, bool>> where, params Expression<Func<TEntity, object>>[] includeProperties);
+        IEnumerable<TEntity> FindAllSelect(Expression<Func<TEntity, bool>> where, params Expression<Func<TEntity, object>>[] includeProperties);
         /// Retorna la ultima entidad encontrada bajo una condición especificada
         TEntity First(Expression<Func<TEntity, bool>> where, params Expression<Func<TEntity, object>>[] includeProperties);
 
         /// Retorna la primera entidad encontrada bajo una condición especificada o null sino encontrara registros
         TEntity FirstOrDefault(Expression<Func<TEntity, bool>> where, params Expression<Func<TEntity, object>>[] includeProperties);
+        TEntity FirstOrDefaultSelect(Expression<Func<TEntity, bool>> where, params Expression<Func<TEntity, object>>[] includeProperties);
 
         /// Registra una entidad
         void Insert(TEntity entity);

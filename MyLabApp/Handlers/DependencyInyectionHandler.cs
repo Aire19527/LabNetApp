@@ -1,4 +1,5 @@
-﻿using Infraestructure.Core.Repository;
+﻿using Infraestructure.Core.Context;
+using Infraestructure.Core.Repository;
 using Infraestructure.Core.Repository.Inerface;
 using Infraestructure.Core.UnitOfWork;
 using Infraestructure.Core.UnitOfWork.Interface;
@@ -15,10 +16,19 @@ namespace MyLabApp.Handlers
             // Infrastructure
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-            //services.AddScoped<SeedDb>();
+            services.AddScoped<SeedDb>();
 
             //Domain
             services.AddTransient<ISkillServices, SkillServices>();
+
+            services.AddTransient<IUserServices, UserServices>();
+
+            services.AddTransient<IProfileServices, ProfileServices>();
+
+            services.AddTransient<IRoleServices, RoleServices>();
+
+            services.AddTransient<IJobPositionServices, JobPositionServices>();
+
         }
     }
 }

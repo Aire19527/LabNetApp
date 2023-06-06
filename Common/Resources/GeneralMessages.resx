@@ -141,6 +141,9 @@
   <data name="ItemNoDeleted" xml:space="preserve">
     <value>No fue posible eliminar el registro, por favor intentalo de nuevo.</value>
   </data>
+  <data name="ItemNoFound" xml:space="preserve">
+    <value>Item no encontrado, por favor verificar los registros enviados.</value>
+  </data>
   <data name="ItemNoInserted" xml:space="preserve">
     <value>No fue posible guardar el registro, por favor intentalo de nuevo.</value>
   </data>
@@ -149,6 +152,9 @@
   </data>
   <data name="ItemUpdated" xml:space="preserve">
     <value>Registro actualizado satisfactoriamente.</value>
+  </data>
+  <data name="PasswordIncorrect" xml:space="preserve">
+    <value>La contraseña es incorrecta</value>
   </data>
   <data name="RegisteredEmail" xml:space="preserve">
     <value>El Email ya se encentra registrado en nuestro sistema, por favor usar otro Email.</value>
