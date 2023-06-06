@@ -56,22 +56,6 @@ namespace Infraestructure.Core.Context
                 })
                 .IsUnique();
 
-            modelBuilder.Entity<ProfileEducationEntity>()
-                .HasIndex(x => new
-                {
-                    x.IdProfile,
-                    x.IdEducation
-                })
-                .IsUnique();
-
-            modelBuilder.Entity<ProfileWorkEntity>()
-               .HasIndex(x => new
-               {
-                   x.IdProfile,
-                   x.IdWork
-               })
-               .IsUnique();
-
             modelBuilder.Entity<ProfileCertificationEntity>()
                .HasIndex(x => new
                {

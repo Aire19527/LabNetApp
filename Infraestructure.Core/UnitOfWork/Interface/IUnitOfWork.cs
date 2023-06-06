@@ -13,7 +13,6 @@ namespace Infraestructure.Core.UnitOfWork.Interface
         IRepository<RoleEntity> RoleRepository { get; }
         IRepository<ProfileEntity> ProfileRepository { get; }
         IRepository<ProfilesSkillsEntity> ProfilesSkillsRepository { get; }
-        IRepository<ProfileWorkEntity> ProfilesWorkRepository { get; }
         IRepository<WorkEntity> WorkRepository { get; }
 
         IRepository<JobPositionEntity> JobPositionRepository { get; }

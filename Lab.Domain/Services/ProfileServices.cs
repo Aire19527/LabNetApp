@@ -42,10 +42,7 @@ namespace Lab.Domain.Services
         {
             IEnumerable<ProfileEntity> ProfileList = _unitOfWork.ProfileRepository.GetAllSelect(x => x.AdressEntity,
 
-                                                                                                d => d.DniTypeEntity,
-                                                                                                //r => r.ProfileWorkEntity,
-                                                                                                r => r.ProfileWorkEntity.Select(e => e.WorkEntity),
-                                                                                                e => e.ProfileEducationEntity.Select(b => b.EducationEntity.InstitutionTypeEntity));
+                                                                                                d => d.DniTypeEntity);
 
             List<ConsultProfileDto> profiles = ProfileList.Select(p => new ConsultProfileDto()
             {
@@ -63,24 +60,24 @@ namespace Lab.Domain.Services
                 AdressDescription = p.AdressEntity?.Description,
                 IdDniType = p.DniTypeEntity?.id,
 
-                WorkEntities = p.ProfileWorkEntity.Select(x => new WorkDto
-                {
-                    Id = x.WorkEntity.Id,
-                    Company = x.WorkEntity.Company,
-                    Role = x.WorkEntity.Role
-                }).ToList(),
+                //WorkEntities = p.WorkEntity.Select(x => new WorkDto
+                //{
+                //    Id = x.WorkEntity.Id,
+                //    Company = x.WorkEntity.Company,
+                //    Role = x.WorkEntity.Role
+                //}).ToList(),
 
-                EducationEntities = p.ProfileEducationEntity.Select(x => new EducationDto
-                {
-                    Id = x.EducationEntity.Id,
-                    InstitutionName = x.EducationEntity.InstitutionName,
-                    Degree = x.EducationEntity.Degree,
-                    AdmissionDate = x.EducationEntity.AdmissionDate,
-                    ExpeditionDate = x.EducationEntity.ExpeditionDate,
-                    IdInstitutionType = x.EducationEntity.InstitutionTypeEntity.Id,
-                    DescriptionInstitutionType = x.EducationEntity.InstitutionTypeEntity.Description
+                //EducationEntities = p.ProfileEducationEntity.Select(x => new EducationDto
+                //{
+                //    Id = x.EducationEntity.Id,
+                //    InstitutionName = x.EducationEntity.InstitutionName,
+                //    Degree = x.EducationEntity.Degree,
+                //    AdmissionDate = x.EducationEntity.AdmissionDate,
+                //    ExpeditionDate = x.EducationEntity.ExpeditionDate,
+                //    IdInstitutionType = x.EducationEntity.InstitutionTypeEntity.Id,
+                //    DescriptionInstitutionType = x.EducationEntity.InstitutionTypeEntity.Description
 
-                }).ToList(),
+                //}).ToList(),
 
             }).ToList();
 
@@ -91,9 +88,7 @@ namespace Lab.Domain.Services
         {
             ProfileEntity profile = _unitOfWork.ProfileRepository.FirstOrDefaultSelect(x => x.IdUser == id,
                                                                                 a => a.AdressEntity,
-                                                                                d => d.DniTypeEntity,
-                                                                                r => r.ProfileWorkEntity.Select(e => e.WorkEntity),
-                                                                                e => e.ProfileEducationEntity.Select(b => b.EducationEntity.InstitutionTypeEntity));
+                                                                                d => d.DniTypeEntity);
 
 
             if (profile == null)
@@ -116,22 +111,22 @@ namespace Lab.Domain.Services
                 AdressDescription = profile.AdressEntity?.Description,
                 IdDniType = profile.DniTypeEntity?.id,
                 DniDescrption = profile.DniTypeEntity?.Description,
-                WorkEntities = profile.ProfileWorkEntity.Select(x => new WorkDto
-                {
-                    Id = x.WorkEntity.Id,
-                    Company = x.WorkEntity.Company,
-                    Role = x.WorkEntity.Role
-                }).ToList(),
-                EducationEntities = profile.ProfileEducationEntity.Select(x => new EducationDto
-                {
-                    Id = x.EducationEntity.Id,
-                    InstitutionName = x.EducationEntity.InstitutionName,
-                    Degree = x.EducationEntity.Degree,
-                    AdmissionDate = x.EducationEntity.AdmissionDate,
-                    ExpeditionDate = x.EducationEntity.ExpeditionDate,
-                    IdInstitutionType = x.EducationEntity.IdInstitutionType,
-                    DescriptionInstitutionType = x.EducationEntity.InstitutionTypeEntity.Description
-                }).ToList()
+                //WorkEntities = profile.ProfileWorkEntity.Select(x => new WorkDto
+                //{
+                //    Id = x.WorkEntity.Id,
+                //    Company = x.WorkEntity.Company,
+                //    Role = x.WorkEntity.Role
+                //}).ToList(),
+                //EducationEntities = profile.ProfileEducationEntity.Select(x => new EducationDto
+                //{
+                //    Id = x.EducationEntity.Id,
+                //    InstitutionName = x.EducationEntity.InstitutionName,
+                //    Degree = x.EducationEntity.Degree,
+                //    AdmissionDate = x.EducationEntity.AdmissionDate,
+                //    ExpeditionDate = x.EducationEntity.ExpeditionDate,
+                //    IdInstitutionType = x.EducationEntity.IdInstitutionType,
+                //    DescriptionInstitutionType = x.EducationEntity.InstitutionTypeEntity.Description
+                //}).ToList()
 
             };
 
@@ -303,22 +298,22 @@ namespace Lab.Domain.Services
             return path;
         }
 
-        public async Task<bool> AddWorkProfile(AddProfileWorkDto addProfileWorkDto)
-        {
-            ProfileEntity Profile = _unitOfWork.ProfileRepository.FirstOrDefault(x => x.Id == addProfileWorkDto.IdProfile);
-            WorkEntity Work = _unitOfWork.WorkRepository.FirstOrDefault(x => x.Id == addProfileWorkDto.IdWork);
+        //public async Task<bool> AddWorkProfile(AddProfileWorkDto addProfileWorkDto)
+        //{
+        //    ProfileEntity Profile = _unitOfWork.ProfileRepository.FirstOrDefault(x => x.Id == addProfileWorkDto.IdProfile);
+        //    WorkEntity Work = _unitOfWork.WorkRepository.FirstOrDefault(x => x.Id == addProfileWorkDto.IdWork);
 
-            if (Profile != null && Work != null)
-            {
-                _unitOfWork.ProfilesWorkRepository.Insert(new ProfileWorkEntity()
-                {
-                    IdProfile = addProfileWorkDto.IdProfile,
-                    IdWork = addProfileWorkDto.IdWork
-                });
-            }
+        //    //if (Profile != null && Work != null)
+        //    //{
+        //    //    _unitOfWork.ProfilesWorkRepository.Insert(new ProfileWorkEntity()
+        //    //    {
+        //    //        IdProfile = addProfileWorkDto.IdProfile,
+        //    //        IdWork = addProfileWorkDto.IdWork
+        //    //    });
+        //    //}
 
-            return await _unitOfWork.Save() > 0;
-        }
+        //    return await _unitOfWork.Save() > 0;
+        //}
 
         #endregion
 
