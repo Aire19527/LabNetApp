@@ -20,15 +20,11 @@ namespace MyLabApp.Handlers
 
             //Domain
             services.AddTransient<ISkillServices, SkillServices>();
-
             services.AddTransient<IUserServices, UserServices>();
-
             services.AddTransient<IProfileServices, ProfileServices>();
-
             services.AddTransient<IRoleServices, RoleServices>();
-
             services.AddTransient<IJobPositionServices, JobPositionServices>();
-
+            services.AddTransient<IWorkServices, WorkServices>();
         }
     }
 }
