@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infraestructure.Core.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230517151645_mockFinished")]
-    partial class mockFinished
+    [Migration("20230602200940_ultimaMigracion")]
+    partial class ultimaMigracion
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -33,14 +33,13 @@ namespace Infraestructure.Core.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("IdCityEntity")
                         .HasColumnType("int");
 
-                    b.Property<int>("Number")
+                    b.Property<int?>("Number")
                         .HasColumnType("int");
 
                     b.Property<string>("Street")
@@ -63,7 +62,7 @@ namespace Infraestructure.Core.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<DateTime>("ExpeditionDate")
+                    b.Property<DateTime?>("ExpeditionDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
@@ -108,7 +107,6 @@ namespace Infraestructure.Core.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Value")
@@ -217,7 +215,6 @@ namespace Infraestructure.Core.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -234,7 +231,6 @@ namespace Infraestructure.Core.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("IdPermissionTypeEntity")
@@ -324,25 +320,23 @@ namespace Infraestructure.Core.Migrations
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<byte[]>("CV")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
+                    b.Property<string>("CV")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("DNI")
                         .HasMaxLength(8)
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("IdAdress")
+                    b.Property<int?>("IdAdress")
                         .HasColumnType("int");
 
-                    b.Property<int>("IdDniType")
+                    b.Property<int?>("IdDniType")
                         .HasColumnType("int");
 
-                    b.Property<int>("IdJobPosition")
+                    b.Property<int?>("IdJobPosition")
                         .HasColumnType("int");
 
                     b.Property<int>("IdUser")
@@ -363,12 +357,10 @@ namespace Infraestructure.Core.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Phone")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<byte[]>("Photo")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
+                    b.Property<string>("Photo")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -548,25 +540,25 @@ namespace Infraestructure.Core.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("IdEntity")
+                    b.Property<int>("IdRole")
                         .HasColumnType("int");
 
-                    b.Property<int>("IdStatus")
-                        .HasColumnType("int");
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Mail")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(70)
+                        .HasColumnType("nvarchar(70)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("IdEntity");
-
-                    b.HasIndex("IdStatus");
+                    b.HasIndex("IdRole");
 
                     b.HasIndex("Mail")
                         .IsUnique();
@@ -583,15 +575,12 @@ namespace Infraestructure.Core.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("BossContact")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("BossName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("BossRole")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Company")
@@ -600,7 +589,6 @@ namespace Infraestructure.Core.Migrations
                         .HasColumnType("nvarchar(120)");
 
                     b.Property<string>("DetailFuntion")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Role")
@@ -699,21 +687,15 @@ namespace Infraestructure.Core.Migrations
                 {
                     b.HasOne("Infraestructure.Entity.Models.AdressEntity", "AdressEntity")
                         .WithMany("ProfileEntity")
-                        .HasForeignKey("IdAdress")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("IdAdress");
 
                     b.HasOne("Infraestructure.Entity.Models.DniTypeEntity", "DniTypeEntity")
                         .WithMany("ProfileEntity")
-                        .HasForeignKey("IdDniType")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("IdDniType");
 
                     b.HasOne("Infraestructure.Entity.Models.JobPositionEntity", "JobPositionEntity")
                         .WithMany("ProfileEntity")
-                        .HasForeignKey("IdJobPosition")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("IdJobPosition");
 
                     b.HasOne("Infraestructure.Entity.Models.UserEntity", "UserEntity")
                         .WithOne("ProfileEntity")
@@ -802,19 +784,11 @@ namespace Infraestructure.Core.Migrations
                 {
                     b.HasOne("Infraestructure.Entity.Models.RoleEntity", "RoleEntity")
                         .WithMany("UsersEntities")
-                        .HasForeignKey("IdEntity")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Infraestructure.Entity.Models.StateEntity", "StateEntity")
-                        .WithMany("UserEntities")
-                        .HasForeignKey("IdStatus")
+                        .HasForeignKey("IdRole")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("RoleEntity");
-
-                    b.Navigation("StateEntity");
                 });
 
             modelBuilder.Entity("Infraestructure.Entity.Models.AdressEntity", b =>
@@ -883,11 +857,6 @@ namespace Infraestructure.Core.Migrations
             modelBuilder.Entity("Infraestructure.Entity.Models.SkillEntity", b =>
                 {
                     b.Navigation("ProfilesSkillsEntity");
-                });
-
-            modelBuilder.Entity("Infraestructure.Entity.Models.StateEntity", b =>
-                {
-                    b.Navigation("UserEntities");
                 });
 
             modelBuilder.Entity("Infraestructure.Entity.Models.UserEntity", b =>

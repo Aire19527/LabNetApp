@@ -15,10 +15,10 @@ namespace Infraestructure.Entity.Models
         public int Id { get; set; }
         [Required]
         [MaxLength(100)]
-        public string Street { get; set; }
-        public int Number { get; set; }
+        public string? Street { get; set; }
+        public int? Number { get; set; }
         [MaxLength(200)]
-        public string Description { get; set; }
+        public string? Description { get; set; }
         public IEnumerable<ProfileEntity> ProfileEntity { get; set; }
 
 

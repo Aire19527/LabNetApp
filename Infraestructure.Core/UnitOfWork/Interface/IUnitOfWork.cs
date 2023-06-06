@@ -8,6 +8,14 @@ namespace Infraestructure.Core.UnitOfWork.Interface
     {
         IRepository<SkillEntity> SkillRepository { get; }
 
+        IRepository<UserEntity> UserRepository { get; }
+
+        IRepository<RoleEntity> RoleRepository { get; }
+        IRepository<ProfileEntity> ProfileRepository { get; }
+        IRepository<ProfilesSkillsEntity> ProfilesSkillsRepository { get; }
+        IRepository<WorkEntity> WorkRepository { get; }
+
+        IRepository<JobPositionEntity> JobPositionRepository { get; }
 
 
         void Dispose();
