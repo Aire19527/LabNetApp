@@ -4,11 +4,13 @@ using Lab.Domain.Dto.Work;
 using Lab.Domain.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MyLabApp.Handlers;
 
 namespace MyLabApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [TypeFilter(typeof(CustomExceptionHandler))]
     public class WorkController : ControllerBase
     {
         #region Attributes
@@ -62,9 +64,46 @@ namespace MyLabApp.Controllers
 
             return action;
         }
-            
-        
 
+        [HttpPut]
+        [Route("Update")]
+        public async Task<IActionResult> Update(ModifyWorkDto modifyWorkDto)
+        {
+            IActionResult action;
+            bool result = await _workServices.Update(modifyWorkDto);
+
+            ResponseDto response = new ResponseDto()
+            {
+                IsSuccess = result,
+                Message = result ? GeneralMessages.ItemUpdated : GeneralMessages.ItemNoUpdated,
+                Result = result
+            };
+
+            if (result)
+            {
+                action = Ok(response);
+            }
+            else
+            {
+                action = BadRequest(response);
+            }
+
+            return action;
+        }
+
+        [HttpDelete]
+        [Route("Delete/{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            bool result = await _workServices.Delete(id);
+
+            return Ok(new ResponseDto
+            {
+                IsSuccess = result,
+                Message = result ? GeneralMessages.ItemDeleted : GeneralMessages.ItemNoDeleted,
+                Result = result
+            });
+        }
         #endregion
     }
 }

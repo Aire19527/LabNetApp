@@ -1,4 +1,6 @@
-﻿using Infraestructure.Core.UnitOfWork.Interface;
+﻿using Common.Exceptions;
+using Common.Resources;
+using Infraestructure.Core.UnitOfWork.Interface;
 using Infraestructure.Entity.Models;
 using Lab.Domain.Dto.Work;
 using Lab.Domain.Services.Interfaces;
@@ -64,14 +66,35 @@ namespace Lab.Domain.Services
             return await _unitOfWork.Save() > 0;
         }
 
-        public Task<bool> Update(ModifyWorkDto modifyWorkDto)
+        public async Task<bool> Update(ModifyWorkDto modifyWorkDto)
         {
-            throw new NotImplementedException();
+            WorkEntity workEntity = _unitOfWork.WorkRepository
+                .FirstOrDefault(x => x.Id == modifyWorkDto.Id);
+
+            if (workEntity != null)
+            {
+                workEntity.Company = modifyWorkDto.Company;
+                workEntity.Role = modifyWorkDto.Role;
+                workEntity.BossRole = modifyWorkDto.BossRole;
+                workEntity.BossContact = modifyWorkDto.BossContact;
+                workEntity.BossName = modifyWorkDto.BossName;
+
+                _unitOfWork.WorkRepository.Update(workEntity);
+                return await _unitOfWork.Save() > 0;
+            }
+            return false;
         }
 
-        public Task<bool> Delete(int id)
+        public async Task<bool> Delete(int id)
         {
-            throw new NotImplementedException();
+            WorkEntity workEntity = _unitOfWork.WorkRepository.
+                FirstOrDefault((x) => x.Id == id);
+
+            if (workEntity == null) 
+                throw new BusinessException(GeneralMessages.ItemNoFound);
+
+                _unitOfWork.WorkRepository.Delete(workEntity);
+                return await _unitOfWork.Save() > 0;
         }
         #endregion
     }
