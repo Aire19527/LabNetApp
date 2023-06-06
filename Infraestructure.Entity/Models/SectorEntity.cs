@@ -18,6 +18,6 @@ namespace Infraestructure.Entity.Models
         [MaxLength(100)]
         [RegularExpression(@"^[A-Za-z\s]+$",
                     ErrorMessage = "La descripcion solo pueden contener letras y espacios.")]
-        public int Description { get; set; }
+        public string Description { get; set; }
     }
 }
