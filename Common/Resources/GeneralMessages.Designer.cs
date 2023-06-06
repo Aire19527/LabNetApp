@@ -133,15 +133,6 @@ namespace Common.Resources {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Item no encontrado, por favor verificar los registros enviados..
-        /// </summary>
-        public static string ItemNoFound {
-            get {
-                return ResourceManager.GetString("ItemNoFound", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Busca una cadena traducida similar a No fue posible guardar el registro, por favor intentalo de nuevo..
         /// </summary>
         public static string ItemNoInserted {
@@ -165,15 +156,6 @@ namespace Common.Resources {
         public static string ItemUpdated {
             get {
                 return ResourceManager.GetString("ItemUpdated", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Busca una cadena traducida similar a La contraseña es incorrecta.
-        /// </summary>
-        public static string PasswordIncorrect {
-            get {
-                return ResourceManager.GetString("PasswordIncorrect", resourceCulture);
             }
         }
         

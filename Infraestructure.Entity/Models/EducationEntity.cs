@@ -23,13 +23,10 @@ namespace Infraestructure.Entity.Models
         public DateTime AdmissionDate { get; set; }
         [Required]
         public DateTime ExpeditionDate { get; set; }
-
-        [ForeignKey("ProfileEntity")]
-        public int IdProfile { get; set; }
+        public IEnumerable<ProfileEducationEntity> ProfileEducationEntity { get; set; }
 
         [ForeignKey("InstitutionTypeEntity")]
         public int IdInstitutionType { get; set; }
         public InstitutionTypeEntity InstitutionTypeEntity { get; set; }
-        public ProfileEntity ProfileEntity { get; set; }
     }
 }

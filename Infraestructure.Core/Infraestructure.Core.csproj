@@ -17,7 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Common\Common.csproj" />
     <ProjectReference Include="..\Infraestructure.Entity\Infraestructure.Entity.csproj" />
   </ItemGroup>
 
