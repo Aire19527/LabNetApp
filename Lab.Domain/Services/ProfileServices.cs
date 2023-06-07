@@ -12,7 +12,6 @@ using Lab.Domain.Services.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
-using System.ComponentModel;
 
 namespace Lab.Domain.Services
 {
@@ -34,8 +33,7 @@ namespace Lab.Domain.Services
         }
         #endregion
 
-
-        #region MethodsEmi-Salva
+        #region Methods
 
         public async Task<List<ConsultProfileDto>> Getall()
         {

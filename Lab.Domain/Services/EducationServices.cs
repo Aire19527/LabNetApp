@@ -1,32 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Common.Exceptions;
+﻿using Common.Exceptions;
 using Common.Resources;
 using Infraestructure.Core.UnitOfWork.Interface;
 using Infraestructure.Entity.Models;
 using Lab.Domain.Dto.Education;
 using Lab.Domain.Services.Interfaces;
 using Microsoft.Extensions.Configuration;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Lab.Domain.Services
 {
     public class EducationServices : IEducationServices
     {
-
+        #region Attributes
         private readonly IUnitOfWork _unitOfWork;
         private readonly IConfiguration _configuration;
+        #endregion
 
+        #region Builder
         public EducationServices(IUnitOfWork unitOfWork, IConfiguration configuration)
         {
             _unitOfWork = unitOfWork;
             _configuration = configuration;
         }
-
-
+        #endregion
 
         public async Task<bool> Delete(int id)
         {

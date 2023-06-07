@@ -31,6 +31,9 @@ namespace MyLabApp.Handlers
 
             services.AddTransient<IJobPositionServices, JobPositionServices>();
 
+            services.AddTransient<IInstitutionTypeServices, InstitutionTypeServices>();
+
+
         }
     }
 }
