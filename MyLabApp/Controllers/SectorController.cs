@@ -5,6 +5,8 @@ using Lab.Domain.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Lab.Domain.Dto.Sector;
+using Common.Resources;
+using Lab.Domain.Dto.Skill;
 
 namespace MyLabApp.Controllers
 {
@@ -18,7 +20,7 @@ namespace MyLabApp.Controllers
         {
             _sectorServices = sectorServices;
         }
-
+        #region Methods
         [HttpGet]
         [Route("GetAll")]
         public IActionResult GetAll()
@@ -32,6 +34,46 @@ namespace MyLabApp.Controllers
                 Result = result
             });
         }
+
+
+        [HttpPost]
+        [Route("Insert")]
+        public async Task<IActionResult> Insert(AddSectorDto sector)
+        {
+            IActionResult action;
+
+            bool result = await _sectorServices.Insert(sector);
+
+            ResponseDto response = new ResponseDto()
+            {
+                IsSuccess = result,
+                Result = result,
+                Message = result ? GeneralMessages.ItemInserted : GeneralMessages.ItemNoInserted
+            };
+
+            if (result)
+                action = Ok(response);
+            else
+                action = BadRequest(response);
+
+            return action;
+        }
+
+
+        [HttpDelete]
+        [Route("Delete/{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            bool res = await _sectorServices.Delete(id);
+
+            return Ok(new ResponseDto()
+            {
+                IsSuccess = res,
+                Message = res ? GeneralMessages.ItemDeleted : GeneralMessages.ItemNoDeleted,
+                Result = res
+            });
+        }
+        #endregion
 
     }
 }

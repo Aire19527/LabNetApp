@@ -1,4 +1,6 @@
-﻿using Infraestructure.Core.UnitOfWork.Interface;
+﻿using Common.Exceptions;
+using Common.Resources;
+using Infraestructure.Core.UnitOfWork.Interface;
 using Infraestructure.Entity.Models;
 using Lab.Domain.Dto.Role;
 using Lab.Domain.Dto.Sector;
@@ -35,14 +37,30 @@ namespace Lab.Domain.Services
             return sectores;
         }
 
-        public Task<bool> Insert(AddSectorDto add)
+        public async Task<bool> Insert(AddSectorDto add)
         {
-            throw new NotImplementedException();
+            if (_unitOfWork.SectorRepository.FirstOrDefault(x => x.Description.Equals(add.Description)) != null)
+                throw new BusinessException("No se puede insertar un registro duplicado");
+
+            SectorEntity sector = new SectorEntity()
+            {
+                Description = add.Description
+            };
+            _unitOfWork.SectorRepository.Insert(sector);
+
+            return await _unitOfWork.Save() > 0;
         }
 
-        public Task<bool> Delete(int id)
+        public async Task<bool> Delete(int id)
         {
-            throw new NotImplementedException();
+            SectorEntity? sector = _unitOfWork.SectorRepository.FirstOrDefault((sector) => sector.Id == id);
+
+            if (sector == null)
+                throw new BusinessException(GeneralMessages.ItemNoFound);
+
+            _unitOfWork.SectorRepository.Delete(sector);
+
+            return await _unitOfWork.Save() > 0;
         }
     }
 }
