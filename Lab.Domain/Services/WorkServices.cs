@@ -78,6 +78,9 @@ namespace Lab.Domain.Services
                 workEntity.BossRole = modifyWorkDto.BossRole;
                 workEntity.BossContact = modifyWorkDto.BossContact;
                 workEntity.BossName = modifyWorkDto.BossName;
+                workEntity.IdSector = modifyWorkDto.IdSector;
+                workEntity.IdUbication = modifyWorkDto.IdUbication;
+                workEntity.IdWorkType = modifyWorkDto.IdWorkType;
 
                 _unitOfWork.WorkRepository.Update(workEntity);
                 return await _unitOfWork.Save() > 0;

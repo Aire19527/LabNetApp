@@ -21,5 +21,11 @@ namespace Lab.Domain.Dto.Work
         public string? BossRole { get; set; }
         public string? BossContact { get; set; }
         public string? BossName { get; set; }
+
+        public int IdSector { get; set; }
+        [Required]
+        public int IdUbication { get; set; }
+        [Required]
+        public int IdWorkType { get; set; }
     }
 }

@@ -26,7 +26,7 @@ namespace MyLabApp.Handlers
             services.AddTransient<IJobPositionServices, JobPositionServices>();
 
             services.AddTransient<IWorkTypeServices, WorkTypeServices>();
-
+            services.AddTransient<IWorkServices, WorkServices>();
             services.AddTransient<IUbicationServices, UbicationServices>();
             services.AddTransient<ISectorServices, SectorServices>();
 

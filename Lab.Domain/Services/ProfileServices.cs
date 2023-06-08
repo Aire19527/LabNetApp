@@ -122,9 +122,11 @@ namespace Lab.Domain.Services
                     Id = x.Id,
                     Company = x.Company,
                     Role = x.Role,
-                    IdSector = x.IdSector,
+                    IdSector = x.SectorEntity.Id,
                     DescriptionSector = x.SectorEntity.Description,
+                    IdUbication = x.UbicationEntity.Id,
                     DescriptionUbication = x.UbicationEntity.Description,
+                    IdWorkType = x.WorkTypeEntity.Id,
                     DescriptionWorkType = x.WorkTypeEntity.Description
                 }).ToList(),
 
