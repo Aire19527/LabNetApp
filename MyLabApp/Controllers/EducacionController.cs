@@ -30,7 +30,7 @@ namespace MyLabApp.Controllers
         #region Endpoints
 
         [HttpPost]
-        [Route("/Insert")]
+        [Route("Insert")]
         public async Task<IActionResult> InsertEducation(AddEducationDto add)
         {
             IActionResult action;
