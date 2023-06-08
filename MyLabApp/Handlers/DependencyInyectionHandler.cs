@@ -24,7 +24,12 @@ namespace MyLabApp.Handlers
             services.AddTransient<IProfileServices, ProfileServices>();
             services.AddTransient<IRoleServices, RoleServices>();
             services.AddTransient<IJobPositionServices, JobPositionServices>();
-            services.AddTransient<IWorkServices, WorkServices>();
+
+            services.AddTransient<IWorkTypeServices, WorkTypeServices>();
+
+            services.AddTransient<IUbicationServices, UbicationServices>();
+            services.AddTransient<ISectorServices, SectorServices>();
+
         }
     }
 }

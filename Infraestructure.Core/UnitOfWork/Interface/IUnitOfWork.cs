@@ -14,6 +14,14 @@ namespace Infraestructure.Core.UnitOfWork.Interface
         IRepository<WorkEntity> WorkRepository { get; }
         IRepository<JobPositionEntity> JobPositionRepository { get; }
 
+        IRepository<WorkTypeEntity> WorkTypeRepository { get; }
+
+        IRepository<UbicationEntity> UbicationRepository { get; }
+
+        IRepository<SectorEntity> SectorRepository { get; }
+
+
+
         void Dispose();
         Task<int> Save();
 

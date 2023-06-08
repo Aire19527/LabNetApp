@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infraestructure.Core.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230524193850_initialMigration")]
-    partial class initialMigration
+    [Migration("20230606200152_ultMigration")]
+    partial class ultMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -78,10 +78,7 @@ namespace Infraestructure.Core.Migrations
             modelBuilder.Entity("Infraestructure.Entity.Models.CityEntity", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -121,10 +118,7 @@ namespace Infraestructure.Core.Migrations
             modelBuilder.Entity("Infraestructure.Entity.Models.CountryEntity", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -176,6 +170,9 @@ namespace Infraestructure.Core.Migrations
                     b.Property<int>("IdInstitutionType")
                         .HasColumnType("int");
 
+                    b.Property<int>("IdProfile")
+                        .HasColumnType("int");
+
                     b.Property<string>("InstitutionName")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -184,6 +181,8 @@ namespace Infraestructure.Core.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("IdInstitutionType");
+
+                    b.HasIndex("IdProfile");
 
                     b.ToTable("Education");
                 });
@@ -285,30 +284,6 @@ namespace Infraestructure.Core.Migrations
                     b.ToTable("ProfileCertification");
                 });
 
-            modelBuilder.Entity("Infraestructure.Entity.Models.ProfileEducationEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("IdEducation")
-                        .HasColumnType("int");
-
-                    b.Property<int>("IdProfile")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("IdEducation");
-
-                    b.HasIndex("IdProfile", "IdEducation")
-                        .IsUnique();
-
-                    b.ToTable("ProfileEducation");
-                });
-
             modelBuilder.Entity("Infraestructure.Entity.Models.ProfileEntity", b =>
                 {
                     b.Property<int>("Id")
@@ -334,9 +309,6 @@ namespace Infraestructure.Core.Migrations
                         .HasColumnType("int");
 
                     b.Property<int?>("IdDniType")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("IdJobPosition")
                         .HasColumnType("int");
 
                     b.Property<int>("IdUser")
@@ -368,8 +340,6 @@ namespace Infraestructure.Core.Migrations
 
                     b.HasIndex("IdDniType");
 
-                    b.HasIndex("IdJobPosition");
-
                     b.HasIndex("IdUser")
                         .IsUnique();
 
@@ -400,37 +370,10 @@ namespace Infraestructure.Core.Migrations
                     b.ToTable("ProfilesSkills");
                 });
 
-            modelBuilder.Entity("Infraestructure.Entity.Models.ProfileWorkEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("IdProfile")
-                        .HasColumnType("int");
-
-                    b.Property<int>("IdWork")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("IdWork");
-
-                    b.HasIndex("IdProfile", "IdWork")
-                        .IsUnique();
-
-                    b.ToTable("ProfileWork");
-                });
-
             modelBuilder.Entity("Infraestructure.Entity.Models.ProvinceEntity", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -450,10 +393,7 @@ namespace Infraestructure.Core.Migrations
             modelBuilder.Entity("Infraestructure.Entity.Models.RoleEntity", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -486,6 +426,24 @@ namespace Infraestructure.Core.Migrations
                         .IsUnique();
 
                     b.ToTable("RolesPermissions");
+                });
+
+            modelBuilder.Entity("Infraestructure.Entity.Models.SectorEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Sector");
                 });
 
             modelBuilder.Entity("Infraestructure.Entity.Models.SkillEntity", b =>
@@ -530,6 +488,24 @@ namespace Infraestructure.Core.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("State");
+                });
+
+            modelBuilder.Entity("Infraestructure.Entity.Models.UbicationEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Ubication");
                 });
 
             modelBuilder.Entity("Infraestructure.Entity.Models.UserEntity", b =>
@@ -591,6 +567,21 @@ namespace Infraestructure.Core.Migrations
                     b.Property<string>("DetailFuntion")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("IdJobPosition")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdProfile")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdSector")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdUbication")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdWorkType")
+                        .HasColumnType("int");
+
                     b.Property<string>("Role")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -598,7 +589,35 @@ namespace Infraestructure.Core.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("IdJobPosition");
+
+                    b.HasIndex("IdProfile");
+
+                    b.HasIndex("IdSector");
+
+                    b.HasIndex("IdUbication");
+
+                    b.HasIndex("IdWorkType");
+
                     b.ToTable("Work");
+                });
+
+            modelBuilder.Entity("Infraestructure.Entity.Models.WorkTypeEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("WorkType");
                 });
 
             modelBuilder.Entity("Infraestructure.Entity.Models.AdressEntity", b =>
@@ -631,7 +650,15 @@ namespace Infraestructure.Core.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Infraestructure.Entity.Models.ProfileEntity", "ProfileEntity")
+                        .WithMany("EducationEntity")
+                        .HasForeignKey("IdProfile")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("InstitutionTypeEntity");
+
+                    b.Navigation("ProfileEntity");
                 });
 
             modelBuilder.Entity("Infraestructure.Entity.Models.PermissionEntity", b =>
@@ -664,25 +691,6 @@ namespace Infraestructure.Core.Migrations
                     b.Navigation("ProfileEntity");
                 });
 
-            modelBuilder.Entity("Infraestructure.Entity.Models.ProfileEducationEntity", b =>
-                {
-                    b.HasOne("Infraestructure.Entity.Models.EducationEntity", "EducationEntity")
-                        .WithMany("ProfileEducationEntity")
-                        .HasForeignKey("IdEducation")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Infraestructure.Entity.Models.ProfileEntity", "ProfileEntity")
-                        .WithMany("ProfileEducationEntity")
-                        .HasForeignKey("IdProfile")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("EducationEntity");
-
-                    b.Navigation("ProfileEntity");
-                });
-
             modelBuilder.Entity("Infraestructure.Entity.Models.ProfileEntity", b =>
                 {
                     b.HasOne("Infraestructure.Entity.Models.AdressEntity", "AdressEntity")
@@ -693,10 +701,6 @@ namespace Infraestructure.Core.Migrations
                         .WithMany("ProfileEntity")
                         .HasForeignKey("IdDniType");
 
-                    b.HasOne("Infraestructure.Entity.Models.JobPositionEntity", "JobPositionEntity")
-                        .WithMany("ProfileEntity")
-                        .HasForeignKey("IdJobPosition");
-
                     b.HasOne("Infraestructure.Entity.Models.UserEntity", "UserEntity")
                         .WithOne("ProfileEntity")
                         .HasForeignKey("Infraestructure.Entity.Models.ProfileEntity", "IdUser")
@@ -706,8 +710,6 @@ namespace Infraestructure.Core.Migrations
                     b.Navigation("AdressEntity");
 
                     b.Navigation("DniTypeEntity");
-
-                    b.Navigation("JobPositionEntity");
 
                     b.Navigation("UserEntity");
                 });
@@ -729,25 +731,6 @@ namespace Infraestructure.Core.Migrations
                     b.Navigation("ProfileEntity");
 
                     b.Navigation("SkillEntity");
-                });
-
-            modelBuilder.Entity("Infraestructure.Entity.Models.ProfileWorkEntity", b =>
-                {
-                    b.HasOne("Infraestructure.Entity.Models.ProfileEntity", "ProfileEntity")
-                        .WithMany("ProfileWorkEntity")
-                        .HasForeignKey("IdProfile")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Infraestructure.Entity.Models.WorkEntity", "WorkEntity")
-                        .WithMany("ProfileWorkEntity")
-                        .HasForeignKey("IdWork")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ProfileEntity");
-
-                    b.Navigation("WorkEntity");
                 });
 
             modelBuilder.Entity("Infraestructure.Entity.Models.ProvinceEntity", b =>
@@ -791,6 +774,47 @@ namespace Infraestructure.Core.Migrations
                     b.Navigation("RoleEntity");
                 });
 
+            modelBuilder.Entity("Infraestructure.Entity.Models.WorkEntity", b =>
+                {
+                    b.HasOne("Infraestructure.Entity.Models.JobPositionEntity", "JobPositionEntity")
+                        .WithMany("WorkEntity")
+                        .HasForeignKey("IdJobPosition");
+
+                    b.HasOne("Infraestructure.Entity.Models.ProfileEntity", "ProfileEntity")
+                        .WithMany("WorkEntity")
+                        .HasForeignKey("IdProfile")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Infraestructure.Entity.Models.SectorEntity", "SectorEntity")
+                        .WithMany()
+                        .HasForeignKey("IdSector")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Infraestructure.Entity.Models.UbicationEntity", "UbicationEntity")
+                        .WithMany("WorkEntitys")
+                        .HasForeignKey("IdUbication")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Infraestructure.Entity.Models.WorkTypeEntity", "WorkTypeEntity")
+                        .WithMany()
+                        .HasForeignKey("IdWorkType")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("JobPositionEntity");
+
+                    b.Navigation("ProfileEntity");
+
+                    b.Navigation("SectorEntity");
+
+                    b.Navigation("UbicationEntity");
+
+                    b.Navigation("WorkTypeEntity");
+                });
+
             modelBuilder.Entity("Infraestructure.Entity.Models.AdressEntity", b =>
                 {
                     b.Navigation("ProfileEntity");
@@ -806,11 +830,6 @@ namespace Infraestructure.Core.Migrations
                     b.Navigation("ProfileEntity");
                 });
 
-            modelBuilder.Entity("Infraestructure.Entity.Models.EducationEntity", b =>
-                {
-                    b.Navigation("ProfileEducationEntity");
-                });
-
             modelBuilder.Entity("Infraestructure.Entity.Models.InstitutionTypeEntity", b =>
                 {
                     b.Navigation("EducationEntities");
@@ -818,7 +837,7 @@ namespace Infraestructure.Core.Migrations
 
             modelBuilder.Entity("Infraestructure.Entity.Models.JobPositionEntity", b =>
                 {
-                    b.Navigation("ProfileEntity");
+                    b.Navigation("WorkEntity");
                 });
 
             modelBuilder.Entity("Infraestructure.Entity.Models.PermissionEntity", b =>
@@ -833,13 +852,13 @@ namespace Infraestructure.Core.Migrations
 
             modelBuilder.Entity("Infraestructure.Entity.Models.ProfileEntity", b =>
                 {
+                    b.Navigation("EducationEntity");
+
                     b.Navigation("ProfileCertificationEntity");
 
-                    b.Navigation("ProfileEducationEntity");
-
-                    b.Navigation("ProfileWorkEntity");
-
                     b.Navigation("ProfilesSkillsEntity");
+
+                    b.Navigation("WorkEntity");
                 });
 
             modelBuilder.Entity("Infraestructure.Entity.Models.ProvinceEntity", b =>
@@ -859,15 +878,15 @@ namespace Infraestructure.Core.Migrations
                     b.Navigation("ProfilesSkillsEntity");
                 });
 
+            modelBuilder.Entity("Infraestructure.Entity.Models.UbicationEntity", b =>
+                {
+                    b.Navigation("WorkEntitys");
+                });
+
             modelBuilder.Entity("Infraestructure.Entity.Models.UserEntity", b =>
                 {
                     b.Navigation("ProfileEntity")
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Infraestructure.Entity.Models.WorkEntity", b =>
-                {
-                    b.Navigation("ProfileWorkEntity");
                 });
 #pragma warning restore 612, 618
         }

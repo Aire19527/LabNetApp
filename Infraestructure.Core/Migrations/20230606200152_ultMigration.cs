@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Infraestructure.Core.Migrations
 {
-    public partial class initialMigration : Migration
+    public partial class ultMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -41,8 +41,7 @@ namespace Infraestructure.Core.Migrations
                 name: "Country",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false)
                 },
                 constraints: table =>
@@ -106,13 +105,25 @@ namespace Infraestructure.Core.Migrations
                 name: "Role",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Role", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Sector",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Description = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Sector", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -144,29 +155,36 @@ namespace Infraestructure.Core.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Work",
+                name: "Ubication",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Company = table.Column<string>(type: "nvarchar(120)", maxLength: 120, nullable: false),
-                    Role = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    DetailFuntion = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    BossRole = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    BossContact = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    BossName = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Description = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Work", x => x.Id);
+                    table.PrimaryKey("PK_Ubication", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "WorkType",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Description = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WorkType", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Province",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false),
                     IdCountryEntity = table.Column<int>(type: "int", nullable: false)
                 },
@@ -177,29 +195,6 @@ namespace Infraestructure.Core.Migrations
                         name: "FK_Province_Country_IdCountryEntity",
                         column: x => x.IdCountryEntity,
                         principalTable: "Country",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Education",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    InstitutionName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Degree = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    AdmissionDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ExpeditionDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    IdInstitutionType = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Education", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Education_InstitutionType_IdInstitutionType",
-                        column: x => x.IdInstitutionType,
-                        principalTable: "InstitutionType",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -250,8 +245,7 @@ namespace Infraestructure.Core.Migrations
                 name: "City",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false),
                     IDProvinceEntity = table.Column<int>(type: "int", nullable: false)
                 },
@@ -331,8 +325,7 @@ namespace Infraestructure.Core.Migrations
                     CV = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IdUser = table.Column<int>(type: "int", nullable: false),
                     IdAdress = table.Column<int>(type: "int", nullable: true),
-                    IdDniType = table.Column<int>(type: "int", nullable: true),
-                    IdJobPosition = table.Column<int>(type: "int", nullable: true)
+                    IdDniType = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -348,14 +341,39 @@ namespace Infraestructure.Core.Migrations
                         principalTable: "DniType",
                         principalColumn: "id");
                     table.ForeignKey(
-                        name: "FK_Profile_JobPosition_IdJobPosition",
-                        column: x => x.IdJobPosition,
-                        principalTable: "JobPosition",
-                        principalColumn: "Id");
-                    table.ForeignKey(
                         name: "FK_Profile_User_IdUser",
                         column: x => x.IdUser,
                         principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Education",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    InstitutionName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Degree = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    AdmissionDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ExpeditionDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IdProfile = table.Column<int>(type: "int", nullable: false),
+                    IdInstitutionType = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Education", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Education_InstitutionType_IdInstitutionType",
+                        column: x => x.IdInstitutionType,
+                        principalTable: "InstitutionType",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Education_Profile_IdProfile",
+                        column: x => x.IdProfile,
+                        principalTable: "Profile",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -380,32 +398,6 @@ namespace Infraestructure.Core.Migrations
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ProfileCertification_Profile_IdProfile",
-                        column: x => x.IdProfile,
-                        principalTable: "Profile",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ProfileEducation",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    IdProfile = table.Column<int>(type: "int", nullable: false),
-                    IdEducation = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProfileEducation", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ProfileEducation_Education_IdEducation",
-                        column: x => x.IdEducation,
-                        principalTable: "Education",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ProfileEducation_Profile_IdProfile",
                         column: x => x.IdProfile,
                         principalTable: "Profile",
                         principalColumn: "Id",
@@ -439,27 +431,53 @@ namespace Infraestructure.Core.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProfileWork",
+                name: "Work",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Company = table.Column<string>(type: "nvarchar(120)", maxLength: 120, nullable: false),
+                    Role = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    DetailFuntion = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BossRole = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BossContact = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BossName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IdProfile = table.Column<int>(type: "int", nullable: false),
-                    IdWork = table.Column<int>(type: "int", nullable: false)
+                    IdUbication = table.Column<int>(type: "int", nullable: false),
+                    IdWorkType = table.Column<int>(type: "int", nullable: false),
+                    IdSector = table.Column<int>(type: "int", nullable: false),
+                    IdJobPosition = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProfileWork", x => x.Id);
+                    table.PrimaryKey("PK_Work", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ProfileWork_Profile_IdProfile",
+                        name: "FK_Work_JobPosition_IdJobPosition",
+                        column: x => x.IdJobPosition,
+                        principalTable: "JobPosition",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Work_Profile_IdProfile",
                         column: x => x.IdProfile,
                         principalTable: "Profile",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ProfileWork_Work_IdWork",
-                        column: x => x.IdWork,
-                        principalTable: "Work",
+                        name: "FK_Work_Sector_IdSector",
+                        column: x => x.IdSector,
+                        principalTable: "Sector",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Work_Ubication_IdUbication",
+                        column: x => x.IdUbication,
+                        principalTable: "Ubication",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Work_WorkType_IdWorkType",
+                        column: x => x.IdWorkType,
+                        principalTable: "WorkType",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -480,6 +498,11 @@ namespace Infraestructure.Core.Migrations
                 column: "IdInstitutionType");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Education_IdProfile",
+                table: "Education",
+                column: "IdProfile");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Permission_IdPermissionTypeEntity",
                 table: "Permission",
                 column: "IdPermissionTypeEntity");
@@ -493,11 +516,6 @@ namespace Infraestructure.Core.Migrations
                 name: "IX_Profile_IdDniType",
                 table: "Profile",
                 column: "IdDniType");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Profile_IdJobPosition",
-                table: "Profile",
-                column: "IdJobPosition");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Profile_IdUser",
@@ -517,17 +535,6 @@ namespace Infraestructure.Core.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProfileEducation_IdEducation",
-                table: "ProfileEducation",
-                column: "IdEducation");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProfileEducation_IdProfile_IdEducation",
-                table: "ProfileEducation",
-                columns: new[] { "IdProfile", "IdEducation" },
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_ProfilesSkills_IdProfile_IdSkill",
                 table: "ProfilesSkills",
                 columns: new[] { "IdProfile", "IdSkill" },
@@ -537,17 +544,6 @@ namespace Infraestructure.Core.Migrations
                 name: "IX_ProfilesSkills_IdSkill",
                 table: "ProfilesSkills",
                 column: "IdSkill");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProfileWork_IdProfile_IdWork",
-                table: "ProfileWork",
-                columns: new[] { "IdProfile", "IdWork" },
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProfileWork_IdWork",
-                table: "ProfileWork",
-                column: "IdWork");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Province_IdCountryEntity",
@@ -575,6 +571,31 @@ namespace Infraestructure.Core.Migrations
                 table: "User",
                 column: "Mail",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Work_IdJobPosition",
+                table: "Work",
+                column: "IdJobPosition");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Work_IdProfile",
+                table: "Work",
+                column: "IdProfile");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Work_IdSector",
+                table: "Work",
+                column: "IdSector");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Work_IdUbication",
+                table: "Work",
+                column: "IdUbication");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Work_IdWorkType",
+                table: "Work",
+                column: "IdWorkType");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -583,16 +604,13 @@ namespace Infraestructure.Core.Migrations
                 name: "Configuration");
 
             migrationBuilder.DropTable(
+                name: "Education");
+
+            migrationBuilder.DropTable(
                 name: "ProfileCertification");
 
             migrationBuilder.DropTable(
-                name: "ProfileEducation");
-
-            migrationBuilder.DropTable(
                 name: "ProfilesSkills");
-
-            migrationBuilder.DropTable(
-                name: "ProfileWork");
 
             migrationBuilder.DropTable(
                 name: "RolesPermissions");
@@ -601,25 +619,37 @@ namespace Infraestructure.Core.Migrations
                 name: "State");
 
             migrationBuilder.DropTable(
-                name: "Certification");
+                name: "Work");
 
             migrationBuilder.DropTable(
-                name: "Education");
+                name: "InstitutionType");
+
+            migrationBuilder.DropTable(
+                name: "Certification");
 
             migrationBuilder.DropTable(
                 name: "Skill");
 
             migrationBuilder.DropTable(
-                name: "Profile");
-
-            migrationBuilder.DropTable(
-                name: "Work");
-
-            migrationBuilder.DropTable(
                 name: "Permission");
 
             migrationBuilder.DropTable(
-                name: "InstitutionType");
+                name: "JobPosition");
+
+            migrationBuilder.DropTable(
+                name: "Profile");
+
+            migrationBuilder.DropTable(
+                name: "Sector");
+
+            migrationBuilder.DropTable(
+                name: "Ubication");
+
+            migrationBuilder.DropTable(
+                name: "WorkType");
+
+            migrationBuilder.DropTable(
+                name: "PermissionType");
 
             migrationBuilder.DropTable(
                 name: "Adress");
@@ -628,13 +658,7 @@ namespace Infraestructure.Core.Migrations
                 name: "DniType");
 
             migrationBuilder.DropTable(
-                name: "JobPosition");
-
-            migrationBuilder.DropTable(
                 name: "User");
-
-            migrationBuilder.DropTable(
-                name: "PermissionType");
 
             migrationBuilder.DropTable(
                 name: "City");

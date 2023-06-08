@@ -33,6 +33,9 @@ namespace Infraestructure.Core.UnitOfWork
         private IRepository<ProfilesSkillsEntity> profileSkillRepository;
         private IRepository<WorkEntity> workRepository;
         private IRepository<JobPositionEntity> jobPositionRepository;
+        private IRepository<WorkTypeEntity> workTypeRepository;
+        private IRepository<UbicationEntity> ubicationRepository;
+        private IRepository<SectorEntity> sectorRepository;
         #endregion
 
         #region Members
@@ -48,6 +51,18 @@ namespace Infraestructure.Core.UnitOfWork
                 return skillRepository;
             }
         }
+
+        public IRepository<WorkTypeEntity> WorkTypeRepository
+        {
+            get
+            {
+                if (this.workTypeRepository == null)
+                    this.workTypeRepository = new Repository<WorkTypeEntity>(_context);
+
+                return workTypeRepository;
+            }
+        }
+
 
         public IRepository<UserEntity> UserRepository
         {
@@ -115,6 +130,28 @@ namespace Infraestructure.Core.UnitOfWork
                     this.jobPositionRepository = new Repository<JobPositionEntity>(_context);
 
                 return jobPositionRepository;
+            }
+        }
+
+        public IRepository<UbicationEntity> UbicationRepository
+        {
+            get
+            {
+                if (this.ubicationRepository == null)
+                    this.ubicationRepository = new Repository<UbicationEntity>(_context);
+
+                return ubicationRepository;
+            }
+
+        }
+
+        public IRepository<SectorEntity> SectorRepository
+        {
+            get {  
+                if (this.sectorRepository == null)
+                    this.sectorRepository = new Repository<SectorEntity>(_context);
+
+                return sectorRepository;
             }
         }
 

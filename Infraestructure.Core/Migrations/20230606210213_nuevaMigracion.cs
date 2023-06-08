@@ -4,7 +4,7 @@
 
 namespace Infraestructure.Core.Migrations
 {
-    public partial class devx1 : Migration
+    public partial class nuevaMigracion : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
