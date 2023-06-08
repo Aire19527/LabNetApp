@@ -36,6 +36,8 @@ namespace Infraestructure.Core.UnitOfWork
         private IRepository<ProfilesSkillsEntity> profileSkillRepository;
         private IRepository<WorkEntity> workRepository;
         private IRepository<JobPositionEntity> jobPositionRepository;
+        private IRepository<EducationEntity> educationRepository;
+        private IRepository<InstitutionTypeEntity> institutionTypeRepository;
         private IRepository<WorkTypeEntity> workTypeRepository;
         private IRepository<UbicationEntity> ubicationRepository;
         private IRepository<SectorEntity> sectorRepository;
@@ -135,6 +137,32 @@ namespace Infraestructure.Core.UnitOfWork
                 return jobPositionRepository;
             }
         }
+
+
+
+        public IRepository<EducationEntity> EducationRepository
+        {
+            get
+            {
+                if (this.educationRepository == null)
+                    this.educationRepository = new Repository<EducationEntity>(_context);
+
+                return educationRepository;
+            }
+        }
+
+        public IRepository<InstitutionTypeEntity> InstitutionTypeRepository
+        {
+            get
+            {
+                if (this.institutionTypeRepository == null)
+                    this.institutionTypeRepository = new Repository<InstitutionTypeEntity>(_context);
+
+                return institutionTypeRepository;
+            }
+        }
+
+        public IDbContextTransaction BeginTransaction()
 
         public IRepository<UbicationEntity> UbicationRepository
         {

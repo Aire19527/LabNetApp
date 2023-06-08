@@ -8,21 +8,8 @@ using System.Threading.Tasks;
 
 namespace Lab.Domain.Dto.Education
 {
-    public class EducationDto
+    public class EducationDto : UpdateEducationDto
     {
-        [Key]
-        public int Id { get; set; }
-        [Required]
-        [MaxLength(100)]
-        public string InstitutionName { get; set; }
-        [Required]
-        [MaxLength(100)]
-        public string Degree { get; set; }
-        [Required]
-        public DateTime AdmissionDate { get; set; }
-        [Required]
-        public DateTime ExpeditionDate { get; set; }
-        public int IdInstitutionType { get; set; }
         public string DescriptionInstitutionType { get; set; }
     }
 }

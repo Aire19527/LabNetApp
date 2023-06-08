@@ -16,6 +16,9 @@ namespace Infraestructure.Core.UnitOfWork.Interface
         IRepository<WorkEntity> WorkRepository { get; }
 
         IRepository<JobPositionEntity> JobPositionRepository { get; }
+        IRepository<EducationEntity> EducationRepository { get; }
+
+        IRepository<InstitutionTypeEntity> InstitutionTypeRepository { get; }
 
         IRepository<WorkTypeEntity> WorkTypeRepository { get; }
 

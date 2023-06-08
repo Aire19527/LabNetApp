@@ -5,11 +5,14 @@ using Lab.Domain.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Lab.Domain.Dto.Role;
+using MyLabApp.Handlers;
 
 namespace MyLabApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [TypeFilter(typeof(CustomExceptionHandler))]
+
     public class RoleController : ControllerBase
     {
         private readonly IRoleServices _roleServices;
