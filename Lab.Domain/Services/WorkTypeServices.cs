@@ -1,7 +1,7 @@
 ﻿using Infraestructure.Core.UnitOfWork.Interface;
 using Infraestructure.Entity.Models;
 using Lab.Domain.Dto.Role;
-using Lab.Domain.Dto.User;
+using Lab.Domain.Dto.WorkType;
 using Lab.Domain.Services.Interfaces;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -12,30 +12,33 @@ using System.Threading.Tasks;
 
 namespace Lab.Domain.Services
 {
-    public class RoleServices : IRoleServices
+    public class WorkTypeServices : IWorkTypeServices
     {
         private readonly IUnitOfWork _unitOfWork;
 
 
-        public RoleServices(IUnitOfWork unitOfWork)
+
+        public WorkTypeServices(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
+    
 
         }
-        public List<GetRoleDto> GetAll()
+        public List<GetWorkTypeDto> GetAll()
         {
-            IEnumerable<RoleEntity> roleQuery = _unitOfWork.RoleRepository.GetAll();
+
+            IEnumerable<WorkTypeEntity> workQuery = _unitOfWork.WorkTypeRepository.GetAll();
             //.FindAll(x=> & | ) para separar las condiciones
 
 
-            List<GetRoleDto> roles = roleQuery.Select(x => new GetRoleDto()
+            List<GetWorkTypeDto> works = workQuery.Select(x => new GetWorkTypeDto()
             {
                 Id = x.Id,
-                Descripcion= x.Description
+                Descripcion = x.Description
             })
             .ToList();
 
-            return roles;
+            return works;
 
         }
     }

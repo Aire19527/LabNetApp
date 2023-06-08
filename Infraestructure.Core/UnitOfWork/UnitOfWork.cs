@@ -38,6 +38,9 @@ namespace Infraestructure.Core.UnitOfWork
         private IRepository<JobPositionEntity> jobPositionRepository;
         private IRepository<EducationEntity> educationRepository;
         private IRepository<InstitutionTypeEntity> institutionTypeRepository;
+        private IRepository<WorkTypeEntity> workTypeRepository;
+        private IRepository<UbicationEntity> ubicationRepository;
+        private IRepository<SectorEntity> sectorRepository;
         #endregion
 
         #region Members
@@ -51,6 +54,17 @@ namespace Infraestructure.Core.UnitOfWork
                     this.skillRepository = new Repository<SkillEntity>(_context);
 
                 return skillRepository;
+            }
+        }
+
+        public IRepository<WorkTypeEntity> WorkTypeRepository
+        {
+            get
+            {
+                if (this.workTypeRepository == null)
+                    this.workTypeRepository = new Repository<WorkTypeEntity>(_context);
+
+                return workTypeRepository;
             }
         }
 
@@ -149,6 +163,30 @@ namespace Infraestructure.Core.UnitOfWork
         }
 
         public IDbContextTransaction BeginTransaction()
+
+        public IRepository<UbicationEntity> UbicationRepository
+        {
+            get
+            {
+                if (this.ubicationRepository == null)
+                    this.ubicationRepository = new Repository<UbicationEntity>(_context);
+
+                return ubicationRepository;
+            }
+
+        }
+
+        public IRepository<SectorEntity> SectorRepository
+        {
+            get {  
+                if (this.sectorRepository == null)
+                    this.sectorRepository = new Repository<SectorEntity>(_context);
+
+                return sectorRepository;
+            }
+        }
+
+    public IDbContextTransaction BeginTransaction()
         {
             return _context.Database.BeginTransaction();
         }

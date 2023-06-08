@@ -33,6 +33,10 @@ namespace MyLabApp.Handlers
 
             services.AddTransient<IInstitutionTypeServices, InstitutionTypeServices>();
 
+            services.AddTransient<IWorkTypeServices, WorkTypeServices>();
+
+            services.AddTransient<IUbicationServices, UbicationServices>();
+            services.AddTransient<ISectorServices, SectorServices>();
 
         }
     }
