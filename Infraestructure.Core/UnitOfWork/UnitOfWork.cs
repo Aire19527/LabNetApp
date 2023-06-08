@@ -162,7 +162,6 @@ namespace Infraestructure.Core.UnitOfWork
             }
         }
 
-        public IDbContextTransaction BeginTransaction()
 
         public IRepository<UbicationEntity> UbicationRepository
         {
