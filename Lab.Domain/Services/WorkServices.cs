@@ -63,10 +63,11 @@ namespace Lab.Domain.Services
                 IdSector = addWorkDto.IdSector,
                 IdUbication = addWorkDto.IdUbication,
                 IdWorkType = addWorkDto.IdWorkType,
-                EndDate = addWorkDto.EndDate,
+                EndDate = addWorkDto.IsCurrent ? null : addWorkDto.EndDate,
                 StartDate = addWorkDto.StartDate,
                 IsCurrent = addWorkDto.IsCurrent,
             };
+
             _unitOfWork.WorkRepository.Insert(workEntity);
            
             return await _unitOfWork.Save() > 0;
@@ -88,7 +89,7 @@ namespace Lab.Domain.Services
                 workEntity.IdUbication = modifyWorkDto.IdUbication;
                 workEntity.IdWorkType = modifyWorkDto.IdWorkType;
                 workEntity.StartDate = modifyWorkDto.StartDate;
-                workEntity.EndDate = modifyWorkDto.EndDate;
+                workEntity.EndDate = modifyWorkDto.IsCurrent? null : modifyWorkDto.EndDate;
                 workEntity.IsCurrent = modifyWorkDto.IsCurrent;
 
                 _unitOfWork.WorkRepository.Update(workEntity);
