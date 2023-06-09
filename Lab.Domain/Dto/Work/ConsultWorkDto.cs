@@ -23,5 +23,10 @@ namespace Lab.Domain.Dto.Work
         public string? SectorName { get; set; }
         public string? UbicationName { get; set; }
         public string? WorkTypeName { get; set; }
+        [Required]
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        [Required]
+        public bool IsCurrent { get; set; }
     }
 }

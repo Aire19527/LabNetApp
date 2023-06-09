@@ -23,5 +23,10 @@ namespace Lab.Domain.Dto.Work
         public int IdUbication { get; set; }
         [Required]
         public int IdWorkType { get; set; }
+        [Required]
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        [Required]
+        public bool IsCurrent { get; set; }
     }
 }

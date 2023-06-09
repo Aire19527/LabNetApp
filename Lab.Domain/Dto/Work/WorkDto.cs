@@ -29,5 +29,10 @@ namespace Lab.Domain.Dto.Work
         public int IdWorkType { get; set; }
 
         public string DescriptionWorkType { get; set; }
+        [Required]
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        [Required]
+        public bool IsCurrent { get; set; }
     }
 }
