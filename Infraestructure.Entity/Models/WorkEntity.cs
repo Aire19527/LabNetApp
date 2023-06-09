@@ -23,6 +23,11 @@ namespace Infraestructure.Entity.Models
         public string? BossRole { get; set; }
         public string? BossContact { get; set; }
         public string? BossName { get; set; }
+        [Required]
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        [Required]
+        public bool IsCurrent { get; set; }
         
         [ForeignKey("ProfileEntity")]
         public int IdProfile { get; set; }
