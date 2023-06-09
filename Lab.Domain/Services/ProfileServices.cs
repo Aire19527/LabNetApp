@@ -370,6 +370,7 @@ namespace Lab.Domain.Services
                                         LastName = x.ProfileEntity.LastName,
                                         Mail = x.ProfileEntity.Mail,
                                         Phone = x.ProfileEntity.Phone,
+                                        Works = (GetWork(x.ProfileEntity.Id)),
                                         Skill = (GetProfileSkill(x.ProfileEntity.Id)),
                                     }).FirstOrDefault(),
                                     Key = perf.Key,
@@ -397,7 +398,30 @@ namespace Lab.Domain.Services
 
             return listSkill;
         }
+        public IEnumerable<WorkDto> GetWork(int id)
+        {
 
+            ProfileEntity profile = _unitOfWork.ProfileRepository.FirstOrDefaultSelect(x => x.Id == id,
+                                                                                        w => w.WorkEntity.Select(x => x.SectorEntity),
+                                                                                        w => w.WorkEntity.Select(x => x.UbicationEntity),
+                                                                                        w => w.WorkEntity.Select(x => x.WorkTypeEntity)
+                                                                                        );
+            if (profile == null)
+                throw new BusinessException("No existe el perfil seleccinado");
+
+            IEnumerable<WorkDto> workEntities = profile.WorkEntity.Select(x => new WorkDto
+            {
+                Id = x.Id,
+                Company = x.Company,
+                Role = x.Role,
+                IdSector = x.SectorEntity.Id,
+                DescriptionSector = x.SectorEntity.Description,
+                DescriptionUbication = x.UbicationEntity.Description,
+                DescriptionWorkType = x.WorkTypeEntity.Description
+            }).ToList();
+
+            return workEntities;
+        }
 
         #endregion
     }

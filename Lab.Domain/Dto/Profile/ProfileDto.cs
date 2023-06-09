@@ -1,5 +1,6 @@
 ﻿using Infraestructure.Entity.Models;
 using Lab.Domain.Dto.Skill;
+using Lab.Domain.Dto.Work;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -28,6 +29,8 @@ namespace Lab.Domain.Dto.Profile
         public string Phone { get; set; }
 
         public IEnumerable<ConsultSkllDto> Skill { get; set; }
+        public IEnumerable<WorkDto> Works { get; set; }
+
 
         //public string Photo { get; set; }
     }
