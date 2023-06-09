@@ -7,14 +7,11 @@ namespace Infraestructure.Core.UnitOfWork.Interface
     public interface IUnitOfWork
     {
         IRepository<SkillEntity> SkillRepository { get; }
-
         IRepository<UserEntity> UserRepository { get; }
-
         IRepository<RoleEntity> RoleRepository { get; }
         IRepository<ProfileEntity> ProfileRepository { get; }
         IRepository<ProfilesSkillsEntity> ProfilesSkillsRepository { get; }
         IRepository<WorkEntity> WorkRepository { get; }
-
         IRepository<JobPositionEntity> JobPositionRepository { get; }
         IRepository<EducationEntity> EducationRepository { get; }
 

@@ -27,11 +27,8 @@ namespace Infraestructure.Core.UnitOfWork
 
         #region Properties
         private IRepository<SkillEntity> skillRepository;
-
         private IRepository<UserEntity> userRepository;
-
         private IRepository<RoleEntity> roleRepository;
-
         private IRepository<ProfileEntity> profileRepository;
         private IRepository<ProfilesSkillsEntity> profileSkillRepository;
         private IRepository<WorkEntity> workRepository;
@@ -196,8 +193,6 @@ namespace Infraestructure.Core.UnitOfWork
         }
         #endregion
 
-
-
         protected virtual void Dispose(bool disposing)
         {
 
@@ -220,5 +215,4 @@ namespace Infraestructure.Core.UnitOfWork
         public async Task<int> Save() => await _context.SaveChangesAsync();
 
     }
-
 }

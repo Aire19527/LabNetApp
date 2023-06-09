@@ -87,8 +87,11 @@ namespace Lab.Domain.Services
             ProfileEntity profile = _unitOfWork.ProfileRepository.FirstOrDefaultSelect(x => x.IdUser == id,
                                                                                 a => a.AdressEntity,
                                                                                 d => d.DniTypeEntity,
-                                                                                w => w.WorkEntity,
-                                                                                e => e.EducationEntity.Select(x => x.InstitutionTypeEntity));
+                                                                                w => w.WorkEntity.Select(x => x.SectorEntity),
+                                                                                w => w.WorkEntity.Select(x => x.UbicationEntity),
+                                                                                w => w.WorkEntity.Select(x => x.WorkTypeEntity),
+                                                                                e => e.EducationEntity.Select(x => x.InstitutionTypeEntity)
+                                                                                );
 
 
             if (profile == null)
@@ -117,6 +120,12 @@ namespace Lab.Domain.Services
                     Id = x.Id,
                     Company = x.Company,
                     Role = x.Role,
+                    IdSector = x.SectorEntity.Id,
+                    DescriptionSector = x.SectorEntity.Description,
+                    IdUbication = x.UbicationEntity.Id,
+                    DescriptionUbication = x.UbicationEntity.Description,
+                    IdWorkType = x.WorkTypeEntity.Id,
+                    DescriptionWorkType = x.WorkTypeEntity.Description
                 }).ToList(),
 
                 EducationEntities = profile.EducationEntity.Select(x => new EducationDto()

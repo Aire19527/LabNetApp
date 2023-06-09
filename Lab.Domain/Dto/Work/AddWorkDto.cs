@@ -7,27 +7,21 @@ using System.Threading.Tasks;
 
 namespace Lab.Domain.Dto.Work
 {
-    public class WorkDto
+    public class AddWorkDto
     {
-        [Key]
-        public int Id { get; set; }
         [Required]
         [MaxLength(120)]
         public string Company { get; set; }
         [Required]
         [MaxLength(100)]
         public string Role { get; set; }
-
+        [Required]
+        public int IdProfile { get; set; }
+        [Required]
         public int IdSector { get; set; }
-
-        public string DescriptionSector { get; set; }
         [Required]
         public int IdUbication { get; set; }
-        public string DescriptionUbication { get; set; }
-
         [Required]
         public int IdWorkType { get; set; }
-
-        public string DescriptionWorkType { get; set; }
     }
 }

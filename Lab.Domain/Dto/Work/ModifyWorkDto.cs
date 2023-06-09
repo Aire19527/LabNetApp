@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Lab.Domain.Dto.Work
 {
-    public class WorkDto
+    public class ModifyWorkDto
     {
         [Key]
         public int Id { get; set; }
@@ -17,17 +17,15 @@ namespace Lab.Domain.Dto.Work
         [Required]
         [MaxLength(100)]
         public string Role { get; set; }
+        public string? DetailFuntion { get; set; }
+        public string? BossRole { get; set; }
+        public string? BossContact { get; set; }
+        public string? BossName { get; set; }
 
         public int IdSector { get; set; }
-
-        public string DescriptionSector { get; set; }
         [Required]
         public int IdUbication { get; set; }
-        public string DescriptionUbication { get; set; }
-
         [Required]
         public int IdWorkType { get; set; }
-
-        public string DescriptionWorkType { get; set; }
     }
 }

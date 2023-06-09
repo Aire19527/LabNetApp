@@ -22,19 +22,15 @@ namespace MyLabApp.Handlers
             services.AddTransient<IEducationServices, EducationServices>();
 
             services.AddTransient<ISkillServices, SkillServices>();
-
             services.AddTransient<IUserServices, UserServices>();
-
             services.AddTransient<IProfileServices, ProfileServices>();
-
             services.AddTransient<IRoleServices, RoleServices>();
-
             services.AddTransient<IJobPositionServices, JobPositionServices>();
 
             services.AddTransient<IInstitutionTypeServices, InstitutionTypeServices>();
 
             services.AddTransient<IWorkTypeServices, WorkTypeServices>();
-
+            services.AddTransient<IWorkServices, WorkServices>();
             services.AddTransient<IUbicationServices, UbicationServices>();
             services.AddTransient<ISectorServices, SectorServices>();
 
