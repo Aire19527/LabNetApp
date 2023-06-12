@@ -17,7 +17,7 @@ namespace MyLabApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     [TypeFilter(typeof(CustomExceptionHandler))]
     public class UserController : ControllerBase
     {
@@ -74,6 +74,7 @@ namespace MyLabApp.Controllers
 
         [HttpDelete]
         [Route("Delete/{id}")]
+        //[AllowAnonymous]
         public async Task<IActionResult> Delete(int id)
         {
             IActionResult action;

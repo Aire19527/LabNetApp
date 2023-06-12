@@ -12,7 +12,6 @@ namespace MyLabApp.Controllers
     [ApiController]
     [Authorize]
     [TypeFilter(typeof(CustomExceptionHandler))]
-
     public class InstitutionTypeController : ControllerBase
     {
             private readonly IInstitutionTypeServices _InstitutionTypeServices;

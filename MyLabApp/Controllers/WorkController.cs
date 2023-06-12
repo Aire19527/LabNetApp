@@ -2,6 +2,7 @@
 using Lab.Domain.Dto;
 using Lab.Domain.Dto.Work;
 using Lab.Domain.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MyLabApp.Handlers;
@@ -10,6 +11,7 @@ namespace MyLabApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     [TypeFilter(typeof(CustomExceptionHandler))]
     public class WorkController : ControllerBase
     {

@@ -13,7 +13,6 @@ namespace MyLabApp.Controllers
     [ApiController]
     [Authorize]
     [TypeFilter(typeof(CustomExceptionHandler))]
-
     public class JobPositionController : ControllerBase
     {
         private readonly IJobPositionServices _jobPositionServices;

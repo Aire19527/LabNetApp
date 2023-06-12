@@ -7,9 +7,13 @@ using Microsoft.AspNetCore.Mvc;
 using Lab.Domain.Dto.Sector;
 using Common.Resources;
 using Lab.Domain.Dto.Skill;
+using MyLabApp.Handlers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MyLabApp.Controllers
 {
+    [TypeFilter(typeof(CustomExceptionHandler))]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class SectorController : ControllerBase

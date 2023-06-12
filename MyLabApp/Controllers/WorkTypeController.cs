@@ -5,11 +5,15 @@ using Lab.Domain.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Lab.Domain.Dto.WorkType;
+using Microsoft.AspNetCore.Authorization;
+using MyLabApp.Handlers;
 
 namespace MyLabApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
+    [TypeFilter(typeof(CustomExceptionHandler))]
     public class WorkTypeController : ControllerBase
     {
         private IWorkTypeServices _workTypeServices;
