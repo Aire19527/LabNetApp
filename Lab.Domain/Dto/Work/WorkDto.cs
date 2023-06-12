@@ -27,7 +27,7 @@ namespace Lab.Domain.Dto.Work
 
         [Required]
         public int IdWorkType { get; set; }
-
+        public int IdJobPosition { get; set; }
         public string DescriptionWorkType { get; set; }
         [Required]
         public DateTime? StartDate { get; set; }

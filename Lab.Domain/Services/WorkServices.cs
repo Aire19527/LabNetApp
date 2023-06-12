@@ -63,6 +63,7 @@ namespace Lab.Domain.Services
                 IdSector = addWorkDto.IdSector,
                 IdUbication = addWorkDto.IdUbication,
                 IdWorkType = addWorkDto.IdWorkType,
+                IdJobPosition = addWorkDto.IdJobPosition,
                 EndDate = addWorkDto.IsCurrent ? null : addWorkDto.EndDate,
                 StartDate = addWorkDto.StartDate,
                 IsCurrent = addWorkDto.IsCurrent,
@@ -88,6 +89,7 @@ namespace Lab.Domain.Services
                 workEntity.IdSector = modifyWorkDto.IdSector;
                 workEntity.IdUbication = modifyWorkDto.IdUbication;
                 workEntity.IdWorkType = modifyWorkDto.IdWorkType;
+                workEntity.IdJobPosition = modifyWorkDto.IdJobPosition;
                 workEntity.StartDate = modifyWorkDto.StartDate;
                 workEntity.EndDate = modifyWorkDto.IsCurrent? null : modifyWorkDto.EndDate;
                 workEntity.IsCurrent = modifyWorkDto.IsCurrent;
