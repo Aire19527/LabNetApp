@@ -89,6 +89,7 @@ namespace Lab.Domain.Services
                                                                                 d => d.DniTypeEntity,
                                                                                 w => w.WorkEntity.Select(x => x.SectorEntity),
                                                                                 w => w.WorkEntity.Select(x => x.UbicationEntity),
+                                                                                w => w.WorkEntity.Select(x => x.JobPositionEntity),
                                                                                 w => w.WorkEntity.Select(x => x.WorkTypeEntity),
                                                                                 e => e.EducationEntity.Select(x => x.InstitutionTypeEntity)
                                                                                 );
@@ -123,6 +124,7 @@ namespace Lab.Domain.Services
                     IdSector = x.SectorEntity.Id,
                     DescriptionSector = x.SectorEntity.Description,
                     IdUbication = x.UbicationEntity.Id,
+                    IdJobPosition = x.JobPositionEntity.Id,
                     DescriptionUbication = x.UbicationEntity.Description,
                     IdWorkType = x.WorkTypeEntity.Id,
                     DescriptionWorkType = x.WorkTypeEntity.Description
