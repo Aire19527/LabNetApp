@@ -32,6 +32,9 @@ namespace Infraestructure.Core.Context
         public DbSet<WorkEntity> WorksEntity { get; set; }
         public DbSet<RolePermissionEntity> RolePermissionsEntity { get; set; }
         public DbSet<StateEntity> StatesEntity { get; set; }
+        public DbSet<QuestionEntity> QuestionsEntity { get; set; }
+        public DbSet<AnswerEntity> AnswersEntity { get; set; }
+        public DbSet<FileEntity> FilesEntities { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -39,6 +42,16 @@ namespace Infraestructure.Core.Context
                    .HasOne(u => u.ProfileEntity)
                    .WithOne(p => p.UserEntity)
                    .HasForeignKey<ProfileEntity>(p => p.IdUser);
+
+            modelBuilder.Entity<FileEntity>()
+                   .HasOne(q => q.QuestionEntity)
+                   .WithOne(f => f.FileEntity)
+                   .HasForeignKey<QuestionEntity>(q => q.IdFile);
+
+            modelBuilder.Entity<FileEntity>()
+                   .HasOne(a => a.AnswerEntity)
+                   .WithOne(f => f.FileEntity)
+                   .HasForeignKey<AnswerEntity>(a => a.IdFile);
 
             modelBuilder.Entity<UserEntity>()
                    .HasIndex(b => b.Mail)

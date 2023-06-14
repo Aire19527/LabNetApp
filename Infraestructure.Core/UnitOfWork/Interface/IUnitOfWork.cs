@@ -23,7 +23,13 @@ namespace Infraestructure.Core.UnitOfWork.Interface
 
         IRepository<SectorEntity> SectorRepository { get; }
 
+        //ANSERS & QUESTIONS
+        IRepository<QuestionEntity> QuestionRepository { get; }
+        IRepository<AnswerEntity> AnswerRepository {  get; }
 
+        //File
+
+        IRepository<FileEntity> FileRepository { get; }
 
         void Dispose();
         Task<int> Save();

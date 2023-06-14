@@ -38,6 +38,9 @@ namespace Infraestructure.Core.UnitOfWork
         private IRepository<WorkTypeEntity> workTypeRepository;
         private IRepository<UbicationEntity> ubicationRepository;
         private IRepository<SectorEntity> sectorRepository;
+        private IRepository<AnswerEntity> answerRepository;
+        private IRepository<QuestionEntity> questionRepository;
+        private IRepository<FileEntity> fileRepository;
         #endregion
 
         #region Members
@@ -182,7 +185,43 @@ namespace Infraestructure.Core.UnitOfWork
             }
         }
 
-    public IDbContextTransaction BeginTransaction()
+        public IRepository<QuestionEntity> QuestionRepository
+        {
+            get
+            {
+                if (this.questionRepository == null)
+                {
+                    this.questionRepository = new Repository<QuestionEntity>(_context);
+                }
+                return questionRepository;
+            }
+        }
+
+        public IRepository<AnswerEntity> AnswerRepository
+        {
+            get
+            {
+                if (this.answerRepository == null)
+                {
+                    this.answerRepository = new Repository<AnswerEntity>(_context);
+                }
+                return answerRepository;
+            }
+        }
+
+        public IRepository<FileEntity> FileRepository
+        {
+            get
+            {
+                if (this.fileRepository == null)
+                {
+                    this.fileRepository = new Repository<FileEntity>(_context);
+                }
+                return fileRepository;
+            }
+        }
+
+        public IDbContextTransaction BeginTransaction()
         {
             return _context.Database.BeginTransaction();
         }
