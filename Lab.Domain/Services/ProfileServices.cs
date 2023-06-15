@@ -124,10 +124,13 @@ namespace Lab.Domain.Services
                     IdSector = x.SectorEntity.Id,
                     DescriptionSector = x.SectorEntity.Description,
                     IdUbication = x.UbicationEntity.Id,
-                    IdJobPosition = x.JobPositionEntity.Id,
                     DescriptionUbication = x.UbicationEntity.Description,
+                    IdJobPosition = x.JobPositionEntity.Id,
+                    DescriptionJobPosition = x.JobPositionEntity.Description,
                     IdWorkType = x.WorkTypeEntity.Id,
-                    DescriptionWorkType = x.WorkTypeEntity.Description
+                    DescriptionWorkType = x.WorkTypeEntity.Description,
+                    StartDate = x.StartDate,
+                    EndDate = x.EndDate,
                 }).ToList(),
 
                 EducationEntities = profile.EducationEntity.Select(x => new EducationDto()
