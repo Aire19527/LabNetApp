@@ -4,6 +4,7 @@ using Infraestructure.Core.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infraestructure.Core.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230615135345_addFile")]
+    partial class addFile
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -67,11 +69,11 @@ namespace Infraestructure.Core.Migrations
                     b.Property<int?>("IdFile")
                         .HasColumnType("int");
 
-                    b.Property<int>("IdQuestion")
-                        .HasColumnType("int");
-
                     b.Property<bool>("IsCorrect")
                         .HasColumnType("bit");
+
+                    b.Property<int>("QuestionEntityId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -79,7 +81,7 @@ namespace Infraestructure.Core.Migrations
                         .IsUnique()
                         .HasFilter("[IdFile] IS NOT NULL");
 
-                    b.HasIndex("IdQuestion");
+                    b.HasIndex("QuestionEntityId");
 
                     b.ToTable("Answer");
                 });
@@ -740,15 +742,13 @@ namespace Infraestructure.Core.Migrations
                         .WithOne("AnswerEntity")
                         .HasForeignKey("Infraestructure.Entity.Models.AnswerEntity", "IdFile");
 
-                    b.HasOne("Infraestructure.Entity.Models.QuestionEntity", "QuestionEntity")
+                    b.HasOne("Infraestructure.Entity.Models.QuestionEntity", null)
                         .WithMany("AnswerEntities")
-                        .HasForeignKey("IdQuestion")
+                        .HasForeignKey("QuestionEntityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("FileEntity");
-
-                    b.Navigation("QuestionEntity");
                 });
 
             modelBuilder.Entity("Infraestructure.Entity.Models.CityEntity", b =>

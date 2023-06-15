@@ -27,14 +27,13 @@ namespace Infraestructure.Entity.Models
 
         public SkillEntity Skill { get; set; }
 
-        [ForeignKey("Skill")]
+        [ForeignKey("SkillEntity")]
         public int? IdSkill { get; set; }
 
         public IEnumerable<AnswerEntity> AnswerEntities { get; set; }
 
         public int? IdFile { get; set; }
         public FileEntity FileEntity { get; set; }
-
 
 
     }

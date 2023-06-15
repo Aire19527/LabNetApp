@@ -20,14 +20,14 @@ namespace Infraestructure.Entity.Models
         [Required]
         public bool IsCorrect { get; set; }
 
-        [Required]
-        [ForeignKey("Question")]
+        [ForeignKey("QuestionEntity")]
         public int IdQuestion { get; set; }
 
-        public QuestionEntity QuestionEntity { get; set; }
         public int? IdFile { get; set; }
 
         public FileEntity FileEntity { get; set; }
+
+        public QuestionEntity QuestionEntity { get; set; }
 
     }
 }
