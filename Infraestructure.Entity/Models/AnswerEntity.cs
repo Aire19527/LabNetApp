@@ -24,10 +24,7 @@ namespace Infraestructure.Entity.Models
         public int IdQuestion { get; set; }
 
         public int? IdFile { get; set; }
-
         public FileEntity FileEntity { get; set; }
-
-        public QuestionEntity QuestionEntity { get; set; }
-
     }
+
 }

@@ -53,7 +53,21 @@ namespace Lab.Domain.Services
             return fileDto;
         }
 
-        public async Task<bool> InsertFile(AddFileDto add, bool isImg)
+        public GetFileDto getByUrl(string url, bool isImg)
+        {
+            FileEntity file = _unitOfWork.FileRepository.FirstOrDefault(f => f.Url == url);
+            if (file == null)
+                throw new BusinessException("El id no existe");
+            GetFileDto fileDto = new GetFileDto();
+            fileDto.Id = file.Id;
+            fileDto.FileName = file.FileName;
+            fileDto.CreatedAt = file.CreatedAt;
+            if (isImg) fileDto.Url = getImage(file.Url);
+            else fileDto.Url = getResumee(file.Url);
+            return fileDto;
+        }
+
+        public async Task<string> InsertFile(AddFileDto add, bool isImg)
         {
 
             FileEntity file = new FileEntity()
@@ -64,7 +78,7 @@ namespace Lab.Domain.Services
             };
             _unitOfWork.FileRepository.Insert(file);
 
-            return await _unitOfWork.Save() > 0;
+            return file.Url;
         }
 
         public async Task<bool> UpdateFile(UpdateFileDto upd, bool isImg)
@@ -98,7 +112,7 @@ namespace Lab.Domain.Services
             //Comprobar que el archivo sea imagen o documento
             string extension = Path.GetExtension(add.FileName);
 
-            if (ValidExtension(extension, isImg))
+            if (!ValidExtension(extension, isImg))
                 throw new BusinessException("Extension invalida");
 
             if (isImg)

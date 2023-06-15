@@ -24,7 +24,7 @@ namespace Infraestructure.Entity.Models
         [Required]
         public DateTime CreatedAt { get; set; }
 
-        public QuestionEntity QuestionEntity { get; set; }
-        public AnswerEntity AnswerEntity { get; set; }
+        public QuestionEntity? QuestionEntity { get; set; }
+        public AnswerEntity? AnswerEntity { get; set; }
     }
 }

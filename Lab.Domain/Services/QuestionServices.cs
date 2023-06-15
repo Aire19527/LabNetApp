@@ -1,10 +1,14 @@
-﻿using Infraestructure.Core.UnitOfWork.Interface;
+﻿using Common.Exceptions;
+using Common.Resources;
+using Infraestructure.Core.UnitOfWork.Interface;
 using Infraestructure.Entity.Models;
 using Lab.Domain.Dto.Answer;
+using Lab.Domain.Dto.File;
 using Lab.Domain.Dto.Question;
 using Lab.Domain.Services.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,11 +19,13 @@ namespace Lab.Domain.Services
     {
         #region builder
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IFileService _fileService;
         #endregion
 
-        public  QuestionServices(IUnitOfWork unitOfWork)
+        public  QuestionServices(IUnitOfWork unitOfWork, IFileService fileService)
         {
             _unitOfWork = unitOfWork;
+            _fileService = fileService;
         }
 
         public QuestionDto getById(int idQuestion)
@@ -57,14 +63,51 @@ namespace Lab.Domain.Services
         }
 
 
-        public bool Insert(AddQuestionDto questionDto)
+        public async Task<bool> Insert(AddQuestionDto questionDto)
         {
-            throw new NotImplementedException();
+            using (var db = await _unitOfWork.BeginTransactionAsync())
+            {
+                try
+                {
+
+
+                    QuestionEntity entity = new QuestionEntity()
+                    {
+                        IdFile = questionDto.IdFile,
+                        IsVisible = true,
+                        Value = questionDto.Value,
+                        Description = questionDto.Description,
+                    };
+
+                    _unitOfWork.QuestionRepository.Insert(entity);
+
+                    await db.CommitAsync();
+
+                    return await _unitOfWork.Save() > 0;
+
+                }
+                catch (BusinessException ex)
+                {
+                    await db.RollbackAsync();
+                    throw ex;
+                }
+                catch (Exception ex)
+                {
+                    await db.RollbackAsync();
+                    throw new Exception(GeneralMessages.Error500, ex);
+                }
+            }
         }
 
         public bool Update(QuestionDto questionDto)
         {
             throw new NotImplementedException();
+        }
+
+        public bool UpdateImage(UpdateFileDto fileDto)
+        {
+            _fileService.UpdateFile(fileDto, isImg: true);
+            return true;
         }
     }
 }

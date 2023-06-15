@@ -11,7 +11,6 @@ namespace Infraestructure.Entity.Models
     [Table("Question")]
     public class QuestionEntity
     {
-
         [Key]
         public int Id { get; set; }
 
@@ -34,7 +33,5 @@ namespace Infraestructure.Entity.Models
 
         public int? IdFile { get; set; }
         public FileEntity FileEntity { get; set; }
-
-
     }
 }

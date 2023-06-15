@@ -11,11 +11,13 @@ namespace Lab.Domain.Services.Interfaces
 {
     public interface IFileService
     {
-        Task<bool> InsertFile(AddFileDto add, bool isImg);
+        Task<string> InsertFile(AddFileDto add, bool isImg);
         Task<bool> UpdateFile(UpdateFileDto upd, bool isImg);
         Task<bool> DeleteFile(int id);
         GetFileDto getById(int id, bool isImg);
-        
+
+        GetFileDto getByUrl(string url, bool isImg);
+
 
     }
 }

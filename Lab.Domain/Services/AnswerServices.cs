@@ -25,7 +25,7 @@ namespace Lab.Domain.Services
         }
         public List<GetAnswerDto> getByQuestion(int idQuestion)
         {
-            IEnumerable<AnswerEntity> answerList = _unitOfWork.AnswerRepository.GetAllSelect(x => x.QuestionEntity);
+            IEnumerable<AnswerEntity> answerList = _unitOfWork.AnswerRepository.GetAllSelect(x => x.IdQuestion);
 
             List<GetAnswerDto> answers = answerList.Select(a => new GetAnswerDto()
             {
