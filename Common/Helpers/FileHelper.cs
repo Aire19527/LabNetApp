@@ -11,7 +11,7 @@
             {
                 string[] validExtensions =
                 {
-                    ".jpg",".png",".jpeg"
+                    ".jpg",".png",".jpeg",".webp"
                 };
 
                 foreach (string extension in validExtensions)
