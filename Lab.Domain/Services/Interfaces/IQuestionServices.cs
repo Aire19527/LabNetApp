@@ -9,9 +9,10 @@ namespace Lab.Domain.Services.Interfaces
 {
     public interface IQuestionServices
     {
-        List<QuestionDto> getByQuestionId(int idQuestion);
+        QuestionDto getById(int idQuestion);
         bool Insert(AddQuestionDto questionDto);
-        bool Update(AddQuestionDto questionDto);
+        bool Update(QuestionDto questionDto);
+        bool Delete(int id);
 
     }
 }

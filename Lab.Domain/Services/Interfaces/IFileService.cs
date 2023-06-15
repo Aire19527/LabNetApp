@@ -6,10 +6,16 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Lab.Domain.Services.Interfaces
+
+
 {
     public interface IFileService
     {
-        bool UploadFile(AddFileDto add);
+        Task<bool> InsertFile(AddFileDto add, bool isImg);
+        Task<bool> UpdateFile(UpdateFileDto upd, bool isImg);
+        Task<bool> DeleteFile(int id);
+        GetFileDto getById(int id, bool isImg);
+        
 
     }
 }

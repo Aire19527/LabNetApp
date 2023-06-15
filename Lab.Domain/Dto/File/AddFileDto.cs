@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Lab.Domain.Dto.File
 {
-    public class AddFileDto
+    public class AddFileDto 
     {
         public string FileName { get; set; }
         public string Url { get; set; }
@@ -15,5 +15,6 @@ namespace Lab.Domain.Dto.File
 
         //To add File...
         public IFormFile File { get; set; }
+
     }
 }

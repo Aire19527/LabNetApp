@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Infraestructure.Entity.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,6 @@ namespace Lab.Domain.Dto.Answer
         public bool IsCorrect { get; set; }
         public int IdQuestion { get; set; }
         public int? IdFile { get; set; }
-
+        public FileEntity? Image { get; set; }
     }
 }

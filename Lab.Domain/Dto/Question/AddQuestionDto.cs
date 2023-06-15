@@ -15,5 +15,7 @@ namespace Lab.Domain.Dto.Question
         public int Value { get; set; }
         public int? IdSkill { get; set; }
         public int? IdFile { get; set; }
+        public FileEntity? Image { get; set; }
+
     }
 }

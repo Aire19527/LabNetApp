@@ -248,6 +248,7 @@ namespace Lab.Domain.Services
             return $"{path}/{uniqueFileName}";
         }
 
+        //Como convertir en generico?
         public async Task<string> UpdateFile(ProfileFileDto updateFile, bool isImg)
         {
             string urlFile = string.Empty;

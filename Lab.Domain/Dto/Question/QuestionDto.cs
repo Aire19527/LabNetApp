@@ -1,4 +1,5 @@
 ﻿using Infraestructure.Entity.Models;
+using Lab.Domain.Dto.Answer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace Lab.Domain.Dto.Question
     {
         public int Id { get; set;}
         public bool IsVisible { get; set; }
-        public IEnumerable<AnswerEntity>? AnswerEntities { get; set; }
+        public IEnumerable<GetAnswerDto>? AnswerEntities { get; set; }
 
     }
 }
