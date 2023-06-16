@@ -25,9 +25,9 @@ namespace Infraestructure.Entity.Models
         public bool IsVisible { get; set; }
 
 
-        [ForeignKey("SkillEntity")]  
-        public int IdSkill { get; set; }
-        public SkillEntity Skill { get; set; }
+        [ForeignKey("SkillEntity")]
+        public int? SkillId { get; set; }
+        public SkillEntity? Skill { get; set; }
 
         public IEnumerable<AnswerEntity> AnswerEntities { get; set; }
 

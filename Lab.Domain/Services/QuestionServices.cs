@@ -65,18 +65,19 @@ namespace Lab.Domain.Services
 
         public async Task<bool> Insert(QuestionFileDto questionDto)
         {
+            string url = string.Empty;
+            AddFileDto file = new AddFileDto()
+            {
+                FileName = questionDto.FileName,
+                File = questionDto.File,
+            };
+
             using (var db = await _unitOfWork.BeginTransactionAsync())
             {
                 try
                 {
 
-                   
-                    AddFileDto file = new AddFileDto() {
-                        FileName = questionDto.FileName,
-                        File = questionDto.File,
-                    };
-
-                    string url = await _fileService.InsertFile(file,true);
+                    url = await _fileService.InsertFile(file,true,_unitOfWork);
                     GetFileDto dto = _fileService.getByUrl(url,true);
 
                     QuestionEntity entity = new QuestionEntity() {
@@ -84,7 +85,7 @@ namespace Lab.Domain.Services
                         IsVisible = true,
                         Value = questionDto.Value,
                         Description = questionDto.Description,
-                        IdSkill = questionDto.IdSkill
+                        SkillId = questionDto.IdSkill// hay doble idSkill en db
                     };
 
                     _unitOfWork.QuestionRepository.Insert(entity);
@@ -96,11 +97,13 @@ namespace Lab.Domain.Services
                 }
                 catch (BusinessException ex)
                 {
+                    _fileService.DeleteFile(url);
                     await db.RollbackAsync();
                     throw ex;
                 }
                 catch (Exception ex)
                 {
+                    _fileService.DeleteFile(url);
                     await db.RollbackAsync();
                     throw new Exception(GeneralMessages.Error500, ex);
                 }

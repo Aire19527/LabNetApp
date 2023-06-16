@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MyLabApp.Handlers;
 using Lab.Domain.Dto.Question;
-using Infraestructure.Core.Migrations;
 using Lab.Domain.Dto.File;
 
 namespace MyLabApp.Controllers

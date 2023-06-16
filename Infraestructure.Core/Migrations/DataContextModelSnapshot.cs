@@ -73,13 +73,16 @@ namespace Infraestructure.Core.Migrations
                     b.Property<bool>("IsCorrect")
                         .HasColumnType("bit");
 
+                    b.Property<int?>("QuestionEntityId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("IdFile")
                         .IsUnique()
                         .HasFilter("[IdFile] IS NOT NULL");
 
-                    b.HasIndex("IdQuestion");
+                    b.HasIndex("QuestionEntityId");
 
                     b.ToTable("Answer");
                 });
@@ -460,13 +463,10 @@ namespace Infraestructure.Core.Migrations
                     b.Property<int?>("IdFile")
                         .HasColumnType("int");
 
-                    b.Property<int?>("IdSkill")
-                        .HasColumnType("int");
-
                     b.Property<bool>("IsVisible")
                         .HasColumnType("bit");
 
-                    b.Property<int>("SkillId")
+                    b.Property<int?>("SkillId")
                         .HasColumnType("int");
 
                     b.Property<int>("Value")
@@ -740,15 +740,11 @@ namespace Infraestructure.Core.Migrations
                         .WithOne("AnswerEntity")
                         .HasForeignKey("Infraestructure.Entity.Models.AnswerEntity", "IdFile");
 
-                    b.HasOne("Infraestructure.Entity.Models.QuestionEntity", "QuestionEntity")
+                    b.HasOne("Infraestructure.Entity.Models.QuestionEntity", null)
                         .WithMany("AnswerEntities")
-                        .HasForeignKey("IdQuestion")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("QuestionEntityId");
 
                     b.Navigation("FileEntity");
-
-                    b.Navigation("QuestionEntity");
                 });
 
             modelBuilder.Entity("Infraestructure.Entity.Models.CityEntity", b =>
@@ -872,9 +868,7 @@ namespace Infraestructure.Core.Migrations
 
                     b.HasOne("Infraestructure.Entity.Models.SkillEntity", "Skill")
                         .WithMany("QuestionEntities")
-                        .HasForeignKey("SkillId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("SkillId");
 
                     b.Navigation("FileEntity");
 
@@ -969,11 +963,9 @@ namespace Infraestructure.Core.Migrations
 
             modelBuilder.Entity("Infraestructure.Entity.Models.FileEntity", b =>
                 {
-                    b.Navigation("AnswerEntity")
-                        .IsRequired();
+                    b.Navigation("AnswerEntity");
 
-                    b.Navigation("QuestionEntity")
-                        .IsRequired();
+                    b.Navigation("QuestionEntity");
                 });
 
             modelBuilder.Entity("Infraestructure.Entity.Models.InstitutionTypeEntity", b =>
