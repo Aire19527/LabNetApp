@@ -21,15 +21,17 @@ namespace Lab.Domain.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IConfiguration _config;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IFileService _fileService;
         #endregion
 
         #region Builder
         public ProfileServices(IUnitOfWork unitOfWork, IConfiguration config,
-            IWebHostEnvironment webHostEnvironment)
+            IWebHostEnvironment webHostEnvironment, IFileService fileService)
         {
             _unitOfWork = unitOfWork;
             _config = config;
             _webHostEnvironment = webHostEnvironment;
+            _fileService = fileService;
         }
         #endregion
 
@@ -165,7 +167,7 @@ namespace Lab.Domain.Services
         {
             string urlImg = String.Empty;
             if (add.FileImage != null)
-                urlImg = UploadFile(add.FileImage, isImg: true);
+                urlImg = _fileService.UploadFile(add.FileImage, isImg: true);
 
             ProfileEntity profile = new ProfileEntity()
             {
@@ -201,6 +203,8 @@ namespace Lab.Domain.Services
             }
             return false;
         }
+
+
         //  ======== IMAGE-RELATED STUFF ========= 
         public string getImage(string? img)
         {
@@ -217,48 +221,13 @@ namespace Lab.Domain.Services
         }
 
 
-        private string UploadFile(IFormFile file, bool isImg)
-        {
-            string path = string.Empty;
-
-            if (file.Length > 3000000)
-                throw new BusinessException("The file size is too big!: [max 3 MB]");
-
-            //Comprobar que el archivo sea imagen o documento
-            string extension = Path.GetExtension(file.FileName);
-
-            if (!FileHelper.ValidExtension(extension, isImg))
-                throw new BusinessException("Extension invalida");
-
-
-            if (isImg)
-                path = $"{_config.GetSection("PathFiles").GetSection("ProfilePicture").Value}";
-            else   
-                path = $"{_config.GetSection("PathFiles").GetSection("Resumee").Value}";
-
-            if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
- 
-            string uploads = Path.Combine(_webHostEnvironment.WebRootPath, path);
-            string uniqueFileName = FileHelper.GetUniqueFileName(file.FileName);
-            string pathFinal = $"{uploads}/{uniqueFileName}";
-
-            using (var stream = new FileStream(pathFinal, FileMode.Create))
-            {
-                file.CopyTo(stream);
-            }
-
-            return $"{path}/{uniqueFileName}";
-        }
-
-        //Como convertir en generico?
         public async Task<string> UpdateFile(ProfileFileDto updateFile, bool isImg)
         {
             string urlFile = string.Empty;
 
 
             if (updateFile.File != null)
-                urlFile = UploadFile(updateFile.File, isImg);
+                urlFile = _fileService.UploadFile(updateFile.File, isImg);
             else throw new BusinessException("El archivo es requerido");
 
 
@@ -267,7 +236,7 @@ namespace Lab.Domain.Services
             if (isImg)
             {
                 if (!string.IsNullOrEmpty(profile.Photo))
-                    DeleteFile(profile.Photo);
+                    _fileService.DeleteFile(profile.Photo);
 
                 profile.Photo = urlFile;
             }
@@ -275,7 +244,7 @@ namespace Lab.Domain.Services
             else
             {
                 if (!string.IsNullOrEmpty(profile.CV))
-                    DeleteFile(profile.CV);
+                    _fileService.DeleteFile(profile.CV);
 
                 profile.CV = urlFile;
 
@@ -289,13 +258,7 @@ namespace Lab.Domain.Services
         }
 
 
-        public void DeleteFile(string path)
-        {
-            string pathFull = Path.Combine(_webHostEnvironment.WebRootPath, path);
-            if (File.Exists(pathFull))
-                File.Delete(pathFull);
-        }
-
+      
 
         // ============ CV - RELATED STUFF ==================
         public string getResumee(string? resumee)

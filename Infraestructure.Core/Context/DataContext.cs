@@ -43,6 +43,7 @@ namespace Infraestructure.Core.Context
                    .WithOne(p => p.UserEntity)
                    .HasForeignKey<ProfileEntity>(p => p.IdUser);
 
+
             modelBuilder.Entity<FileEntity>()
                    .HasOne(q => q.QuestionEntity)
                    .WithOne(f => f.FileEntity)

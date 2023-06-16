@@ -1,6 +1,7 @@
 ﻿using Infraestructure.Core.UnitOfWork;
 using Infraestructure.Core.UnitOfWork.Interface;
 using Lab.Domain.Dto.File;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,9 @@ namespace Lab.Domain.Services.Interfaces
         GetFileDto getById(int id, bool isImg);
 
         GetFileDto getByUrl(string url, bool isImg);
+
+        public string UploadFile(IFormFile add, bool isImg);
+
 
 
     }

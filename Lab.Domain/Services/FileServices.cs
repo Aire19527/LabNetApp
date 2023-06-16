@@ -106,7 +106,7 @@ namespace Lab.Domain.Services
 
         #region privateMethods
 
-        private string UploadFile(IFormFile add, bool isImg)
+        public string UploadFile(IFormFile add, bool isImg)
         {
             string Url = string.Empty;
 
