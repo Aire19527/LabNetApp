@@ -77,6 +77,7 @@ namespace Lab.Domain.Services
                 CreatedAt = DateTime.Now
             };
             _unitOfWork.FileRepository.Insert(file);
+            _unitOfWork.Save();
 
             return file.Url;
         }

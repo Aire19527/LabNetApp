@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Lab.Domain.Dto.File;
 
 namespace Lab.Domain.Dto.Question
 {
@@ -15,7 +16,7 @@ namespace Lab.Domain.Dto.Question
         public int Value { get; set; }
         public int? IdSkill { get; set; }
         public int? IdFile { get; set; }
-        public FileEntity? Image { get; set; }
+        public AddFileDto? Image { get; set; }
 
     }
 }

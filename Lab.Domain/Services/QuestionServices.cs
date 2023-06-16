@@ -41,7 +41,7 @@ namespace Lab.Domain.Services
                 Description = entity.Description,
                 IdSkill = entity.Skill.Id,
                 IdFile = entity.FileEntity.Id,
-                Image = entity.FileEntity,
+       
                 IsVisible = entity.IsVisible,
                 Value = entity.Value,
                 AnswerEntities = entity.AnswerEntities.Select(x => new GetAnswerDto()
@@ -63,20 +63,28 @@ namespace Lab.Domain.Services
         }
 
 
-        public async Task<bool> Insert(AddQuestionDto questionDto)
+        public async Task<bool> Insert(QuestionFileDto questionDto)
         {
             using (var db = await _unitOfWork.BeginTransactionAsync())
             {
                 try
                 {
 
+                   
+                    AddFileDto file = new AddFileDto() {
+                        FileName = questionDto.FileName,
+                        File = questionDto.File,
+                    };
 
-                    QuestionEntity entity = new QuestionEntity()
-                    {
-                        IdFile = questionDto.IdFile,
+                    string url = await _fileService.InsertFile(file,true);
+                    GetFileDto dto = _fileService.getByUrl(url,true);
+
+                    QuestionEntity entity = new QuestionEntity() {
+                        IdFile = dto.Id,
                         IsVisible = true,
                         Value = questionDto.Value,
                         Description = questionDto.Description,
+                        IdSkill = questionDto.IdSkill
                     };
 
                     _unitOfWork.QuestionRepository.Insert(entity);
