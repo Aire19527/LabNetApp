@@ -34,6 +34,7 @@ namespace Infraestructure.Core.UnitOfWork.Interface
         void Dispose();
         Task<int> Save();
 
+
         IDbContextTransaction BeginTransaction();
         Task<IDbContextTransaction> BeginTransactionAsync();
     }

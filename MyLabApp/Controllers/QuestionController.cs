@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using MyLabApp.Handlers;
 using Lab.Domain.Dto.Question;
 using Lab.Domain.Dto.File;
+using Lab.Domain.Dto.Answer;
 
 namespace MyLabApp.Controllers
 {
@@ -26,7 +27,7 @@ namespace MyLabApp.Controllers
         #region Builder
         public QuestionController(IQuestionServices questionServices)
         {
-           _questionServices = questionServices;
+            _questionServices = questionServices;
         }
         #endregion
 
@@ -52,5 +53,29 @@ namespace MyLabApp.Controllers
 
             return action;
         }
+
+        [HttpGet]
+        [Route("Get/{id}")]
+        public IActionResult GetById(int id)
+        {
+            IActionResult action;
+            QuestionDto result = _questionServices.getById(id);
+
+
+            ResponseDto rpdto = new ResponseDto()
+            {
+                IsSuccess = true,
+                Message = string.Empty,
+                Result = result
+            };
+
+            if (result != null)
+                action = Ok(rpdto);
+            else
+                action = BadRequest(rpdto);
+
+            return action;
+        }
+
     }
 }

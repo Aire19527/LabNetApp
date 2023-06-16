@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data.Common;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -68,11 +69,9 @@ namespace Lab.Domain.Services
             return fileDto;
         }
 
-        public async Task<string> InsertFile(AddFileDto add, bool isImg, IUnitOfWork unit)
+        public async Task<string> InsertFile(AddFileDto add, bool isImg)
+
         {
-
-            _unitOfWork = unit;
-
             FileEntity file = new FileEntity()
             {
                 FileName = add.FileName,

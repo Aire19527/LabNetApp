@@ -10,7 +10,7 @@ namespace Lab.Domain.Services.Interfaces
 {
     public interface IAnswerService
     {
-        Task<bool> Insert(AddAnswerDto add);
+        Task<bool> Insert(AnswerFileDto add);
         Task<bool> Delete(int id);
         GetAnswerDto getById(int id);
         List<GetAnswerDto> getByQuestion(int idQuestion);

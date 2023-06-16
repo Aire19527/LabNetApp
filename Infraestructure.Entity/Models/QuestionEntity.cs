@@ -32,6 +32,7 @@ namespace Infraestructure.Entity.Models
         public IEnumerable<AnswerEntity> AnswerEntities { get; set; }
 
         public int? IdFile { get; set; }
-        public FileEntity FileEntity { get; set; }
+        public FileEntity? FileEntity { get; set; }
+
     }
 }

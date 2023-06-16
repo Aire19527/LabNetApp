@@ -30,27 +30,32 @@ namespace Lab.Domain.Services
 
         public QuestionDto getById(int idQuestion)
         {
-            QuestionEntity entity = _unitOfWork.QuestionRepository.FirstOrDefault(x => x.Id == idQuestion,
-                                                                                  s => s.Skill,
-                                                                                  i => i.FileEntity,
-                                                                                  a => a.AnswerEntities.Select(x => x.IdQuestion == idQuestion));
+            QuestionEntity entity = _unitOfWork.QuestionRepository.FirstOrDefaultSelect(
+                x => x.Id == idQuestion,
+                s => s.Skill,
+                i => i.FileEntity,
+                a => a.AnswerEntities);
+
+            if (entity == null)
+                throw new BusinessException(GeneralMessages.ItemNoFound);
 
             QuestionDto question = new QuestionDto()
             {
                 Id = entity.Id,
                 Description = entity.Description,
                 IdSkill = entity.Skill.Id,
-                IdFile = entity.FileEntity.Id,
-       
+                IdFile = entity.FileEntity?.Id,
                 IsVisible = entity.IsVisible,
                 Value = entity.Value,
-                AnswerEntities = entity.AnswerEntities.Select(x => new GetAnswerDto()
-                {
-                    Id = x.Id,
-                    Description = x.Description,
-                    IsCorrect = x.IsCorrect,
-                    IdFile = x.IdFile
-                }).ToList()
+                AnswerEntities = entity.AnswerEntities
+                    .Select(x => new GetAnswerDto()
+                    {
+                        Id = x.Id,
+                        Description = x.Description,
+                        IsCorrect = x.IsCorrect,
+                        IdFile = x.IdFile,
+                        IdQuestion = entity.Id
+                    }).ToList()
             };
 
             return question;
@@ -76,24 +81,24 @@ namespace Lab.Domain.Services
             {
                 try
                 {
-
-                    url = await _fileService.InsertFile(file,true,_unitOfWork);
-                    GetFileDto dto = _fileService.getByUrl(url,true);
-
                     QuestionEntity entity = new QuestionEntity() {
-                        IdFile = dto.Id,
                         IsVisible = true,
                         Value = questionDto.Value,
                         Description = questionDto.Description,
-                        SkillId = questionDto.IdSkill// hay doble idSkill en db
+                        SkillId = questionDto.IdSkill
                     };
+
+                    if ( questionDto.File != null)
+                    {
+                        url = await _fileService.InsertFile(file, true);
+                        GetFileDto dto = _fileService.getByUrl(url, true);
+                        entity.IdFile = dto.Id;
+                    }
 
                     _unitOfWork.QuestionRepository.Insert(entity);
 
                     await db.CommitAsync();
-
                     return await _unitOfWork.Save() > 0;
-
                 }
                 catch (BusinessException ex)
                 {
