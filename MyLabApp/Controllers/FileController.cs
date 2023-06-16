@@ -11,38 +11,12 @@ namespace MyLabApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     [TypeFilter(typeof(CustomExceptionHandler))]
     public class FileController : ControllerBase
     {
         private readonly IFileService _fileServices;
 
-        public FileController(IFileService fileService)
-        {
-            _fileServices = fileService;
-        }
-
-        //[HttpPost]
-        //[Route("InsertImage")]
-        //public async Task <IActionResult> InsertImage([FromForm] AddFileDto add)
-        //{
-        //    IActionResult action;
-        //    //string result = await _fileServices.InsertFile(add,isImg: true);
-        //    ResponseDto response = new ResponseDto()
-        //    {
-        //        IsSuccess = true,
-        //        Result = result,
-        //        Message = string.Empty
-        //    };
-
-
-        //    if (result != null)
-        //        action = Ok(response);
-        //    else
-        //        action = BadRequest(response);
-
-        //    return action;
-        //}
 
         [HttpGet]
         [Route("{id}")]

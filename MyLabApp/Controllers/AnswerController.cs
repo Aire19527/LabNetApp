@@ -1,4 +1,5 @@
-﻿using Lab.Domain.Dto;
+﻿using Common.Resources;
+using Lab.Domain.Dto;
 using Lab.Domain.Dto.Answer;
 using Lab.Domain.Dto.Profile;
 using Lab.Domain.Services;
@@ -12,7 +13,7 @@ namespace MyLabApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     [TypeFilter(typeof(CustomExceptionHandler))]
     public class AnswerController : ControllerBase
     {
@@ -72,10 +73,23 @@ namespace MyLabApp.Controllers
                 action = BadRequest(rpdto);
             return action;
 
-            #endregion
-
-
         }
+
+        [HttpDelete]
+        [Route("Delete/{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            bool res = await _answerService.Delete(id);
+
+            return Ok(new ResponseDto()
+            {
+                IsSuccess = res,
+                Message = res ? GeneralMessages.ItemDeleted : GeneralMessages.ItemNoDeleted,
+                Result = res
+            });
+        }
+        #endregion
+
     }
 }
 
