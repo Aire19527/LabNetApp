@@ -19,18 +19,13 @@ namespace Lab.Domain.Services
     {
         #region Attributes
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IConfiguration _config;
-        private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IFileService _fileService;
         #endregion
 
         #region Builder
-        public ProfileServices(IUnitOfWork unitOfWork, IConfiguration config,
-            IWebHostEnvironment webHostEnvironment, IFileService fileService)
+        public ProfileServices(IUnitOfWork unitOfWork, IFileService fileService)
         {
             _unitOfWork = unitOfWork;
-            _config = config;
-            _webHostEnvironment = webHostEnvironment;
             _fileService = fileService;
         }
         #endregion
@@ -53,8 +48,8 @@ namespace Lab.Domain.Services
                 Name = p.Name,
                 Mail = p.Mail,
                 DNI = p.DNI,
-                CV = getResumee(p.CV),
-                Photo = getImage(p.Photo),
+                CV = _fileService.getResumee(p.CV),
+                Photo = _fileService.getImage(p.Photo),
                 Phone = p.Phone,
                 BirthDate = p.BirthDate,
                 IdAdress = p.AdressEntity?.Id,
@@ -109,8 +104,8 @@ namespace Lab.Domain.Services
                 Name = profile.Name,
                 Mail = profile.Mail,
                 DNI = profile.DNI,
-                CV = getResumee(profile.CV),
-                Photo = getImage(profile.Photo),
+                CV = _fileService.getResumee(profile.CV),
+                Photo = _fileService.getImage(profile.Photo),
                 Phone = profile.Phone,
                 BirthDate = profile.BirthDate,
                 IdAdress = profile.AdressEntity?.Id,
@@ -203,24 +198,6 @@ namespace Lab.Domain.Services
             }
             return false;
         }
-
-
-        //  ======== IMAGE-RELATED STUFF ========= 
-        public string getImage(string? img)
-        {
-            string path = string.Empty;
-            if (string.IsNullOrEmpty(img))
-            {
-                path = $"{_webHostEnvironment.WebRootPath}/{_config.GetSection("PathFiles").GetSection("NoImage").Value}";
-            }
-            else
-            {
-                path = $"{_webHostEnvironment.WebRootPath}/{img}";
-            }
-            return path;
-        }
-
-
         public async Task<string> UpdateFile(ProfileFileDto updateFile, bool isImg)
         {
             string urlFile = string.Empty;
@@ -255,24 +232,6 @@ namespace Lab.Domain.Services
             await _unitOfWork.Save();
             return urlFile;
 
-        }
-
-
-      
-
-        // ============ CV - RELATED STUFF ==================
-        public string getResumee(string? resumee)
-        {
-            string path = string.Empty;
-            if (string.IsNullOrEmpty(resumee))
-            {
-                path = "";
-            }
-            else
-            {
-                path = $"/{resumee}";
-            }
-            return path;
         }
 
         #endregion

@@ -24,6 +24,8 @@ namespace Lab.Domain.Services.Interfaces
         GetFileDto getByUrl(string url, bool isImg);
 
         public string UploadFile(IFormFile add, bool isImg);
+        string getImage(string? img);
+        string getResumee(string? resumee);
 
 
 

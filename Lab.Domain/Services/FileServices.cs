@@ -146,7 +146,7 @@ namespace Lab.Domain.Services
                 File.Delete(pathFull);
         }
 
-        private string getImage(string? img)
+        public string getImage(string? img)
         {
             string path = string.Empty;
             if (string.IsNullOrEmpty(img))
@@ -162,7 +162,7 @@ namespace Lab.Domain.Services
 
 
 
-        private string getResumee(string? resumee)
+        public string getResumee(string? resumee)
         {
             string path = string.Empty;
             if (string.IsNullOrEmpty(resumee))
