@@ -91,9 +91,16 @@ namespace Lab.Domain.Services
         }
 
 
-        public bool Delete(int id)
+        public async Task<bool> Delete(int id)
         {
-            throw new NotImplementedException();
+            QuestionEntity? entity = _unitOfWork.QuestionRepository.FirstOrDefault(x => x.Id == id);
+
+            if (entity == null)
+                throw new BusinessException(GeneralMessages.ItemNoFound);
+
+            _unitOfWork.QuestionRepository.Delete(entity);
+
+            return await _unitOfWork.Save() > 0;
         }
 
 
@@ -143,18 +150,5 @@ namespace Lab.Domain.Services
                 }
             }
         }
-
-        public bool Update(QuestionDto questionDto)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool UpdateImage(UpdateFileDto fileDto)
-        {
-            _fileService.UpdateFile(fileDto, isImg: true);
-            return true;
-        }
-
-
     }
 }

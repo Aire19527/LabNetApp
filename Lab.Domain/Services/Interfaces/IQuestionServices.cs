@@ -13,7 +13,6 @@ namespace Lab.Domain.Services.Interfaces
         QuestionDto getById(int idQuestion);
         List<QuestionDto> getAll();
         Task<bool> Insert(QuestionFileDto questionDto);
-        bool Update(QuestionDto questionDto);
-        bool Delete(int id);
+        Task<bool> Delete(int id);
     }
 }

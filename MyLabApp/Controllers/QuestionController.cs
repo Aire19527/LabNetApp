@@ -99,5 +99,19 @@ namespace MyLabApp.Controllers
 
             return action;
         }
+
+        [HttpDelete]
+        [Route("Delete/{id}")] 
+        public async Task<IActionResult> Delete(int id)
+        {
+            bool res = await _questionServices.Delete(id);
+
+            return Ok(new ResponseDto()
+            {
+                IsSuccess = res,
+                Message = res ? GeneralMessages.ItemDeleted : GeneralMessages.ItemNoDeleted,
+                Result = res
+            });
+        }
     }
 }
