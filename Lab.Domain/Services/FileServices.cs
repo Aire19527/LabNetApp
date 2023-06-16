@@ -1,5 +1,6 @@
 ﻿using Common.Exceptions;
 using Common.Helpers;
+using Infraestructure.Core.UnitOfWork;
 using Infraestructure.Core.UnitOfWork.Interface;
 using Infraestructure.Entity.Models;
 using Lab.Domain.Dto.File;
@@ -11,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data.Common;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -23,7 +25,7 @@ namespace Lab.Domain.Services
     {
 
         #region Attributes
-        private readonly IUnitOfWork _unitOfWork;
+        private IUnitOfWork _unitOfWork;
         private readonly IConfiguration _config;
         private readonly IWebHostEnvironment _webHostEnvironment;
         #endregion
@@ -68,8 +70,8 @@ namespace Lab.Domain.Services
         }
 
         public async Task<string> InsertFile(AddFileDto add, bool isImg)
-        {
 
+        {
             FileEntity file = new FileEntity()
             {
                 FileName = add.FileName,
@@ -77,6 +79,8 @@ namespace Lab.Domain.Services
                 CreatedAt = DateTime.Now
             };
             _unitOfWork.FileRepository.Insert(file);
+
+            await _unitOfWork.Save();
 
             return file.Url;
         }
@@ -135,7 +139,7 @@ namespace Lab.Domain.Services
         }
 
 
-        private void DeleteFile(string path)
+        public void DeleteFile(string path)
         {
             string pathFull = Path.Combine(_webHostEnvironment.WebRootPath, path);
             if (File.Exists(pathFull))

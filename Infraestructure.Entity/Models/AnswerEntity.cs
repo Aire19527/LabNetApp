@@ -21,10 +21,11 @@ namespace Infraestructure.Entity.Models
         public bool IsCorrect { get; set; }
 
         [ForeignKey("QuestionEntity")]
-        public int IdQuestion { get; set; }
-
+        public int QuestionEntityId { get; set; }
+        public QuestionEntity question { get; set; }
         public int? IdFile { get; set; }
         public FileEntity FileEntity { get; set; }
+
     }
 
 }

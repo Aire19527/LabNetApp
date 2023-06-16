@@ -24,14 +24,15 @@ namespace Infraestructure.Entity.Models
         [Required]
         public bool IsVisible { get; set; }
 
-        public SkillEntity Skill { get; set; }
 
         [ForeignKey("SkillEntity")]
-        public int? IdSkill { get; set; }
+        public int? SkillId { get; set; }
+        public SkillEntity? Skill { get; set; }
 
         public IEnumerable<AnswerEntity> AnswerEntities { get; set; }
 
         public int? IdFile { get; set; }
-        public FileEntity FileEntity { get; set; }
+        public FileEntity? FileEntity { get; set; }
+
     }
 }

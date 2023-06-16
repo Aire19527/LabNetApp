@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infraestructure.Core.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230615135345_addFile")]
-    partial class addFile
+    [Migration("20230616135117_otra")]
+    partial class otra
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -69,10 +69,13 @@ namespace Infraestructure.Core.Migrations
                     b.Property<int?>("IdFile")
                         .HasColumnType("int");
 
+                    b.Property<int>("IdQuestion")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsCorrect")
                         .HasColumnType("bit");
 
-                    b.Property<int>("QuestionEntityId")
+                    b.Property<int?>("QuestionEntityId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -462,7 +465,7 @@ namespace Infraestructure.Core.Migrations
                     b.Property<int?>("IdFile")
                         .HasColumnType("int");
 
-                    b.Property<int?>("IdSkill")
+                    b.Property<int>("IdSkill")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsVisible")
@@ -744,9 +747,7 @@ namespace Infraestructure.Core.Migrations
 
                     b.HasOne("Infraestructure.Entity.Models.QuestionEntity", null)
                         .WithMany("AnswerEntities")
-                        .HasForeignKey("QuestionEntityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("QuestionEntityId");
 
                     b.Navigation("FileEntity");
                 });
@@ -969,11 +970,9 @@ namespace Infraestructure.Core.Migrations
 
             modelBuilder.Entity("Infraestructure.Entity.Models.FileEntity", b =>
                 {
-                    b.Navigation("AnswerEntity")
-                        .IsRequired();
+                    b.Navigation("AnswerEntity");
 
-                    b.Navigation("QuestionEntity")
-                        .IsRequired();
+                    b.Navigation("QuestionEntity");
                 });
 
             modelBuilder.Entity("Infraestructure.Entity.Models.InstitutionTypeEntity", b =>

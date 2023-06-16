@@ -4,7 +4,7 @@
 
 namespace Infraestructure.Core.Migrations
 {
-    public partial class RepairedQuestion : Migration
+    public partial class answer1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,40 +12,19 @@ namespace Infraestructure.Core.Migrations
                 name: "FK_Answer_Question_QuestionEntityId",
                 table: "Answer");
 
-            migrationBuilder.RenameColumn(
-                name: "QuestionEntityId",
-                table: "Answer",
-                newName: "IdQuestion");
-
-            migrationBuilder.RenameIndex(
-                name: "IX_Answer_QuestionEntityId",
-                table: "Answer",
-                newName: "IX_Answer_IdQuestion");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Answer_Question_IdQuestion",
-                table: "Answer",
-                column: "IdQuestion",
-                principalTable: "Question",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-        }
-
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Answer_Question_IdQuestion",
+            migrationBuilder.DropColumn(
+                name: "IdQuestion",
                 table: "Answer");
 
-            migrationBuilder.RenameColumn(
-                name: "IdQuestion",
+            migrationBuilder.AlterColumn<int>(
+                name: "QuestionEntityId",
                 table: "Answer",
-                newName: "QuestionEntityId");
-
-            migrationBuilder.RenameIndex(
-                name: "IX_Answer_IdQuestion",
-                table: "Answer",
-                newName: "IX_Answer_QuestionEntityId");
+                type: "int",
+                nullable: false,
+                defaultValue: 0,
+                oldClrType: typeof(int),
+                oldType: "int",
+                oldNullable: true);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Answer_Question_QuestionEntityId",
@@ -54,6 +33,35 @@ namespace Infraestructure.Core.Migrations
                 principalTable: "Question",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
+        }
+
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropForeignKey(
+                name: "FK_Answer_Question_QuestionEntityId",
+                table: "Answer");
+
+            migrationBuilder.AlterColumn<int>(
+                name: "QuestionEntityId",
+                table: "Answer",
+                type: "int",
+                nullable: true,
+                oldClrType: typeof(int),
+                oldType: "int");
+
+            migrationBuilder.AddColumn<int>(
+                name: "IdQuestion",
+                table: "Answer",
+                type: "int",
+                nullable: false,
+                defaultValue: 0);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Answer_Question_QuestionEntityId",
+                table: "Answer",
+                column: "QuestionEntityId",
+                principalTable: "Question",
+                principalColumn: "Id");
         }
     }
 }

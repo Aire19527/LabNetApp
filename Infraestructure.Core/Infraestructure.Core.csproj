@@ -21,8 +21,4 @@
     <ProjectReference Include="..\Infraestructure.Entity\Infraestructure.Entity.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Migrations\" />
-  </ItemGroup>
-
 </Project>

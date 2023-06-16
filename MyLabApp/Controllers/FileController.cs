@@ -22,27 +22,27 @@ namespace MyLabApp.Controllers
             _fileServices = fileService;
         }
 
-        [HttpPost]
-        [Route("InsertImage")]
-        public async Task <IActionResult> InsertImage([FromForm] AddFileDto add)
-        {
-            IActionResult action;
-            string result = await _fileServices.InsertFile(add,isImg: true);
-            ResponseDto response = new ResponseDto()
-            {
-                IsSuccess = true,
-                Result = result,
-                Message = string.Empty
-            };
+        //[HttpPost]
+        //[Route("InsertImage")]
+        //public async Task <IActionResult> InsertImage([FromForm] AddFileDto add)
+        //{
+        //    IActionResult action;
+        //    //string result = await _fileServices.InsertFile(add,isImg: true);
+        //    ResponseDto response = new ResponseDto()
+        //    {
+        //        IsSuccess = true,
+        //        Result = result,
+        //        Message = string.Empty
+        //    };
 
 
-            if (result != null)
-                action = Ok(response);
-            else
-                action = BadRequest(response);
+        //    if (result != null)
+        //        action = Ok(response);
+        //    else
+        //        action = BadRequest(response);
 
-            return action;
-        }
+        //    return action;
+        //}
 
         [HttpGet]
         [Route("{id}")]

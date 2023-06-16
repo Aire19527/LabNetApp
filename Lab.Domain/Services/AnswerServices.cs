@@ -3,7 +3,9 @@ using Common.Resources;
 using Infraestructure.Core.UnitOfWork.Interface;
 using Infraestructure.Entity.Models;
 using Lab.Domain.Dto.Answer;
+using Lab.Domain.Dto.File;
 using Lab.Domain.Dto.Profile;
+using Lab.Domain.Dto.Question;
 using Lab.Domain.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -17,42 +19,79 @@ namespace Lab.Domain.Services
     {
         #region builder
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IFileService _fileSerivce;
         #endregion
 
-        public AnswerServices(IUnitOfWork unitOfWork)
+        public AnswerServices(IUnitOfWork unitOfWork, IFileService fileSerivce)
         {
             _unitOfWork = unitOfWork;
+            _fileSerivce = fileSerivce; 
         }
         public List<GetAnswerDto> getByQuestion(int idQuestion)
         {
-            IEnumerable<AnswerEntity> answerList = _unitOfWork.AnswerRepository.GetAllSelect(x => x.IdQuestion);
-
+            IEnumerable<AnswerEntity> answerList = _unitOfWork.AnswerRepository.FindAllSelect(x => x.QuestionEntityId == idQuestion);
             List<GetAnswerDto> answers = answerList.Select(a => new GetAnswerDto()
             {
                 Id = a.Id,
                 Description = a.Description,
-                IdQuestion = a.IdQuestion,
+                IdQuestion = a.QuestionEntityId,
                 IsCorrect = a.IsCorrect,
-                IdFile = a.IdFile,
-                Image = a.FileEntity
+                IdFile = a.IdFile
             }).ToList();
 
             return answers;
         }
-
-        public async Task<bool> Insert(AddAnswerDto add)
+        public async Task<bool> Insert(AnswerFileDto answerFile)
         {
 
-            AnswerEntity answer = new AnswerEntity()
-            {
-                Description = add.Description,
-                IdQuestion = add.IdQuestion,
-                IdFile = add.IdFile,
-                IsCorrect = add.IsCorrect,
-            };
-            _unitOfWork.AnswerRepository.Insert(answer);
+            
+                string url = string.Empty;
+                AddFileDto file = new AddFileDto()
+                {
+                    FileName = answerFile.FileName,
+                    File = answerFile.File,
+                };
 
-            return await _unitOfWork.Save() > 0;
+                using (var dbA = await _unitOfWork.BeginTransactionAsync())
+                {
+                    try
+                    {
+
+
+                    AnswerEntity entity = new AnswerEntity()
+                        {
+                            Description = answerFile.Description,
+                            QuestionEntityId = answerFile.IdQuestion,
+                            IsCorrect = answerFile.IsCorrect,
+                        };
+
+                        if (answerFile.File != null)
+                        {
+                            url = await _fileSerivce.InsertFile(file, true);
+                            GetFileDto dto = _fileSerivce.getByUrl(url, true);
+                            entity.IdFile = dto.Id;
+                        }
+
+                    _unitOfWork.AnswerRepository.Insert(entity);
+
+                        await dbA.CommitAsync();
+                        return await _unitOfWork.Save() > 0;
+                    }
+                    catch (BusinessException ex)
+                    {
+                    _fileSerivce.DeleteFile(url);
+                        await dbA.RollbackAsync();
+                        throw ex;
+                    }
+                    catch (Exception ex)
+                    {
+                        _fileSerivce.DeleteFile(url);
+                        await dbA.RollbackAsync();
+                        throw new Exception(GeneralMessages.Error500, ex);
+                    }
+
+                }
+            
         }
 
         public async Task<bool> Delete(int id)
@@ -75,10 +114,9 @@ namespace Lab.Domain.Services
             {
                 Id = entity.Id,
                 Description = entity.Description,
-                IdQuestion = entity.IdQuestion,
+                IdQuestion = entity.QuestionEntityId,
                 IsCorrect = entity.IsCorrect,
                 IdFile = entity.IdFile,
-                Image = entity.FileEntity
             };
 
             return answer;

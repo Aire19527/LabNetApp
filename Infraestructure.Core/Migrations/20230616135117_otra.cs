@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Infraestructure.Core.Migrations
 {
-    public partial class ultMigration : Migration
+    public partial class otra : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -60,6 +60,21 @@ namespace Infraestructure.Core.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_DniType", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "File",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FileName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Url = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_File", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -242,6 +257,35 @@ namespace Infraestructure.Core.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Question",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Description = table.Column<string>(type: "nvarchar(120)", maxLength: 120, nullable: false),
+                    Value = table.Column<int>(type: "int", nullable: false),
+                    IsVisible = table.Column<bool>(type: "bit", nullable: false),
+                    IdSkill = table.Column<int>(type: "int", nullable: false),
+                    SkillId = table.Column<int>(type: "int", nullable: false),
+                    IdFile = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Question", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Question_File_IdFile",
+                        column: x => x.IdFile,
+                        principalTable: "File",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Question_Skill_SkillId",
+                        column: x => x.SkillId,
+                        principalTable: "Skill",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "City",
                 columns: table => new
                 {
@@ -284,6 +328,33 @@ namespace Infraestructure.Core.Migrations
                         principalTable: "Role",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Answer",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsCorrect = table.Column<bool>(type: "bit", nullable: false),
+                    IdQuestion = table.Column<int>(type: "int", nullable: false),
+                    IdFile = table.Column<int>(type: "int", nullable: true),
+                    QuestionEntityId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Answer", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Answer_File_IdFile",
+                        column: x => x.IdFile,
+                        principalTable: "File",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Answer_Question_QuestionEntityId",
+                        column: x => x.QuestionEntityId,
+                        principalTable: "Question",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -442,6 +513,9 @@ namespace Infraestructure.Core.Migrations
                     BossRole = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     BossContact = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     BossName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsCurrent = table.Column<bool>(type: "bit", nullable: false),
                     IdProfile = table.Column<int>(type: "int", nullable: false),
                     IdUbication = table.Column<int>(type: "int", nullable: false),
                     IdWorkType = table.Column<int>(type: "int", nullable: false),
@@ -486,6 +560,18 @@ namespace Infraestructure.Core.Migrations
                 name: "IX_Adress_IdCityEntity",
                 table: "Adress",
                 column: "IdCityEntity");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Answer_IdFile",
+                table: "Answer",
+                column: "IdFile",
+                unique: true,
+                filter: "[IdFile] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Answer_QuestionEntityId",
+                table: "Answer",
+                column: "QuestionEntityId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_City_IDProvinceEntity",
@@ -551,6 +637,18 @@ namespace Infraestructure.Core.Migrations
                 column: "IdCountryEntity");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Question_IdFile",
+                table: "Question",
+                column: "IdFile",
+                unique: true,
+                filter: "[IdFile] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Question_SkillId",
+                table: "Question",
+                column: "SkillId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_RolesPermissions_IdPermission_IdRol",
                 table: "RolesPermissions",
                 columns: new[] { "IdPermission", "IdRol" },
@@ -601,6 +699,9 @@ namespace Infraestructure.Core.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Answer");
+
+            migrationBuilder.DropTable(
                 name: "Configuration");
 
             migrationBuilder.DropTable(
@@ -622,13 +723,13 @@ namespace Infraestructure.Core.Migrations
                 name: "Work");
 
             migrationBuilder.DropTable(
+                name: "Question");
+
+            migrationBuilder.DropTable(
                 name: "InstitutionType");
 
             migrationBuilder.DropTable(
                 name: "Certification");
-
-            migrationBuilder.DropTable(
-                name: "Skill");
 
             migrationBuilder.DropTable(
                 name: "Permission");
@@ -647,6 +748,12 @@ namespace Infraestructure.Core.Migrations
 
             migrationBuilder.DropTable(
                 name: "WorkType");
+
+            migrationBuilder.DropTable(
+                name: "File");
+
+            migrationBuilder.DropTable(
+                name: "Skill");
 
             migrationBuilder.DropTable(
                 name: "PermissionType");

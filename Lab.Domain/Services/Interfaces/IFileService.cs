@@ -1,6 +1,10 @@
-﻿using Lab.Domain.Dto.File;
+﻿using Infraestructure.Core.UnitOfWork;
+using Infraestructure.Core.UnitOfWork.Interface;
+using Lab.Domain.Dto.File;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,7 +17,7 @@ namespace Lab.Domain.Services.Interfaces
     {
         Task<string> InsertFile(AddFileDto add, bool isImg);
         Task<bool> UpdateFile(UpdateFileDto upd, bool isImg);
-        Task<bool> DeleteFile(int id);
+        void DeleteFile(string path);
         GetFileDto getById(int id, bool isImg);
 
         GetFileDto getByUrl(string url, bool isImg);

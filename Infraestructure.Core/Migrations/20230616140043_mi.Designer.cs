@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infraestructure.Core.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230606210213_nuevaMigracion")]
-    partial class nuevaMigracion
+    [Migration("20230616140043_mi")]
+    partial class mi
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -52,6 +52,41 @@ namespace Infraestructure.Core.Migrations
                     b.HasIndex("IdCityEntity");
 
                     b.ToTable("Adress");
+                });
+
+            modelBuilder.Entity("Infraestructure.Entity.Models.AnswerEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("IdFile")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdQuestion")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsCorrect")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("QuestionEntityId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdFile")
+                        .IsUnique()
+                        .HasFilter("[IdFile] IS NOT NULL");
+
+                    b.HasIndex("QuestionEntityId");
+
+                    b.ToTable("Answer");
                 });
 
             modelBuilder.Entity("Infraestructure.Entity.Models.CertificationEntity", b =>
@@ -185,6 +220,30 @@ namespace Infraestructure.Core.Migrations
                     b.HasIndex("IdProfile");
 
                     b.ToTable("Education");
+                });
+
+            modelBuilder.Entity("Infraestructure.Entity.Models.FileEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("File");
                 });
 
             modelBuilder.Entity("Infraestructure.Entity.Models.InstitutionTypeEntity", b =>
@@ -390,6 +449,42 @@ namespace Infraestructure.Core.Migrations
                     b.ToTable("Province");
                 });
 
+            modelBuilder.Entity("Infraestructure.Entity.Models.QuestionEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(120)
+                        .HasColumnType("nvarchar(120)");
+
+                    b.Property<int?>("IdFile")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsVisible")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("SkillId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Value")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdFile")
+                        .IsUnique()
+                        .HasFilter("[IdFile] IS NOT NULL");
+
+                    b.HasIndex("SkillId");
+
+                    b.ToTable("Question");
+                });
+
             modelBuilder.Entity("Infraestructure.Entity.Models.RoleEntity", b =>
                 {
                     b.Property<int>("Id")
@@ -567,6 +662,9 @@ namespace Infraestructure.Core.Migrations
                     b.Property<string>("DetailFuntion")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<int?>("IdJobPosition")
                         .HasColumnType("int");
 
@@ -582,10 +680,17 @@ namespace Infraestructure.Core.Migrations
                     b.Property<int>("IdWorkType")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsCurrent")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Role")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime?>("StartDate")
+                        .IsRequired()
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -629,6 +734,19 @@ namespace Infraestructure.Core.Migrations
                         .IsRequired();
 
                     b.Navigation("CityEntity");
+                });
+
+            modelBuilder.Entity("Infraestructure.Entity.Models.AnswerEntity", b =>
+                {
+                    b.HasOne("Infraestructure.Entity.Models.FileEntity", "FileEntity")
+                        .WithOne("AnswerEntity")
+                        .HasForeignKey("Infraestructure.Entity.Models.AnswerEntity", "IdFile");
+
+                    b.HasOne("Infraestructure.Entity.Models.QuestionEntity", null)
+                        .WithMany("AnswerEntities")
+                        .HasForeignKey("QuestionEntityId");
+
+                    b.Navigation("FileEntity");
                 });
 
             modelBuilder.Entity("Infraestructure.Entity.Models.CityEntity", b =>
@@ -744,6 +862,21 @@ namespace Infraestructure.Core.Migrations
                     b.Navigation("CountryEntity");
                 });
 
+            modelBuilder.Entity("Infraestructure.Entity.Models.QuestionEntity", b =>
+                {
+                    b.HasOne("Infraestructure.Entity.Models.FileEntity", "FileEntity")
+                        .WithOne("QuestionEntity")
+                        .HasForeignKey("Infraestructure.Entity.Models.QuestionEntity", "IdFile");
+
+                    b.HasOne("Infraestructure.Entity.Models.SkillEntity", "Skill")
+                        .WithMany("QuestionEntities")
+                        .HasForeignKey("SkillId");
+
+                    b.Navigation("FileEntity");
+
+                    b.Navigation("Skill");
+                });
+
             modelBuilder.Entity("Infraestructure.Entity.Models.RolePermissionEntity", b =>
                 {
                     b.HasOne("Infraestructure.Entity.Models.PermissionEntity", "PermissionEntity")
@@ -830,6 +963,13 @@ namespace Infraestructure.Core.Migrations
                     b.Navigation("ProfileEntity");
                 });
 
+            modelBuilder.Entity("Infraestructure.Entity.Models.FileEntity", b =>
+                {
+                    b.Navigation("AnswerEntity");
+
+                    b.Navigation("QuestionEntity");
+                });
+
             modelBuilder.Entity("Infraestructure.Entity.Models.InstitutionTypeEntity", b =>
                 {
                     b.Navigation("EducationEntities");
@@ -866,6 +1006,11 @@ namespace Infraestructure.Core.Migrations
                     b.Navigation("CityEntities");
                 });
 
+            modelBuilder.Entity("Infraestructure.Entity.Models.QuestionEntity", b =>
+                {
+                    b.Navigation("AnswerEntities");
+                });
+
             modelBuilder.Entity("Infraestructure.Entity.Models.RoleEntity", b =>
                 {
                     b.Navigation("RolePermissionEntities");
@@ -876,6 +1021,8 @@ namespace Infraestructure.Core.Migrations
             modelBuilder.Entity("Infraestructure.Entity.Models.SkillEntity", b =>
                 {
                     b.Navigation("ProfilesSkillsEntity");
+
+                    b.Navigation("QuestionEntities");
                 });
 
             modelBuilder.Entity("Infraestructure.Entity.Models.UbicationEntity", b =>
