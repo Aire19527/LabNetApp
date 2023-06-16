@@ -28,6 +28,35 @@ namespace Lab.Domain.Services
             _fileService = fileService;
         }
 
+        public List<QuestionDto> getAll()
+        {
+            IEnumerable<QuestionEntity> entities = _unitOfWork.QuestionRepository.GetAllSelect(
+                s => s.Skill,
+                i => i.FileEntity,
+                a => a.AnswerEntities);
+
+            List<QuestionDto> questionList = entities.Select(q => new QuestionDto()
+            {
+                Id = q.Id,
+                Description = q.Description,
+                IdSkill = q.Skill?.Id,
+                IdFile = q.FileEntity?.Id,
+                IsVisible = q.IsVisible,
+                Value = q.Value,
+                AnswerEntities = q.AnswerEntities
+                    .Select(x => new GetAnswerDto()
+                    {
+                        Id = x.Id,
+                        Description = x.Description,
+                        IsCorrect = x.IsCorrect,
+                        IdFile = x.IdFile,
+                        IdQuestion = q.Id
+                    }).ToList()
+            }).ToList();
+
+            return questionList;
+        }
+
         public QuestionDto getById(int idQuestion)
         {
             QuestionEntity entity = _unitOfWork.QuestionRepository.FirstOrDefaultSelect(
@@ -43,7 +72,7 @@ namespace Lab.Domain.Services
             {
                 Id = entity.Id,
                 Description = entity.Description,
-                IdSkill = entity.Skill.Id,
+                IdSkill = entity.Skill?.Id,
                 IdFile = entity.FileEntity?.Id,
                 IsVisible = entity.IsVisible,
                 Value = entity.Value,
@@ -125,5 +154,7 @@ namespace Lab.Domain.Services
             _fileService.UpdateFile(fileDto, isImg: true);
             return true;
         }
+
+
     }
 }

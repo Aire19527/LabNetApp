@@ -11,6 +11,7 @@ namespace Lab.Domain.Services.Interfaces
     public interface IQuestionServices
     {
         QuestionDto getById(int idQuestion);
+        List<QuestionDto> getAll();
         Task<bool> Insert(QuestionFileDto questionDto);
         bool Update(QuestionDto questionDto);
         bool Delete(int id);

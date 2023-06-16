@@ -77,5 +77,27 @@ namespace MyLabApp.Controllers
             return action;
         }
 
+        [HttpGet]
+        [Route("Get")]
+        public IActionResult GetAll()
+        {
+            IActionResult action;
+            List<QuestionDto> result = _questionServices.getAll();
+
+
+            ResponseDto rpdto = new ResponseDto()
+            {
+                IsSuccess = true,
+                Message = string.Empty,
+                Result = result
+            };
+
+            if (result != null)
+                action = Ok(rpdto);
+            else
+                action = BadRequest(rpdto);
+
+            return action;
+        }
     }
 }
