@@ -26,5 +26,9 @@ namespace Infraestructure.Entity.Models
 
         public QuestionEntity? QuestionEntity { get; set; }
         public AnswerEntity? AnswerEntity { get; set; }
+
+        [ForeignKey("ProfileEntity")]
+        public int? IdProfile { get; set; }
+        
     }
 }

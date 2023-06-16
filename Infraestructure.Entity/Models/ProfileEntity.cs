@@ -58,5 +58,6 @@ namespace Infraestructure.Entity.Models
         public IEnumerable<EducationEntity>? EducationEntity { get; set; }
         public IEnumerable<ProfilesSkillsEntity>? ProfilesSkillsEntity { get; set; }
         public IEnumerable<ProfileCertificationEntity>? ProfileCertificationEntity { get; set; }
+
     }
 }
