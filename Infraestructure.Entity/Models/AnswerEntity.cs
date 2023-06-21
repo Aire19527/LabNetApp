@@ -16,13 +16,8 @@ namespace Infraestructure.Entity.Models
 
         [Required]
         public string Description { get; set; }
+        public IEnumerable<QuestionAnswerEntity>? QuestionAnswerEntityEntities { get; set; }
 
-        [Required]
-        public bool IsCorrect { get; set; }
-
-        [ForeignKey("QuestionEntity")]
-        public int QuestionEntityId { get; set; }
-        public QuestionEntity question { get; set; }
         public int? IdFile { get; set; }
         public FileEntity FileEntity { get; set; }
 

@@ -29,7 +29,7 @@ namespace Infraestructure.Entity.Models
         public int? SkillId { get; set; }
         public SkillEntity? Skill { get; set; }
 
-        public IEnumerable<AnswerEntity> AnswerEntities { get; set; }
+        public IEnumerable<QuestionAnswerEntity>? QuestionAnswerEntities { get; set; }
 
         public int? IdFile { get; set; }
         public FileEntity? FileEntity { get; set; }

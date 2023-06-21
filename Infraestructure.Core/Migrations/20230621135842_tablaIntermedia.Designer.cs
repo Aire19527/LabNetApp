@@ -4,6 +4,7 @@ using Infraestructure.Core.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infraestructure.Core.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230621135842_tablaIntermedia")]
+    partial class tablaIntermedia
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -60,6 +62,9 @@ namespace Infraestructure.Core.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<int?>("AnswerEntityId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -67,11 +72,18 @@ namespace Infraestructure.Core.Migrations
                     b.Property<int?>("IdFile")
                         .HasColumnType("int");
 
+                    b.Property<int?>("QuestionEntityId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("AnswerEntityId");
 
                     b.HasIndex("IdFile")
                         .IsUnique()
                         .HasFilter("[IdFile] IS NOT NULL");
+
+                    b.HasIndex("QuestionEntityId");
 
                     b.ToTable("Answer");
                 });
@@ -460,7 +472,8 @@ namespace Infraestructure.Core.Migrations
 
                     b.HasIndex("AnswerId");
 
-                    b.HasIndex("QuestionId");
+                    b.HasIndex("QuestionId", "AnswerId")
+                        .IsUnique();
 
                     b.ToTable("QuestionsAnswers");
                 });
@@ -754,9 +767,17 @@ namespace Infraestructure.Core.Migrations
 
             modelBuilder.Entity("Infraestructure.Entity.Models.AnswerEntity", b =>
                 {
+                    b.HasOne("Infraestructure.Entity.Models.AnswerEntity", null)
+                        .WithMany("AnswerEntities")
+                        .HasForeignKey("AnswerEntityId");
+
                     b.HasOne("Infraestructure.Entity.Models.FileEntity", "FileEntity")
                         .WithOne("AnswerEntity")
                         .HasForeignKey("Infraestructure.Entity.Models.AnswerEntity", "IdFile");
+
+                    b.HasOne("Infraestructure.Entity.Models.QuestionEntity", null)
+                        .WithMany("AnswerEntities")
+                        .HasForeignKey("QuestionEntityId");
 
                     b.Navigation("FileEntity");
                 });
@@ -877,13 +898,13 @@ namespace Infraestructure.Core.Migrations
             modelBuilder.Entity("Infraestructure.Entity.Models.QuestionAnswerEntity", b =>
                 {
                     b.HasOne("Infraestructure.Entity.Models.AnswerEntity", "AnswerEntity")
-                        .WithMany("QuestionAnswerEntityEntities")
+                        .WithMany()
                         .HasForeignKey("AnswerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Infraestructure.Entity.Models.QuestionEntity", "QuestionEntity")
-                        .WithMany("QuestionAnswerEntityEntities")
+                        .WithMany()
                         .HasForeignKey("QuestionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -986,7 +1007,7 @@ namespace Infraestructure.Core.Migrations
 
             modelBuilder.Entity("Infraestructure.Entity.Models.AnswerEntity", b =>
                 {
-                    b.Navigation("QuestionAnswerEntityEntities");
+                    b.Navigation("AnswerEntities");
                 });
 
             modelBuilder.Entity("Infraestructure.Entity.Models.CertificationEntity", b =>
@@ -1044,7 +1065,7 @@ namespace Infraestructure.Core.Migrations
 
             modelBuilder.Entity("Infraestructure.Entity.Models.QuestionEntity", b =>
                 {
-                    b.Navigation("QuestionAnswerEntityEntities");
+                    b.Navigation("AnswerEntities");
                 });
 
             modelBuilder.Entity("Infraestructure.Entity.Models.RoleEntity", b =>

@@ -3,6 +3,7 @@ using Common.Resources;
 using Infraestructure.Core.UnitOfWork.Interface;
 using Infraestructure.Entity.Models;
 using Lab.Domain.Dto.Answer;
+using Lab.Domain.Dto.AnswerQuestion;
 using Lab.Domain.Dto.File;
 using Lab.Domain.Dto.Profile;
 using Lab.Domain.Dto.Question;
@@ -27,20 +28,22 @@ namespace Lab.Domain.Services
             _unitOfWork = unitOfWork;
             _fileSerivce = fileSerivce; 
         }
-        public List<GetAnswerDto> getByQuestion(int idQuestion)
+
+
+        public List<GetAnswerDto> getAll()
         {
-            IEnumerable<AnswerEntity> answerList = _unitOfWork.AnswerRepository.FindAllSelect(x => x.QuestionEntityId == idQuestion);
+            IEnumerable<AnswerEntity> answerList = _unitOfWork.AnswerRepository.GetAll();
             List<GetAnswerDto> answers = answerList.Select(a => new GetAnswerDto()
             {
                 Id = a.Id,
                 Description = a.Description,
-                IdQuestion = a.QuestionEntityId,
-                IsCorrect = a.IsCorrect,
                 IdFile = a.IdFile
             }).ToList();
 
             return answers;
         }
+
+
         public async Task<bool> Insert(AnswerFileDto answerFile)
         {
 
@@ -61,8 +64,6 @@ namespace Lab.Domain.Services
                     AnswerEntity entity = new AnswerEntity()
                         {
                             Description = answerFile.Description,
-                            QuestionEntityId = answerFile.IdQuestion,
-                            IsCorrect = answerFile.IsCorrect,
                         };
 
                         if (answerFile.File != null)
@@ -101,7 +102,7 @@ namespace Lab.Domain.Services
             if (AnswerEntity == null)
                 throw new BusinessException(GeneralMessages.ItemNoFound);
 
-            _unitOfWork.SkillRepository.Delete(AnswerEntity);
+            _unitOfWork.AnswerRepository.Delete(AnswerEntity);
 
             return await _unitOfWork.Save() > 0;
         }
@@ -114,12 +115,35 @@ namespace Lab.Domain.Services
             {
                 Id = entity.Id,
                 Description = entity.Description,
-                IdQuestion = entity.QuestionEntityId,
-                IsCorrect = entity.IsCorrect,
                 IdFile = entity.IdFile,
             };
 
             return answer;
         }
+
+        public async Task<bool> InsertAnswerInQuestion(AddAnswerQuestion add)
+        {
+            if (add.IdAnswer == null || add.IdQuestion == null)
+                throw new BusinessException("No se ha indicado pregunta y/o respuesta.");
+
+            AnswerEntity Answer = _unitOfWork.AnswerRepository.FirstOrDefault(x => x.Id == add.IdAnswer);
+            QuestionEntity Question = _unitOfWork.QuestionRepository.FirstOrDefault(x => x.Id == add.IdQuestion);
+
+            if (Answer == null || Question == null)
+                throw new BusinessException("Pregunta y/o respuesta no existente.");
+
+
+            _unitOfWork.QuestionAnswerRepository.Insert(new QuestionAnswerEntity()
+            {
+                AnswerId = add.IdAnswer,
+                QuestionId = add.IdQuestion,
+                isCorrect = add.isCorrect
+            });
+
+            return await _unitOfWork.Save() > 0;
+        }
+
+
+
     }
 }

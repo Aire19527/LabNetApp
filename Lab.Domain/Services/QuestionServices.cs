@@ -33,7 +33,7 @@ namespace Lab.Domain.Services
             IEnumerable<QuestionEntity> entities = _unitOfWork.QuestionRepository.GetAllSelect(
                 s => s.Skill,
                 i => i.FileEntity,
-                a => a.AnswerEntities);
+                a => a.QuestionAnswerEntities.Select(r => r.AnswerEntity));
 
             List<QuestionDto> questionList = entities.Select(q => new QuestionDto()
             {
@@ -43,14 +43,12 @@ namespace Lab.Domain.Services
                 IdFile = q.FileEntity?.Id,
                 IsVisible = q.IsVisible,
                 Value = q.Value,
-                AnswerEntities = q.AnswerEntities
+                AnswerEntities = q.QuestionAnswerEntities
                     .Select(x => new GetAnswerDto()
                     {
-                        Id = x.Id,
-                        Description = x.Description,
-                        IsCorrect = x.IsCorrect,
-                        IdFile = x.IdFile,
-                        IdQuestion = q.Id
+                        Id = x.AnswerEntity.Id,
+                        Description = x.AnswerEntity.Description,
+                        IdFile = x.AnswerEntity.IdFile,
                     }).ToList()
             }).ToList();
 
@@ -63,7 +61,7 @@ namespace Lab.Domain.Services
                 x => x.Id == idQuestion,
                 s => s.Skill,
                 i => i.FileEntity,
-                a => a.AnswerEntities);
+                a => a.QuestionAnswerEntities.Select(r => r.AnswerEntity));
 
             if (entity == null)
                 throw new BusinessException(GeneralMessages.ItemNoFound);
@@ -76,14 +74,12 @@ namespace Lab.Domain.Services
                 IdFile = entity.FileEntity?.Id,
                 IsVisible = entity.IsVisible,
                 Value = entity.Value,
-                AnswerEntities = entity.AnswerEntities
+                AnswerEntities = entity.QuestionAnswerEntities
                     .Select(x => new GetAnswerDto()
                     {
-                        Id = x.Id,
-                        Description = x.Description,
-                        IsCorrect = x.IsCorrect,
-                        IdFile = x.IdFile,
-                        IdQuestion = entity.Id
+                        Id = x.AnswerEntity.Id,
+                        Description = x.AnswerEntity.Description,
+                        IdFile = x.AnswerEntity.IdFile
                     }).ToList()
             };
 

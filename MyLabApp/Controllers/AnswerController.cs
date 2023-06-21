@@ -1,6 +1,7 @@
 ﻿using Common.Resources;
 using Lab.Domain.Dto;
 using Lab.Domain.Dto.Answer;
+using Lab.Domain.Dto.AnswerQuestion;
 using Lab.Domain.Dto.Profile;
 using Lab.Domain.Services;
 using Lab.Domain.Services.Interfaces;
@@ -13,7 +14,7 @@ namespace MyLabApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     [TypeFilter(typeof(CustomExceptionHandler))]
     public class AnswerController : ControllerBase
     {
@@ -30,11 +31,11 @@ namespace MyLabApp.Controllers
         #region Endpoints
 
         [HttpGet]
-        [Route("{idQuestion}")]
-        public IActionResult GetByQuestion(int idQuestion)
+        [Route("Get")]
+        public IActionResult GetAllAnswers ()
         {
             IActionResult action;
-            List<GetAnswerDto> result = _answerService.getByQuestion(idQuestion);
+            List<GetAnswerDto> result = _answerService.getAll();
 
 
             ResponseDto rpdto = new ResponseDto()
@@ -58,6 +59,30 @@ namespace MyLabApp.Controllers
             IActionResult action;
 
             bool result = await _answerService.Insert(add);
+
+
+            ResponseDto rpdto = new ResponseDto()
+            {
+                IsSuccess = true,
+                Message = string.Empty,
+                Result = result
+            };
+
+            if (result)
+                action = Ok(rpdto);
+            else
+                action = BadRequest(rpdto);
+            return action;
+
+        }
+
+        [HttpPost]
+        [Route("InsertInQuestion")]
+        public async Task<IActionResult> InsertInQuestion([FromBody] AddAnswerQuestion add)
+        {
+            IActionResult action;
+
+            bool result = await _answerService.InsertAnswerInQuestion(add);
 
 
             ResponseDto rpdto = new ResponseDto()

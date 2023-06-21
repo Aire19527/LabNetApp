@@ -4,6 +4,7 @@ using Infraestructure.Core.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infraestructure.Core.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230621140155_fixTabla")]
+    partial class fixTabla
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,6 +23,21 @@ namespace Infraestructure.Core.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+
+            modelBuilder.Entity("AnswerEntityQuestionEntity", b =>
+                {
+                    b.Property<int>("AnswerEntitiesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("QuestionEntitiesId")
+                        .HasColumnType("int");
+
+                    b.HasKey("AnswerEntitiesId", "QuestionEntitiesId");
+
+                    b.HasIndex("QuestionEntitiesId");
+
+                    b.ToTable("AnswerEntityQuestionEntity");
+                });
 
             modelBuilder.Entity("Infraestructure.Entity.Models.AdressEntity", b =>
                 {
@@ -460,7 +477,8 @@ namespace Infraestructure.Core.Migrations
 
                     b.HasIndex("AnswerId");
 
-                    b.HasIndex("QuestionId");
+                    b.HasIndex("QuestionId", "AnswerId")
+                        .IsUnique();
 
                     b.ToTable("QuestionsAnswers");
                 });
@@ -741,6 +759,21 @@ namespace Infraestructure.Core.Migrations
                     b.ToTable("WorkType");
                 });
 
+            modelBuilder.Entity("AnswerEntityQuestionEntity", b =>
+                {
+                    b.HasOne("Infraestructure.Entity.Models.AnswerEntity", null)
+                        .WithMany()
+                        .HasForeignKey("AnswerEntitiesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Infraestructure.Entity.Models.QuestionEntity", null)
+                        .WithMany()
+                        .HasForeignKey("QuestionEntitiesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Infraestructure.Entity.Models.AdressEntity", b =>
                 {
                     b.HasOne("Infraestructure.Entity.Models.CityEntity", "CityEntity")
@@ -877,13 +910,13 @@ namespace Infraestructure.Core.Migrations
             modelBuilder.Entity("Infraestructure.Entity.Models.QuestionAnswerEntity", b =>
                 {
                     b.HasOne("Infraestructure.Entity.Models.AnswerEntity", "AnswerEntity")
-                        .WithMany("QuestionAnswerEntityEntities")
+                        .WithMany()
                         .HasForeignKey("AnswerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Infraestructure.Entity.Models.QuestionEntity", "QuestionEntity")
-                        .WithMany("QuestionAnswerEntityEntities")
+                        .WithMany()
                         .HasForeignKey("QuestionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -984,11 +1017,6 @@ namespace Infraestructure.Core.Migrations
                     b.Navigation("ProfileEntity");
                 });
 
-            modelBuilder.Entity("Infraestructure.Entity.Models.AnswerEntity", b =>
-                {
-                    b.Navigation("QuestionAnswerEntityEntities");
-                });
-
             modelBuilder.Entity("Infraestructure.Entity.Models.CertificationEntity", b =>
                 {
                     b.Navigation("ProfileCertificationEntity");
@@ -1040,11 +1068,6 @@ namespace Infraestructure.Core.Migrations
             modelBuilder.Entity("Infraestructure.Entity.Models.ProvinceEntity", b =>
                 {
                     b.Navigation("CityEntities");
-                });
-
-            modelBuilder.Entity("Infraestructure.Entity.Models.QuestionEntity", b =>
-                {
-                    b.Navigation("QuestionAnswerEntityEntities");
                 });
 
             modelBuilder.Entity("Infraestructure.Entity.Models.RoleEntity", b =>

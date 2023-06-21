@@ -1,4 +1,5 @@
 ﻿using Lab.Domain.Dto.Answer;
+using Lab.Domain.Dto.AnswerQuestion;
 using Lab.Domain.Dto.File;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,8 @@ namespace Lab.Domain.Services.Interfaces
         Task<bool> Insert(AnswerFileDto add);
         Task<bool> Delete(int id);
         GetAnswerDto getById(int id);
-        List<GetAnswerDto> getByQuestion(int idQuestion);
+        List<GetAnswerDto> getAll();
+        Task<bool> InsertAnswerInQuestion(AddAnswerQuestion add);
         
     }
 }

@@ -78,6 +78,8 @@ namespace Infraestructure.Core.Context
                })
                .IsUnique();
 
+              
+
             modelBuilder.Entity<CountryEntity>().Property(c => c.Id).ValueGeneratedNever();
             modelBuilder.Entity<ProvinceEntity>().Property(p => p.Id).ValueGeneratedNever();
             modelBuilder.Entity<CityEntity>().Property(c => c.Id).ValueGeneratedNever();

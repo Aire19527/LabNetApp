@@ -41,6 +41,7 @@ namespace Infraestructure.Core.UnitOfWork
         private IRepository<AnswerEntity> answerRepository;
         private IRepository<QuestionEntity> questionRepository;
         private IRepository<FileEntity> fileRepository;
+        private IRepository<QuestionAnswerEntity> questionAnswerRepository;
         #endregion
 
         #region Members
@@ -218,6 +219,18 @@ namespace Infraestructure.Core.UnitOfWork
                     this.fileRepository = new Repository<FileEntity>(_context);
                 }
                 return fileRepository;
+            }
+        }
+
+        public IRepository<QuestionAnswerEntity> QuestionAnswerRepository
+        {
+            get
+            {
+                if (this.questionAnswerRepository == null)
+                {
+                    this.questionAnswerRepository = new Repository<QuestionAnswerEntity>(_context);
+                }
+                return questionAnswerRepository;
             }
         }
 

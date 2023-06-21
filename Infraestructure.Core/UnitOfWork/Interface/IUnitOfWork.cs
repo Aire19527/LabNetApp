@@ -26,6 +26,8 @@ namespace Infraestructure.Core.UnitOfWork.Interface
         //ANSERS & QUESTIONS
         IRepository<QuestionEntity> QuestionRepository { get; }
         IRepository<AnswerEntity> AnswerRepository {  get; }
+        IRepository<QuestionAnswerEntity> QuestionAnswerRepository { get; }
+
 
         //File
 
