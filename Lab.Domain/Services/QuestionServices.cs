@@ -40,6 +40,7 @@ namespace Lab.Domain.Services
                 Id = q.Id,
                 Description = q.Description,
                 IdSkill = q.Skill?.Id,
+                SkillDescription = q.Skill.Description,
                 IdFile = q.FileEntity?.Id,
                 IsVisible = q.IsVisible,
                 Value = q.Value,
