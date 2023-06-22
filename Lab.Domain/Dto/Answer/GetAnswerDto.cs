@@ -9,5 +9,6 @@ namespace Lab.Domain.Dto.Answer
     public class GetAnswerDto : AddAnswerDto
     {
         public int Id { get; set; }
+        public bool isCorrect { get; set; }
     }
 }
