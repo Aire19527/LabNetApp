@@ -79,7 +79,9 @@ namespace Lab.Domain.Services
                     {
                         Id = x.AnswerEntity.Id,
                         Description = x.AnswerEntity.Description,
-                        IdFile = x.AnswerEntity.IdFile
+                        IdFile = x.AnswerEntity.IdFile,
+                        isCorrect = x.isCorrect
+                        
                     }).ToList()
             };
 
