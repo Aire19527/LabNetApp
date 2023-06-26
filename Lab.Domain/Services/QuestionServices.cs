@@ -5,6 +5,7 @@ using Infraestructure.Entity.Models;
 using Lab.Domain.Dto.Answer;
 using Lab.Domain.Dto.File;
 using Lab.Domain.Dto.Question;
+using Lab.Domain.Dto.Skill;
 using Lab.Domain.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -20,18 +21,22 @@ namespace Lab.Domain.Services
         #region builder
         private readonly IUnitOfWork _unitOfWork;
         private readonly IFileService _fileService;
+        private readonly IAnswerService _answerService;
+
         #endregion
 
-        public  QuestionServices(IUnitOfWork unitOfWork, IFileService fileService)
+        public QuestionServices(IUnitOfWork unitOfWork, IFileService fileService,IAnswerService answerService)
         {
             _unitOfWork = unitOfWork;
             _fileService = fileService;
+            _answerService = answerService;
+
         }
 
         public List<QuestionDto> getAll()
         {
             IEnumerable<QuestionEntity> entities = _unitOfWork.QuestionRepository.GetAllSelect(
-                s => s.Skill,
+                s => s.QuestionSkillEntity.Select(q => q.SkillEntity),
                 i => i.FileEntity,
                 a => a.QuestionAnswerEntities.Select(r => r.AnswerEntity));
 
@@ -39,11 +44,17 @@ namespace Lab.Domain.Services
             {
                 Id = q.Id,
                 Description = q.Description,
-                IdSkill = q.Skill?.Id,
-                SkillDescription = q.Skill.Description,
+                //IdSkill = q.Skill?.Id,
+                //SkillDescription = q.Skill.Description,
                 IdFile = q.FileEntity?.Id,
                 IsVisible = q.IsVisible,
                 Value = q.Value,
+                SkillEntities = q.QuestionSkillEntity.Select(x => new ConsultSkllDto()
+                {
+                    Id = x.SkillEntity.Id,
+                    Description = x.SkillEntity.Description,
+                    IsVisible = x.SkillEntity.IsVisible
+                }).ToList(),
                 AnswerEntities = q.QuestionAnswerEntities
                     .Select(x => new GetAnswerDto()
                     {
@@ -51,7 +62,7 @@ namespace Lab.Domain.Services
                         Description = x.AnswerEntity.Description,
                         IdFile = x.AnswerEntity.IdFile,
                         isCorrect = x.isCorrect
-                    }).ToList()
+                    }).ToList(),                
             }).ToList();
 
             return questionList;
@@ -61,7 +72,7 @@ namespace Lab.Domain.Services
         {
             QuestionEntity entity = _unitOfWork.QuestionRepository.FirstOrDefaultSelect(
                 x => x.Id == idQuestion,
-                s => s.Skill,
+                s => s.QuestionSkillEntity.Select(q => q.SkillEntity),
                 i => i.FileEntity,
                 a => a.QuestionAnswerEntities.Select(r => r.AnswerEntity));
 
@@ -72,10 +83,16 @@ namespace Lab.Domain.Services
             {
                 Id = entity.Id,
                 Description = entity.Description,
-                IdSkill = entity.Skill?.Id,
+                //IdSkill = entity.Skill?.Id,
                 IdFile = entity.FileEntity?.Id,
                 IsVisible = entity.IsVisible,
                 Value = entity.Value,
+                SkillEntities = entity.QuestionSkillEntity.Select(x => new ConsultSkllDto()
+                {
+                    Id = x.SkillEntity.Id,
+                    Description = x.SkillEntity.Description,
+                    IsVisible = x.SkillEntity.IsVisible
+                }).ToList(),
                 AnswerEntities = entity.QuestionAnswerEntities
                     .Select(x => new GetAnswerDto()
                     {
@@ -114,46 +131,71 @@ namespace Lab.Domain.Services
 
         public async Task<bool> Insert(QuestionFileDto questionDto)
         {
-            string url = string.Empty;
             AddFileDto file = new AddFileDto()
             {
                 FileName = questionDto.FileName,
                 File = questionDto.File,
             };
 
+            FileEntity img = null;
+
+            List<AnswerEntity> answers = new List<AnswerEntity>();
+            QuestionAnswerEntity questionAnswer = null;
+
             using (var db = await _unitOfWork.BeginTransactionAsync())
             {
                 try
                 {
+                    if (questionDto.File != null)
+                    {
+                        img = _fileService.InsertFile(file);
+                    }
+
+                    if (questionDto.Answers.Count != 0)
+                    {
+                        foreach (var item in questionDto.Answers)
+                        {
+                            AnswerEntity answer = await _answerService.InsertToQuestion(item);
+                            answers.Add(answer);
+                        }
+                    }
+
                     QuestionEntity entity = new QuestionEntity() {
                         IsVisible = true,
                         Value = questionDto.Value,
                         Description = questionDto.Description,
-                        SkillId = questionDto.IdSkill
+                        FileEntity = img,
+                        QuestionAnswerEntities = answers.Select(a => new QuestionAnswerEntity()
+                        {
+                            AnswerId = a.Id,
+                        }).ToList()
                     };
-
-                    if ( questionDto.File != null)
-                    {
-                        url = await _fileService.InsertFile(file, true);
-                        GetFileDto dto = _fileService.getByUrl(url, true);
-                        entity.IdFile = dto.Id;
-                    }
-
+                    
                     _unitOfWork.QuestionRepository.Insert(entity);
 
+                    await _unitOfWork.Save();
                     await db.CommitAsync();
-                    return await _unitOfWork.Save() > 0;
+
+                    return true;
                 }
                 catch (BusinessException ex)
                 {
-                    _fileService.DeleteFile(url);
+                    if (img!= null)
+                    {
+                        _fileService.DeleteFile(img.Url);
+                    }
                     await db.RollbackAsync();
+
                     throw ex;
                 }
                 catch (Exception ex)
                 {
-                    _fileService.DeleteFile(url);
+                    if (img != null)
+                    {
+                        _fileService.DeleteFile(img.Url);
+                    }
                     await db.RollbackAsync();
+
                     throw new Exception(GeneralMessages.Error500, ex);
                 }
             }

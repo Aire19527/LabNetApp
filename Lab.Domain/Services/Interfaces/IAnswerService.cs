@@ -1,4 +1,5 @@
-﻿using Lab.Domain.Dto.Answer;
+﻿using Infraestructure.Entity.Models;
+using Lab.Domain.Dto.Answer;
 using Lab.Domain.Dto.AnswerQuestion;
 using Lab.Domain.Dto.File;
 using System;
@@ -11,7 +12,8 @@ namespace Lab.Domain.Services.Interfaces
 {
     public interface IAnswerService
     {
-        Task<bool> Insert(AnswerFileDto add);
+        Task<int> Insert(AnswerFileDto add);
+        Task<AnswerEntity> InsertToQuestion(AnswerFileDto answerFile);
         Task<bool> Delete(int id);
         GetAnswerDto getById(int id);
         List<GetAnswerDto> getAll();

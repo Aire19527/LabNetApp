@@ -14,7 +14,7 @@ namespace MyLabApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     [TypeFilter(typeof(CustomExceptionHandler))]
     public class AnswerController : ControllerBase
     {
@@ -58,17 +58,17 @@ namespace MyLabApp.Controllers
         {
             IActionResult action;
 
-            bool result = await _answerService.Insert(add);
+            int idInserted = await _answerService.Insert(add);
 
 
             ResponseDto rpdto = new ResponseDto()
             {
                 IsSuccess = true,
                 Message = string.Empty,
-                Result = result
+                Result = idInserted
             };
 
-            if (result)
+            if (idInserted!=null)
                 action = Ok(rpdto);
             else
                 action = BadRequest(rpdto);
