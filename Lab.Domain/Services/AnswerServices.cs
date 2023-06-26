@@ -44,7 +44,7 @@ namespace Lab.Domain.Services
         }
 
 
-        public async Task<bool> Insert(AnswerFileDto answerFile)
+        public async Task<int> Insert(AnswerFileDto answerFile)
         {
 
             
@@ -74,9 +74,11 @@ namespace Lab.Domain.Services
                         }
 
                     _unitOfWork.AnswerRepository.Insert(entity);
+                    await _unitOfWork.Save();
 
-                        await dbA.CommitAsync();
-                        return await _unitOfWork.Save() > 0;
+                    Console.WriteLine(entity);
+                    await dbA.CommitAsync();
+                    return entity.Id;
                     }
                     catch (BusinessException ex)
                     {
