@@ -28,8 +28,5 @@ namespace Lab.Domain.Services.Interfaces
         public string UploadFile(IFormFile add, bool isImg);
         string getImage(string? img);
         string getResumee(string? resumee);
-
-
-
     }
 }

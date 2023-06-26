@@ -21,12 +21,16 @@ namespace Lab.Domain.Services
         #region builder
         private readonly IUnitOfWork _unitOfWork;
         private readonly IFileService _fileService;
+        private readonly IAnswerService _answerService;
+
         #endregion
 
-        public  QuestionServices(IUnitOfWork unitOfWork, IFileService fileService)
+        public QuestionServices(IUnitOfWork unitOfWork, IFileService fileService,IAnswerService answerService)
         {
             _unitOfWork = unitOfWork;
             _fileService = fileService;
+            _answerService = answerService;
+
         }
 
         public List<QuestionDto> getAll()
@@ -135,6 +139,9 @@ namespace Lab.Domain.Services
 
             FileEntity img = null;
 
+            List<AnswerEntity> answers = new List<AnswerEntity>();
+            QuestionAnswerEntity questionAnswer = null;
+
             using (var db = await _unitOfWork.BeginTransactionAsync())
             {
                 try
@@ -144,25 +151,27 @@ namespace Lab.Domain.Services
                         img = _fileService.InsertFile(file);
                     }
 
+                    if (questionDto.Answers.Count != 0)
+                    {
+                        foreach (var item in questionDto.Answers)
+                        {
+                            AnswerEntity answer = await _answerService.InsertToQuestion(item);
+                            answers.Add(answer);
+                        }
+                    }
+
                     QuestionEntity entity = new QuestionEntity() {
                         IsVisible = true,
                         Value = questionDto.Value,
                         Description = questionDto.Description,
-                        //QuestionSkillEntity =
                         FileEntity = img,
+                        QuestionAnswerEntities = answers.Select(a => new QuestionAnswerEntity()
+                        {
+                            AnswerId = a.Id,
+                        }).ToList()
                     };
-
-                    // se ingresa el file
-
-                    // se ingresa question, va tener que devolver el id o obtenerlo de alguna forma.
-                    // o id no incremental, ponerlo a mano.
+                    
                     _unitOfWork.QuestionRepository.Insert(entity);
-
-                    // se ingresa la questionSkill
-                    // insert({idSkill, idQuestion})
-
-                    // ingresar las RESPUESTAS=>
-                    // primeramente sus files. y luego la respuesta. x4
 
                     await _unitOfWork.Save();
                     await db.CommitAsync();

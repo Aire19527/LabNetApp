@@ -10,6 +10,7 @@ using MyLabApp.Handlers;
 using Lab.Domain.Dto.Question;
 using Lab.Domain.Dto.File;
 using Lab.Domain.Dto.Answer;
+using Infraestructure.Entity.Models;
 
 namespace MyLabApp.Controllers
 {
@@ -37,6 +38,19 @@ namespace MyLabApp.Controllers
         public async Task<IActionResult> Insert([FromForm] QuestionFileDto add)
         {
             IActionResult action;
+
+            //add.Answers = new List<AnswerFileDto>()
+            //{
+            //    new AnswerFileDto()
+            //    {
+            //        Description = "respuesta1"
+            //    },
+            //     new AnswerFileDto()
+            //    {
+            //        Description = "respuesta2"
+            //    },
+            //};
+
 
             bool result = await _questionServices.Insert(add);
             ResponseDto response = new ResponseDto()

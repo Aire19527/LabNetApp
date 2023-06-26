@@ -1,5 +1,6 @@
 ﻿using Common.Exceptions;
 using Common.Resources;
+using Infraestructure.Core.UnitOfWork;
 using Infraestructure.Core.UnitOfWork.Interface;
 using Infraestructure.Entity.Models;
 using Lab.Domain.Dto.Answer;
@@ -20,13 +21,13 @@ namespace Lab.Domain.Services
     {
         #region builder
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IFileService _fileSerivce;
+        private readonly IFileService _fileService;
         #endregion
 
         public AnswerServices(IUnitOfWork unitOfWork, IFileService fileSerivce)
         {
             _unitOfWork = unitOfWork;
-            _fileSerivce = fileSerivce; 
+            _fileService = fileSerivce;
         }
 
 
@@ -47,56 +48,110 @@ namespace Lab.Domain.Services
         public async Task<int> Insert(AnswerFileDto answerFile)
         {
 
-            
-                string url = string.Empty;
-                AddFileDto file = new AddFileDto()
-                {
-                    FileName = answerFile.FileName,
-                    File = answerFile.File,
-                };
+            AddFileDto file = new AddFileDto()
+            {
+                FileName = answerFile.FileName,
+                File = answerFile.File,
+            };
+            FileEntity img = null;
 
-                using (var dbA = await _unitOfWork.BeginTransactionAsync())
+
+            using (var dbA = await _unitOfWork.BeginTransactionAsync())
+            {
+                try
                 {
-                    try
+                    if (answerFile.File != null)
                     {
-
+                        img = _fileService.InsertFile(file);
+                    }
 
                     AnswerEntity entity = new AnswerEntity()
-                        {
-                            Description = answerFile.Description,
-                        };
-
-                        if (answerFile.File != null)
-                        {
-                            url = await _fileSerivce.InsertFile(file, true);
-                            GetFileDto dto = _fileSerivce.getByUrl(url, true);
-                            entity.IdFile = dto.Id;
-                        }
+                    {
+                        Description = answerFile.Description,
+                        FileEntity = img
+                    };
 
                     _unitOfWork.AnswerRepository.Insert(entity);
                     await _unitOfWork.Save();
 
-                    Console.WriteLine(entity);
                     await dbA.CommitAsync();
+
                     return entity.Id;
-                    }
-                    catch (BusinessException ex)
+                }
+                catch (BusinessException ex)
+                {
+                    if (img != null)
                     {
-                    _fileSerivce.DeleteFile(url);
-                        await dbA.RollbackAsync();
-                        throw ex;
-                    }
-                    catch (Exception ex)
-                    {
-                        _fileSerivce.DeleteFile(url);
-                        await dbA.RollbackAsync();
-                        throw new Exception(GeneralMessages.Error500, ex);
+                        _fileService.DeleteFile(img.Url);
                     }
 
+                    await dbA.RollbackAsync();
+
+                    throw ex;
                 }
-            
+                catch (Exception ex)
+                {
+                    if (img != null)
+                    {
+                        _fileService.DeleteFile(img.Url);
+                    }
+                    await dbA.RollbackAsync();
+
+                    throw new Exception(GeneralMessages.Error500, ex);
+                }
+            }
         }
 
+        public async Task<AnswerEntity> InsertToQuestion(AnswerFileDto answerFile)
+        {
+
+            AddFileDto file = new AddFileDto()
+            {
+                FileName = answerFile.FileName,
+                File = answerFile.File,
+            };
+            FileEntity img = null;
+
+            try
+            {
+                if (answerFile.File != null)
+                {
+                    img = _fileService.InsertFile(file);
+                }
+
+                AnswerEntity entity = new AnswerEntity()
+                {
+                    Description = answerFile.Description,
+                    FileEntity = img
+                };
+
+                _unitOfWork.AnswerRepository.Insert(entity);
+                await _unitOfWork.Save();
+
+                return entity;
+            }
+            catch (BusinessException ex)
+            {
+                if (img != null)
+                {
+                    _fileService.DeleteFile(img.Url);
+                }
+
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                if (img != null)
+                {
+                    _fileService.DeleteFile(img.Url);
+                }
+
+                throw new Exception(GeneralMessages.Error500, ex);
+            }
+
+        }
+
+    
         public async Task<bool> Delete(int id)
         {
             AnswerEntity? AnswerEntity = _unitOfWork.AnswerRepository.FirstOrDefault((x) => x.Id == id);
