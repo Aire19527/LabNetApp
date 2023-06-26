@@ -85,6 +85,19 @@ namespace Lab.Domain.Services
             return file.Url;
         }
 
+        public FileEntity InsertFile(AddFileDto add)
+
+        {
+            FileEntity file = new FileEntity()
+            {
+                FileName = add.FileName,
+                Url = UploadFile(add.File, true),
+                CreatedAt = DateTime.Now
+            };
+
+            return file;
+        }
+
         public async Task<bool> UpdateFile(UpdateFileDto upd, bool isImg)
         {
             FileEntity file = _unitOfWork.FileRepository.FirstOrDefault(x => x.Id == upd.Id);
@@ -135,6 +148,7 @@ namespace Lab.Domain.Services
             {
                 add.CopyTo(stream);
             }
+
             return $"{Url}/{uniqueFileName}";
         }
 

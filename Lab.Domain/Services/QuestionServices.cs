@@ -114,46 +114,66 @@ namespace Lab.Domain.Services
 
         public async Task<bool> Insert(QuestionFileDto questionDto)
         {
-            string url = string.Empty;
             AddFileDto file = new AddFileDto()
             {
                 FileName = questionDto.FileName,
                 File = questionDto.File,
             };
+            FileEntity img = null;
+
 
             using (var db = await _unitOfWork.BeginTransactionAsync())
             {
                 try
                 {
+                    if (questionDto.File != null)
+                    {
+                        img = _fileService.InsertFile(file);
+                    }
+
                     QuestionEntity entity = new QuestionEntity() {
                         IsVisible = true,
                         Value = questionDto.Value,
                         Description = questionDto.Description,
-                        SkillId = questionDto.IdSkill
+                        SkillId = questionDto.IdSkill,
+                        FileEntity = img,
                     };
 
-                    if ( questionDto.File != null)
-                    {
-                        url = await _fileService.InsertFile(file, true);
-                        GetFileDto dto = _fileService.getByUrl(url, true);
-                        entity.IdFile = dto.Id;
-                    }
+                    // se ingresa el file
 
+                    // se ingresa question, va tener que devolver el id o obtenerlo de alguna forma.
+                    // o id no incremental, ponerlo a mano.
                     _unitOfWork.QuestionRepository.Insert(entity);
 
+                    // se ingresa la questionSkill
+                    // insert({idSkill, idQuestion})
+
+                    // ingresar las RESPUESTAS=>
+                    // primeramente sus files. y luego la respuesta. x4
+
+                    await _unitOfWork.Save();
                     await db.CommitAsync();
-                    return await _unitOfWork.Save() > 0;
+
+                    return true;
                 }
                 catch (BusinessException ex)
                 {
-                    _fileService.DeleteFile(url);
+                    if (img!= null)
+                    {
+                        _fileService.DeleteFile(img.Url);
+                    }
                     await db.RollbackAsync();
+
                     throw ex;
                 }
                 catch (Exception ex)
                 {
-                    _fileService.DeleteFile(url);
+                    if (img != null)
+                    {
+                        _fileService.DeleteFile(img.Url);
+                    }
                     await db.RollbackAsync();
+
                     throw new Exception(GeneralMessages.Error500, ex);
                 }
             }
