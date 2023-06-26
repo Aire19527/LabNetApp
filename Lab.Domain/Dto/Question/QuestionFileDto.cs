@@ -9,14 +9,22 @@ using System.Threading.Tasks;
 
 namespace Lab.Domain.Dto.Question {
     public class QuestionFileDto {
+        public QuestionFileDto()
+        {
+            Skills = new List<int>();
+            Answers = new List<AnswerFileDto>();
+            AnswersInsert = new List<AnswerFileDto>();
+        }
 
         public string Description { get; set; }
         public int Value { get; set; }
-        //public IEnumerable<ConsultSkllDto> Skills { get; set; }
+       
         //public int IdSkill { get; set; }
         public string? FileName { get; set; }
         //To add File...
         public IFormFile? File { get; set; }
+        public List<int> Skills { get; set; }
         public List<AnswerFileDto> Answers { get; set; }
+        public List<AnswerFileDto> AnswersInsert{ get; set; }
     }
 }

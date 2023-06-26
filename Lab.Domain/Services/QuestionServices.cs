@@ -25,7 +25,7 @@ namespace Lab.Domain.Services
 
         #endregion
 
-        public QuestionServices(IUnitOfWork unitOfWork, IFileService fileService,IAnswerService answerService)
+        public QuestionServices(IUnitOfWork unitOfWork, IFileService fileService, IAnswerService answerService)
         {
             _unitOfWork = unitOfWork;
             _fileService = fileService;
@@ -62,7 +62,7 @@ namespace Lab.Domain.Services
                         Description = x.AnswerEntity.Description,
                         IdFile = x.AnswerEntity.IdFile,
                         isCorrect = x.isCorrect
-                    }).ToList(),                
+                    }).ToList(),
             }).ToList();
 
             return questionList;
@@ -100,7 +100,7 @@ namespace Lab.Domain.Services
                         Description = x.AnswerEntity.Description,
                         IdFile = x.AnswerEntity.IdFile,
                         isCorrect = x.isCorrect
-                        
+
                     }).ToList()
             };
 
@@ -138,8 +138,8 @@ namespace Lab.Domain.Services
             };
 
             FileEntity img = null;
-
-            List<AnswerEntity> answers = new List<AnswerEntity>();
+            //List<AnswerEntity> answers = new List<AnswerEntity>();
+            List<QuestionAnswerEntity> questionAnswers = new List<QuestionAnswerEntity>();
             QuestionAnswerEntity questionAnswer = null;
 
             using (var db = await _unitOfWork.BeginTransactionAsync())
@@ -147,30 +147,51 @@ namespace Lab.Domain.Services
                 try
                 {
                     if (questionDto.File != null)
-                    {
                         img = _fileService.InsertFile(file);
-                    }
 
-                    if (questionDto.Answers.Count != 0)
+                    if (questionDto.AnswersInsert.Any())
                     {
-                        foreach (var item in questionDto.Answers)
+                        foreach (var item in questionDto.AnswersInsert)
                         {
                             AnswerEntity answer = await _answerService.InsertToQuestion(item);
-                            answers.Add(answer);
+                            questionAnswers.Add(new QuestionAnswerEntity()
+                            {
+                                isCorrect = item.IsCorrect,
+                                AnswerEntity = answer,
+                            });
                         }
                     }
 
-                    QuestionEntity entity = new QuestionEntity() {
+                    if (questionDto.Answers.Any())
+                    {
+                        List<QuestionAnswerEntity> list = questionDto.Answers.Select(a => new QuestionAnswerEntity()
+                        {
+                            isCorrect = a.IsCorrect,
+                            AnswerId = a.IdAnswer
+                        }).ToList();
+                        questionAnswers.AddRange(list);
+                    }
+
+                    if (!questionAnswers.Any())
+                        throw new BusinessException("Las respuestas son obligaorias al momento de crear la pregunta!");
+
+                    if (!questionDto.Skills.Any())
+                        throw new BusinessException("Los skill son obligaorias al momento de crear la pregunta.");
+
+
+                    QuestionEntity entity = new QuestionEntity()
+                    {
                         IsVisible = true,
                         Value = questionDto.Value,
                         Description = questionDto.Description,
                         FileEntity = img,
-                        QuestionAnswerEntities = answers.Select(a => new QuestionAnswerEntity()
+                        QuestionAnswerEntities = questionAnswers,
+                        QuestionSkillEntity = questionDto.Skills.Select(s => new QuestionSkillEntity()
                         {
-                            AnswerId = a.Id,
-                        }).ToList()
+                            IdSkill = s
+                        }).ToList(),
                     };
-                    
+
                     _unitOfWork.QuestionRepository.Insert(entity);
 
                     await _unitOfWork.Save();
@@ -180,7 +201,7 @@ namespace Lab.Domain.Services
                 }
                 catch (BusinessException ex)
                 {
-                    if (img!= null)
+                    if (img != null)
                     {
                         _fileService.DeleteFile(img.Url);
                     }

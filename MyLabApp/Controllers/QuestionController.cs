@@ -35,7 +35,8 @@ namespace MyLabApp.Controllers
 
         [HttpPost]
         [Route("Insert")]
-        public async Task<IActionResult> Insert([FromForm] QuestionFileDto add)
+        //public async Task<IActionResult> Insert([FromForm] QuestionFileDto add)
+        public async Task<IActionResult> Insert(QuestionFileDto add)
         {
             IActionResult action;
 

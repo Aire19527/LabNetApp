@@ -133,25 +133,21 @@ namespace Lab.Domain.Services
             catch (BusinessException ex)
             {
                 if (img != null)
-                {
                     _fileService.DeleteFile(img.Url);
-                }
 
                 throw ex;
             }
             catch (Exception ex)
             {
                 if (img != null)
-                {
                     _fileService.DeleteFile(img.Url);
-                }
 
                 throw new Exception(GeneralMessages.Error500, ex);
             }
 
         }
 
-    
+
         public async Task<bool> Delete(int id)
         {
             AnswerEntity? AnswerEntity = _unitOfWork.AnswerRepository.FirstOrDefault((x) => x.Id == id);
