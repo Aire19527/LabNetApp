@@ -106,9 +106,20 @@ namespace Lab.Domain.Services
             return false;
         }
 
-        public Task<bool> DeleteFile(int id)
+        public async Task<bool> Delete(int id)
         {
-            throw new NotImplementedException();
+            if (id == null)
+                throw new BusinessException("no se indico el id.");
+
+            FileEntity? fileEntity = _unitOfWork.FileRepository.FirstOrDefault(f => f.Id == id);
+
+            if (fileEntity == null)
+                throw new BusinessException("el archivo no existe.");
+
+            _unitOfWork.FileRepository.Delete(fileEntity);
+            DeleteFile(fileEntity.Url);
+
+            return true;
         }
 
 

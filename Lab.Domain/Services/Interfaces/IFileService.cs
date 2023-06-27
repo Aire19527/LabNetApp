@@ -21,6 +21,7 @@ namespace Lab.Domain.Services.Interfaces
         FileEntity InsertFile(AddFileDto add);
         Task<bool> UpdateFile(UpdateFileDto upd, bool isImg);
         void DeleteFile(string path);
+        Task<bool> Delete(int id);
         GetFileDto getById(int id, bool isImg);
 
         GetFileDto getByUrl(string url, bool isImg);
