@@ -16,7 +16,7 @@ namespace MyLabApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     [TypeFilter(typeof(CustomExceptionHandler))]
     public class QuestionController : ControllerBase
     {
@@ -35,8 +35,7 @@ namespace MyLabApp.Controllers
 
         [HttpPost]
         [Route("Insert")]
-        //public async Task<IActionResult> Insert([FromForm] QuestionFileDto add)
-        public async Task<IActionResult> Insert(QuestionFileDto add)
+        public async Task<IActionResult> Insert([FromForm] QuestionFileDto add)
         {
             IActionResult action;
 

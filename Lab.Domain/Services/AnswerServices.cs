@@ -154,7 +154,7 @@ namespace Lab.Domain.Services
                 throw new BusinessException(GeneralMessages.ItemNoFound);
 
             if (AnswerEntity.IdFile != null)
-                _fileService.Delete((int)AnswerEntity.IdFile);
+                await _fileService.Delete((int)AnswerEntity.IdFile);
 
             _unitOfWork.AnswerRepository.Delete(AnswerEntity);
 
