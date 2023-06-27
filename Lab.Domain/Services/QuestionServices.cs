@@ -118,7 +118,7 @@ namespace Lab.Domain.Services
             _unitOfWork.QuestionRepository.Delete(entity);
 
             if (entity.IdFile != null)
-                _fileService.Delete((int)entity.IdFile);
+               await _fileService.Delete((int)entity.IdFile);
 
 
             return await _unitOfWork.Save() > 0;
