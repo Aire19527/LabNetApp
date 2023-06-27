@@ -159,4 +159,10 @@
   <data name="RegisteredEmail" xml:space="preserve">
     <value>El Email ya se encentra registrado en nuestro sistema, por favor usar otro Email.</value>
   </data>
+  <data name="RequiredAnswer" xml:space="preserve">
+    <value>Las respuestas son obligaorias al momento de crear la pregunta.</value>
+  </data>
+  <data name="RequiredSkill" xml:space="preserve">
+    <value>Los skill son obligaorias al momento de crear la pregunta.</value>
+  </data>
 </root>

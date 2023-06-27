@@ -15,6 +15,7 @@ namespace Lab.Domain.Services.Interfaces
         Task<int> Insert(AnswerFileDto add);
         Task<AnswerEntity> InsertToQuestion(AnswerFileDto answerFile);
         Task<bool> Delete(int id);
+        Task<bool> DeleteAnswerToQuestion(int idQuestion, int idAnswer);
         GetAnswerDto getById(int id);
         List<GetAnswerDto> getAll();
         Task<bool> InsertAnswerInQuestion(AddAnswerQuestion add);

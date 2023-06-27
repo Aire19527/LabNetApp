@@ -197,6 +197,20 @@ namespace Lab.Domain.Services
         }
 
 
+        public async Task<bool> DeleteAnswerToQuestion(int idQuestion, int idAnswer)
+        {
+            if (idQuestion == null || idAnswer == null)
+                throw new BusinessException("No se ha indicado pregunta o respuesta.");
 
+            QuestionAnswerEntity? QuestionAnswer = _unitOfWork.QuestionAnswerRepository.FirstOrDefault(p => p.QuestionId == idQuestion &&
+                                                                                        p.AnswerId == idAnswer);
+
+            if (QuestionAnswer == null)
+                throw new BusinessException();
+
+            _unitOfWork.QuestionAnswerRepository.Delete(QuestionAnswer);
+
+            return await _unitOfWork.Save() > 0;
+        }
     }
 }

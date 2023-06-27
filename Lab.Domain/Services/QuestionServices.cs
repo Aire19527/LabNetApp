@@ -138,10 +138,8 @@ namespace Lab.Domain.Services
             };
 
             FileEntity img = null;
-            //List<AnswerEntity> answers = new List<AnswerEntity>();
             List<QuestionAnswerEntity> questionAnswers = new List<QuestionAnswerEntity>();
-            QuestionAnswerEntity questionAnswer = null;
-
+            
             using (var db = await _unitOfWork.BeginTransactionAsync())
             {
                 try
@@ -173,10 +171,10 @@ namespace Lab.Domain.Services
                     }
 
                     if (!questionAnswers.Any())
-                        throw new BusinessException("Las respuestas son obligaorias al momento de crear la pregunta!");
+                        throw new BusinessException(GeneralMessages.RequiredAnswer);
 
                     if (!questionDto.Skills.Any())
-                        throw new BusinessException("Los skill son obligaorias al momento de crear la pregunta.");
+                        throw new BusinessException(GeneralMessages.RequiredSkill);
 
 
                     QuestionEntity entity = new QuestionEntity()
@@ -202,9 +200,8 @@ namespace Lab.Domain.Services
                 catch (BusinessException ex)
                 {
                     if (img != null)
-                    {
                         _fileService.DeleteFile(img.Url);
-                    }
+                    
                     await db.RollbackAsync();
 
                     throw ex;
@@ -212,9 +209,8 @@ namespace Lab.Domain.Services
                 catch (Exception ex)
                 {
                     if (img != null)
-                    {
                         _fileService.DeleteFile(img.Url);
-                    }
+                    
                     await db.RollbackAsync();
 
                     throw new Exception(GeneralMessages.Error500, ex);

@@ -40,19 +40,6 @@ namespace MyLabApp.Controllers
         {
             IActionResult action;
 
-            //add.Answers = new List<AnswerFileDto>()
-            //{
-            //    new AnswerFileDto()
-            //    {
-            //        Description = "respuesta1"
-            //    },
-            //     new AnswerFileDto()
-            //    {
-            //        Description = "respuesta2"
-            //    },
-            //};
-
-
             bool result = await _questionServices.Insert(add);
             ResponseDto response = new ResponseDto()
             {
