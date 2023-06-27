@@ -31,6 +31,28 @@ namespace MyLabApp.Controllers
         #region Endpoints
 
         [HttpGet]
+        [Route("Get/{id}")]
+        public IActionResult GetById(int id)
+        {
+            IActionResult action;
+            GetAnswerDto result = _answerService.getById(id);
+
+
+            ResponseDto rpdto = new ResponseDto()
+            {
+                IsSuccess = true,
+                Message = string.Empty,
+                Result = result
+            };
+
+            if (result != null)
+                action = Ok(rpdto);
+            else
+                action = BadRequest(rpdto);
+            return action;
+        }
+
+        [HttpGet]
         [Route("Get")]
         public IActionResult GetAllAnswers ()
         {
