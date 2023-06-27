@@ -133,7 +133,6 @@ namespace Lab.Domain.Services
         {
             AddFileDto file = new AddFileDto()
             {
-                FileName = questionDto.FileName,
                 File = questionDto.File,
             };
 

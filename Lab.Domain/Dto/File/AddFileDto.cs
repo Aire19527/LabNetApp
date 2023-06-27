@@ -9,9 +9,7 @@ namespace Lab.Domain.Dto.File
 {
     public class AddFileDto 
     {
-        public string FileName { get; set; }
         //To add File...
         public IFormFile File { get; set; }
-
     }
 }

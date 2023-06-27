@@ -50,7 +50,6 @@ namespace Lab.Domain.Services
 
             AddFileDto file = new AddFileDto()
             {
-                FileName = answerFile.FileName,
                 File = answerFile.File,
             };
             FileEntity img = null;
@@ -107,7 +106,6 @@ namespace Lab.Domain.Services
 
             AddFileDto file = new AddFileDto()
             {
-                FileName = answerFile.FileName,
                 File = answerFile.File,
             };
             FileEntity img = null;

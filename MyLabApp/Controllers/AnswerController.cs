@@ -113,6 +113,31 @@ namespace MyLabApp.Controllers
                 Result = res
             });
         }
+
+
+        [HttpDelete]
+        [Route("DeleteAnswerToQuestion/{idQuestion}/{idAnswer}")]
+        public async Task<IActionResult> DeleteSkillToProfile(int idQuestion, int idAnswer)
+        {
+            IActionResult action;
+
+            bool result = await _answerService.DeleteAnswerToQuestion(idQuestion, idAnswer);
+            ResponseDto response = new ResponseDto()
+            {
+                IsSuccess = result,
+                Result = result,
+                Message = result ? GeneralMessages.ItemDeleted : GeneralMessages.ItemNoDeleted
+            };
+
+            if (result)
+                action = Ok(response);
+            else
+                action = BadRequest(response);
+
+            return action;
+        }
+
+
         #endregion
 
     }

@@ -48,7 +48,6 @@ namespace Lab.Domain.Services
                 throw new BusinessException("El id no existe");
             GetFileDto fileDto = new GetFileDto();
             fileDto.Id = file.Id;
-            fileDto.FileName = file.FileName;
             fileDto.CreatedAt = file.CreatedAt;
             if (isImg) fileDto.Url = getImage(file.Url);
             else fileDto.Url = getResumee(file.Url);
@@ -62,7 +61,6 @@ namespace Lab.Domain.Services
                 throw new BusinessException("El id no existe");
             GetFileDto fileDto = new GetFileDto();
             fileDto.Id = file.Id;
-            fileDto.FileName = file.FileName;
             fileDto.CreatedAt = file.CreatedAt;
             if (isImg) fileDto.Url = getImage(file.Url);
             else fileDto.Url = getResumee(file.Url);
@@ -74,7 +72,6 @@ namespace Lab.Domain.Services
         {
             FileEntity file = new FileEntity()
             {
-                FileName = add.FileName,
                 Url = UploadFile(add.File, isImg),
                 CreatedAt = DateTime.Now
             };
@@ -90,7 +87,6 @@ namespace Lab.Domain.Services
         {
             FileEntity file = new FileEntity()
             {
-                FileName = add.FileName,
                 Url = UploadFile(add.File, true),
                 CreatedAt = DateTime.Now
             };
@@ -104,7 +100,6 @@ namespace Lab.Domain.Services
             if (file != null)
             {
                 DeleteFile(file.Url); //elimina del servidor la imagen actual
-                file.FileName = upd.FileName;
                 file.Url = UploadFile(upd.File, isImg);
                 return await _unitOfWork.Save() > 0;
             }
