@@ -164,11 +164,11 @@ namespace Lab.Domain.Services
                         questionAnswers.AddRange(list);
                     }
 
-                    //if (!questionAnswers.Any())
-                    //    throw new BusinessException(GeneralMessages.RequiredAnswer);
+                    if (!questionAnswers.Any())
+                        throw new BusinessException(GeneralMessages.RequiredAnswer);
 
-                    //if (!questionDto.Skills.Any())
-                    //    throw new BusinessException(GeneralMessages.RequiredSkill);
+                    if (!questionDto.Skills.Any())
+                        throw new BusinessException(GeneralMessages.RequiredSkill);
 
 
                     QuestionEntity entity = new QuestionEntity()

@@ -12,7 +12,6 @@ namespace Lab.Domain.Dto.Question
     public class QuestionDto : AddQuestionDto
     {
         public int Id { get; set;}
-        public string SkillDescription { get; set; }
         public bool IsVisible { get; set; }
 
         public string? UrlImg { get; set; }
