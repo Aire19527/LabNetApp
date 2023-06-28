@@ -20,7 +20,7 @@ namespace Lab.Domain.Dto.Question {
         public int Value { get; set; }
        
         //public int IdSkill { get; set; }
-        public string? FileName { get; set; }
+        //public string? FileName { get; set; }
         //To add File...
         public IFormFile? File { get; set; }
         public List<int> Skills { get; set; }

@@ -44,9 +44,8 @@ namespace Lab.Domain.Services
             {
                 Id = q.Id,
                 Description = q.Description,
-                //IdSkill = q.Skill?.Id,
-                //SkillDescription = q.Skill.Description,
                 IdFile = q.FileEntity?.Id,
+                UrlImg = q.FileEntity?.Url,
                 IsVisible = q.IsVisible,
                 Value = q.Value,
                 SkillEntities = q.QuestionSkillEntity.Select(x => new ConsultSkllDto()
@@ -83,8 +82,8 @@ namespace Lab.Domain.Services
             {
                 Id = entity.Id,
                 Description = entity.Description,
-                //IdSkill = entity.Skill?.Id,
                 IdFile = entity.FileEntity?.Id,
+                UrlImg = entity.FileEntity?.Url,
                 IsVisible = entity.IsVisible,
                 Value = entity.Value,
                 SkillEntities = entity.QuestionSkillEntity.Select(x => new ConsultSkllDto()
@@ -165,11 +164,11 @@ namespace Lab.Domain.Services
                         questionAnswers.AddRange(list);
                     }
 
-                    if (!questionAnswers.Any())
-                        throw new BusinessException(GeneralMessages.RequiredAnswer);
+                    //if (!questionAnswers.Any())
+                    //    throw new BusinessException(GeneralMessages.RequiredAnswer);
 
-                    if (!questionDto.Skills.Any())
-                        throw new BusinessException(GeneralMessages.RequiredSkill);
+                    //if (!questionDto.Skills.Any())
+                    //    throw new BusinessException(GeneralMessages.RequiredSkill);
 
 
                     QuestionEntity entity = new QuestionEntity()

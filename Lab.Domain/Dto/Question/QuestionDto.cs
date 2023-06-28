@@ -14,6 +14,8 @@ namespace Lab.Domain.Dto.Question
         public int Id { get; set;}
         public string SkillDescription { get; set; }
         public bool IsVisible { get; set; }
+
+        public string? UrlImg { get; set; }
         public IEnumerable<GetAnswerDto>? AnswerEntities { get; set; }
 
         public IEnumerable<ConsultSkllDto>? SkillEntities { get; set; }

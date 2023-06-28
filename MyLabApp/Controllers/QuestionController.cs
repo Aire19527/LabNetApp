@@ -16,7 +16,7 @@ namespace MyLabApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     [TypeFilter(typeof(CustomExceptionHandler))]
     public class QuestionController : ControllerBase
     {
@@ -37,6 +37,7 @@ namespace MyLabApp.Controllers
         [Route("Insert")]
         public async Task<IActionResult> Insert([FromForm] QuestionFileDto add)
         {
+
             IActionResult action;
 
             bool result = await _questionServices.Insert(add);
