@@ -119,7 +119,7 @@ namespace MyLabApp.Controllers
 
         [HttpPut]
         [Route("Update")]
-        public async Task<IActionResult> Update(ModifyQuestionDto questionDto)
+        public async Task<IActionResult> Update([FromForm] ModifyQuestionDto questionDto)
         {
             IActionResult action;
 
