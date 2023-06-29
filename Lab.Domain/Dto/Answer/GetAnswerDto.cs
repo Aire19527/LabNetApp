@@ -10,5 +10,6 @@ namespace Lab.Domain.Dto.Answer
     {
         public int Id { get; set; }
         public bool isCorrect { get; set; }
+        public string? urlFile { get; set; }
     }
 }

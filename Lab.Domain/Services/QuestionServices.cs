@@ -99,7 +99,6 @@ namespace Lab.Domain.Services
                         Description = x.AnswerEntity.Description,
                         IdFile = x.AnswerEntity.IdFile,
                         isCorrect = x.isCorrect
-
                     }).ToList()
             };
 

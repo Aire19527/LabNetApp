@@ -33,12 +33,14 @@ namespace Lab.Domain.Services
 
         public List<GetAnswerDto> getAll()
         {
-            IEnumerable<AnswerEntity> answerList = _unitOfWork.AnswerRepository.GetAll();
+            IEnumerable<AnswerEntity> answerList = _unitOfWork.AnswerRepository.GetAll(x=> x.FileEntity);
             List<GetAnswerDto> answers = answerList.Select(a => new GetAnswerDto()
             {
                 Id = a.Id,
                 Description = a.Description,
-                IdFile = a.IdFile
+                IdFile = a.IdFile,
+                urlFile = a.FileEntity?.Url
+
             }).ToList();
 
             return answers;
@@ -163,13 +165,15 @@ namespace Lab.Domain.Services
 
         public GetAnswerDto getById(int id)
         {
-            AnswerEntity entity = _unitOfWork.AnswerRepository.FirstOrDefault(x => x.Id == id);
+            AnswerEntity entity = _unitOfWork.AnswerRepository.FirstOrDefault(x => x.Id == id,
+                                                                              f=> f.FileEntity);
 
             GetAnswerDto answer = new GetAnswerDto()
             {
                 Id = entity.Id,
                 Description = entity.Description,
                 IdFile = entity.IdFile,
+                urlFile = entity.FileEntity?.Url
             };
 
             return answer;
