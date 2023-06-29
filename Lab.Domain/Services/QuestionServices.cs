@@ -77,7 +77,8 @@ namespace Lab.Domain.Services
                 x => x.Id == idQuestion,
                 s => s.QuestionSkillEntity.Select(q => q.SkillEntity),
                 i => i.FileEntity,
-                a => a.QuestionAnswerEntities.Select(r => r.AnswerEntity));
+                a => a.QuestionAnswerEntities.Select(r => r.AnswerEntity),
+                a => a.QuestionAnswerEntities.Select(r => r.AnswerEntity.FileEntity));
 
             if (entity == null)
                 throw new BusinessException(GeneralMessages.ItemNoFound);
@@ -103,7 +104,7 @@ namespace Lab.Domain.Services
                         Description = x.AnswerEntity.Description,
                         IdFile = x.AnswerEntity.IdFile,
                         isCorrect = x.isCorrect,
-                        urlFile = _fileService.getById(id: (int)x.AnswerEntity?.IdFile, isImg: true)?.Url
+                        urlFile = x.AnswerEntity.FileEntity?.Url
                     }).ToList()
             };
 
@@ -217,17 +218,26 @@ namespace Lab.Domain.Services
         }
         public async Task<bool> Update(ModifyQuestionDto update)
         {
-            QuestionEntity question = _unitOfWork.QuestionRepository.FirstOrDefault(x => x.Id == update.Id);
+            QuestionEntity question = _unitOfWork.QuestionRepository.FirstOrDefaultSelect(x => x.Id == update.Id,
+                                                                                          s => s.QuestionSkillEntity);
             if (question != null)
             {
-
                 question.Value = update.Value;
                 question.Description = update.Description;
-               
+
+                List<QuestionSkillEntity> updatedSkills = update.Skills.Select(x => new QuestionSkillEntity()
+                {
+                    IdSkill = x,
+                    IdQuestion = question.Id
+                }).ToList();
+
+                question.QuestionSkillEntity = updatedSkills;
+
                 _unitOfWork.QuestionRepository.Update(question);
 
                 return await _unitOfWork.Save() > 0;
             }
+
             return false;
         }
     }
