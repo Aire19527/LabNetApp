@@ -39,7 +39,9 @@ namespace Lab.Domain.Services
             IEnumerable<QuestionEntity> entities = _unitOfWork.QuestionRepository.GetAllSelect(
                 s => s.QuestionSkillEntity.Select(q => q.SkillEntity),
                 i => i.FileEntity,
-                a => a.QuestionAnswerEntities.Select(r => r.AnswerEntity));
+                a => a.QuestionAnswerEntities.Select(r => r.AnswerEntity),
+                a => a.QuestionAnswerEntities.Select(r => r.AnswerEntity.FileEntity)
+                );
 
             List<QuestionDto> questionList = entities.Select(q => new QuestionDto()
             {
@@ -61,7 +63,8 @@ namespace Lab.Domain.Services
                         Id = x.AnswerEntity.Id,
                         Description = x.AnswerEntity.Description,
                         IdFile = x.AnswerEntity.IdFile,
-                        isCorrect = x.isCorrect
+                        isCorrect = x.isCorrect,
+                        urlFile = x.AnswerEntity.FileEntity?.Url,
                     }).ToList(),
             }).ToList();
 
@@ -99,7 +102,8 @@ namespace Lab.Domain.Services
                         Id = x.AnswerEntity.Id,
                         Description = x.AnswerEntity.Description,
                         IdFile = x.AnswerEntity.IdFile,
-                        isCorrect = x.isCorrect
+                        isCorrect = x.isCorrect,
+                        urlFile = _fileService.getById(id: (int)x.AnswerEntity?.IdFile, isImg: true)?.Url
                     }).ToList()
             };
 
