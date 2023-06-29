@@ -8,12 +8,6 @@ using Lab.Domain.Dto.Profile;
 using Lab.Domain.Dto.Question;
 using Lab.Domain.Dto.Skill;
 using Lab.Domain.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Lab.Domain.Services
 {
@@ -50,7 +44,6 @@ namespace Lab.Domain.Services
                 IdFile = q.FileEntity?.Id,
                 UrlImg = q.FileEntity?.Url,
                 IsVisible = q.IsVisible,
-                Value = q.Value,
                 SkillEntities = q.QuestionSkillEntity.Select(x => new ConsultSkllDto()
                 {
                     Id = x.SkillEntity.Id,
@@ -90,7 +83,6 @@ namespace Lab.Domain.Services
                 IdFile = entity.FileEntity?.Id,
                 UrlImg = entity.FileEntity?.Url,
                 IsVisible = entity.IsVisible,
-                Value = entity.Value,
                 SkillEntities = entity.QuestionSkillEntity.Select(x => new ConsultSkllDto()
                 {
                     Id = x.SkillEntity.Id,
@@ -179,7 +171,6 @@ namespace Lab.Domain.Services
                     QuestionEntity entity = new QuestionEntity()
                     {
                         IsVisible = true,
-                        Value = questionDto.Value,
                         Description = questionDto.Description,
                         FileEntity = img,
                         QuestionAnswerEntities = questionAnswers,

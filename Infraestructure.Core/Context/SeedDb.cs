@@ -1,10 +1,4 @@
 ﻿using Infraestructure.Entity.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Data.Common;
 using Common.Enums;
 
 namespace Infraestructure.Core.Context
@@ -36,6 +30,7 @@ namespace Infraestructure.Core.Context
             await CheckWorkTypeAsync();
             await CheckInstitutionTypeAsync();
             await CheckSectorTypeAsync();
+            await CheckDifficultyAsync();
         }
 
         private async Task CheckSectorTypeAsync() {
@@ -325,8 +320,6 @@ namespace Infraestructure.Core.Context
             }
         }
 
-
-
         private async Task CheckUserAsync()
         {
             if (!_context.UsersEntity.Any())
@@ -430,6 +423,30 @@ namespace Infraestructure.Core.Context
                       }
 
                 });
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        private async Task CheckDifficultyAsync()
+        {
+            if (!_context.DifficultyEntity.Any())
+            {
+                _context.DifficultyEntity.AddRange(new List<DifficultyEntity>
+                {
+                    new DifficultyEntity
+                    {
+                        Description = "Facil"
+                    },
+                     new DifficultyEntity
+                    {
+                        Description = "Intermedio"
+                    },
+                      new DifficultyEntity
+                    {
+                        Description = "Dificil"
+                    },
+                });
+
                 await _context.SaveChangesAsync();
             }
         }

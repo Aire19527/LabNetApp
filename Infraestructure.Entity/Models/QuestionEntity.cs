@@ -19,17 +19,19 @@ namespace Infraestructure.Entity.Models
         public string Description { get; set; }
 
         [Required]
-        public int Value { get; set; }
-
-        [Required]
         public bool IsVisible { get; set; }
+
+        public int? IdFile { get; set; }
+        public FileEntity? FileEntity { get; set; }
+
+        [ForeignKey("DifficultyEntity")]
+        public int IdIdDifficulty { get; set; }
+
+        public DifficultyEntity DifficultyEntity { get; set; }
 
         public IEnumerable<QuestionSkillEntity> QuestionSkillEntity { get; set; }
 
         public IEnumerable<QuestionAnswerEntity>? QuestionAnswerEntities { get; set; }
-
-        public int? IdFile { get; set; }
-        public FileEntity? FileEntity { get; set; }
 
     }
 }

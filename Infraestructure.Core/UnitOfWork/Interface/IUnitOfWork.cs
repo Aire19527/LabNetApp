@@ -28,6 +28,8 @@ namespace Infraestructure.Core.UnitOfWork.Interface
         IRepository<AnswerEntity> AnswerRepository {  get; }
         IRepository<QuestionAnswerEntity> QuestionAnswerRepository { get; }
 
+        IRepository<DifficultyEntity> DifficultyEntity { get; }
+
 
         //File
 
