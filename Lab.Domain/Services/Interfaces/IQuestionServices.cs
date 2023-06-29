@@ -14,5 +14,7 @@ namespace Lab.Domain.Services.Interfaces
         List<QuestionDto> getAll();
         Task<bool> Insert(QuestionFileDto questionDto);
         Task<bool> Delete(int id);
+
+        Task<bool> Update(ModifyQuestionDto questionDto);
     }
 }

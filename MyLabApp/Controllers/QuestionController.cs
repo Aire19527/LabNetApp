@@ -11,6 +11,7 @@ using Lab.Domain.Dto.Question;
 using Lab.Domain.Dto.File;
 using Lab.Domain.Dto.Answer;
 using Infraestructure.Entity.Models;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace MyLabApp.Controllers
 {
@@ -114,6 +115,28 @@ namespace MyLabApp.Controllers
                 Message = res ? GeneralMessages.ItemDeleted : GeneralMessages.ItemNoDeleted,
                 Result = res
             });
+        }
+
+        [HttpPut]
+        [Route("Update")]
+        public async Task<IActionResult> Update(ModifyQuestionDto questionDto)
+        {
+            IActionResult action;
+
+            bool result = await _questionServices.Update(questionDto);
+            ResponseDto response = new ResponseDto()
+            {
+                IsSuccess = result,
+                Result = result,
+                Message = result ? GeneralMessages.ItemUpdated : GeneralMessages.ItemNoUpdated
+            };
+
+            if (result)
+                action = Ok(response);
+            else
+                action = BadRequest(response);
+
+            return action;
         }
     }
 }

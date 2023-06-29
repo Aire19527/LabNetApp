@@ -4,6 +4,7 @@ using Infraestructure.Core.UnitOfWork.Interface;
 using Infraestructure.Entity.Models;
 using Lab.Domain.Dto.Answer;
 using Lab.Domain.Dto.File;
+using Lab.Domain.Dto.Profile;
 using Lab.Domain.Dto.Question;
 using Lab.Domain.Dto.Skill;
 using Lab.Domain.Services.Interfaces;
@@ -210,6 +211,21 @@ namespace Lab.Domain.Services
                     throw new Exception(GeneralMessages.Error500, ex);
                 }
             }
+        }
+        public async Task<bool> Update(ModifyQuestionDto update)
+        {
+            QuestionEntity question = _unitOfWork.QuestionRepository.FirstOrDefault(x => x.Id == update.Id);
+            if (question != null)
+            {
+
+                question.Value = update.Value;
+                question.Description = update.Description;
+               
+                _unitOfWork.QuestionRepository.Update(question);
+
+                return await _unitOfWork.Save() > 0;
+            }
+            return false;
         }
     }
 }
