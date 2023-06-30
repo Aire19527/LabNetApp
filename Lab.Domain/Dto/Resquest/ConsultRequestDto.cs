@@ -8,6 +8,8 @@ namespace Lab.Domain.Dto.Resquest
 {
     public class ConsultRequestDto
     {
+        public int PercentageMinimoRequired { get; set; }
+        public int TimeInMinutes { get; set; }
         public int IdRequest { get; set; }
         public string TitleRequest { get; set; }
     }

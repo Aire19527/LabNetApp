@@ -3,8 +3,9 @@ using Common.Resources;
 using Infraestructure.Core.UnitOfWork.Interface;
 using Infraestructure.Entity.Models;
 using Lab.Domain.Dto.Resquest;
+using Lab.Domain.Services.Interfaces;
 
-namespace Lab.Domain.Services.Interfaces
+namespace Lab.Domain.Services
 {
     public class RequestService : IRequestService
     {
@@ -12,12 +13,12 @@ namespace Lab.Domain.Services.Interfaces
 
         public RequestService(IUnitOfWork unitOfWork)
         {
-            this._unitOfWork = unitOfWork;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<List<ConsultRequestDto>> GetAllRequests()
         {
-            IEnumerable<RequestEntity> requestEntities = 
+            IEnumerable<RequestEntity> requestEntities =
                 _unitOfWork.RequestRepository.GetAll();
 
             List<ConsultRequestDto> consultRequestDtos = requestEntities
@@ -25,6 +26,8 @@ namespace Lab.Domain.Services.Interfaces
                 {
                     IdRequest = x.Id,
                     TitleRequest = x.Title,
+                    TimeInMinutes = x.TimeInMinutes,
+                    PercentageMinimoRequired = x.PercentageMinimoRequired,
                 }).ToList();
 
             return consultRequestDtos;
@@ -52,7 +55,7 @@ namespace Lab.Domain.Services.Interfaces
             if (requestEntity == null)
                 throw new BusinessException(GeneralMessages.ItemNoFound);
 
-            _unitOfWork.RequestRepository .Delete(requestEntity);
+            _unitOfWork.RequestRepository.Delete(requestEntity);
 
             return await _unitOfWork.Save() > 0;
         }
