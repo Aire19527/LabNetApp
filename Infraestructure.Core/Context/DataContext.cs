@@ -37,6 +37,8 @@ namespace Infraestructure.Core.Context
         public DbSet<FileEntity> FilesEntities { get; set; }
         public DbSet<DifficultyEntity> DifficultyEntity { get; set; }
 
+        public DbSet<RequestEntity> RequestEntity { get; set; }
+
         public DbSet<AssessmentUserEntity> AssessmentUserEntity { get; set; }
         public DbSet<AssessmentQuestionEntity> AssessmentQuestionEntity { get; set; }
         public DbSet<AssessmentQuestionAnswerEntity> AssessmentQuestionAnswerEntity { get; set; }
@@ -76,6 +78,13 @@ namespace Infraestructure.Core.Context
                 })
                 .IsUnique();
 
+            modelBuilder.Entity<RequirementQuestionEntity>()
+               .HasIndex(x => new
+               {
+                   x.IdQuestion,
+                   x.IdRequest
+               })
+               .IsUnique();
             modelBuilder.Entity<ProfileCertificationEntity>()
                .HasIndex(x => new
                {

@@ -10,7 +10,7 @@ namespace Lab.Domain.Dto.Resquest
     {
         public int PercentageMinimoRequired { get; set; }
         public int TimeInMinutes { get; set; }
-        public int IdRequest { get; set; }
         public string TitleRequest { get; set; }
+        public int IdRequest { get; set; }
     }
 }

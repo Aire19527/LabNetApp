@@ -10,6 +10,7 @@ namespace Lab.Domain.Services
     public class RequestService : IRequestService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IDetailRequirementService _detailRequirement;
 
         public RequestService(IUnitOfWork unitOfWork)
         {
@@ -34,17 +35,65 @@ namespace Lab.Domain.Services
         }
         public async Task<bool> Insert(InsertRequestDto insertRequestDto)
         {
-            RequestEntity requestEntity = new RequestEntity()
+            List<DetailRequirementEntity> detailRequirementEntities =
+                new List<DetailRequirementEntity>();
+
+            List<RequirementQuestionEntity> requirementQuestionEntities =
+                new List<RequirementQuestionEntity>();
+
+            using (var db = await _unitOfWork.BeginTransactionAsync())
             {
-                Title = insertRequestDto.TitleRequest,
-                TimeInMinutes = insertRequestDto.TimeInMinutes,
-                PercentageMinimoRequired = insertRequestDto.PercentageMinimoRequired,
-                CreationDate = DateTime.Now,
-            };
+                try
+                {
+                    if (insertRequestDto.DetailRequirements.Any())
+                    {
+                        foreach (var item in insertRequestDto.DetailRequirements)
+                        {
+                            DetailRequirementEntity detailRequirementEntity = await _detailRequirement.GetDetailRequirement(item);
+                            detailRequirementEntities.Add(detailRequirementEntity);
+                        }
+                    }
 
-            _unitOfWork.RequestRepository.Insert(requestEntity);
+                    if (!insertRequestDto.DetailRequirements.Any())
+                        throw new BusinessException("Detalle Requerido");
 
-            return await _unitOfWork.Save() > 0;
+                    if (!insertRequestDto.QuestionsRequired.Any())
+                        throw new BusinessException("Pregunta requerida");
+
+                    RequestEntity requestEntity = new RequestEntity()
+                    {
+                        Title = insertRequestDto.TitleRequest,
+                        TimeInMinutes = insertRequestDto.TimeInMinutes,
+                        PercentageMinimoRequired = insertRequestDto.PercentageMinimoRequired,
+                        CreationDate = DateTime.Now,
+                        DetailRequirementEntities = detailRequirementEntities,
+                        RequirementQuestionEntities = insertRequestDto.QuestionsRequired
+                        .Select(s => new RequirementQuestionEntity()
+                        {
+                            IdQuestion = s
+                        }).ToList(),
+                    };
+
+                    _unitOfWork.RequestRepository.Insert(requestEntity);
+
+                    await _unitOfWork.Save();
+                    await db.CommitAsync();
+
+                    return true;
+                }
+                catch (BusinessException ex)
+                {
+                    await db.RollbackAsync();
+
+                    throw ex;
+                }
+                catch (Exception ex)
+                {
+                    await db.RollbackAsync();
+
+                    throw new Exception(GeneralMessages.Error500, ex);
+                }
+            }
         }
 
         public async Task<bool> Delete(int id)

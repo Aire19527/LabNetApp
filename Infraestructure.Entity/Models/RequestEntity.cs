@@ -20,5 +20,7 @@ namespace Infraestructure.Entity.Models
         public int PercentageMinimoRequired { get; set; }
         public IEnumerable<DetailRequirementEntity> DetailRequirementEntities { get; set; }
         public IEnumerable<AssessmentUserEntity> AssessmentUserEntities { get; set; }
+        public IEnumerable<RequirementQuestionEntity> RequirementQuestionEntities { get; set; }
+
     }
 }
