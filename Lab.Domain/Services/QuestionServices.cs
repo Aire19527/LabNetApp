@@ -3,6 +3,7 @@ using Common.Resources;
 using Infraestructure.Core.UnitOfWork.Interface;
 using Infraestructure.Entity.Models;
 using Lab.Domain.Dto.Answer;
+using Lab.Domain.Dto.Difficulty;
 using Lab.Domain.Dto.File;
 using Lab.Domain.Dto.Profile;
 using Lab.Domain.Dto.Question;
@@ -34,7 +35,8 @@ namespace Lab.Domain.Services
                 s => s.QuestionSkillEntities.Select(q => q.SkillEntity),
                 i => i.FileEntity,
                 a => a.QuestionAnswerEntities.Select(r => r.AnswerEntity),
-                a => a.QuestionAnswerEntities.Select(r => r.AnswerEntity.FileEntity)
+                a => a.QuestionAnswerEntities.Select(r => r.AnswerEntity.FileEntity),
+                d => d.DifficultyEntity
                 );
 
             List<QuestionDto> questionList = entities.Select(q => new QuestionDto()
@@ -44,6 +46,11 @@ namespace Lab.Domain.Services
                 IdFile = q.FileEntity?.Id,
                 UrlImg = q.FileEntity?.Url,
                 IsVisible = q.IsVisible,
+                Difficulty = new ConsultDifficulty() { 
+                    id = q.DifficultyEntity.Id,
+                    Description = q.DifficultyEntity.Description,
+                    Value = q.DifficultyEntity.Value
+                } ,
                 SkillEntities = q.QuestionSkillEntities.Select(x => new ConsultSkllDto()
                 {
                     Id = x.SkillEntity.Id,
@@ -215,6 +222,7 @@ namespace Lab.Domain.Services
             if (question != null)
             {
                 question.Description = update.Description;
+                question.IdDifficulty = update.idDifficulty;
 
                 List<QuestionSkillEntity> updatedSkills = update.Skills.Select(x => new QuestionSkillEntity()
                 {

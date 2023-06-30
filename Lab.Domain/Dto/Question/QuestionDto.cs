@@ -1,5 +1,6 @@
 ﻿using Infraestructure.Entity.Models;
 using Lab.Domain.Dto.Answer;
+using Lab.Domain.Dto.Difficulty;
 using Lab.Domain.Dto.Skill;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,8 @@ namespace Lab.Domain.Dto.Question
         public bool IsVisible { get; set; }
 
         public string? UrlImg { get; set; }
+        
+        public ConsultDifficulty Difficulty { get; set; }
         public IEnumerable<GetAnswerDto>? AnswerEntities { get; set; }
 
         public IEnumerable<ConsultSkllDto>? SkillEntities { get; set; }
