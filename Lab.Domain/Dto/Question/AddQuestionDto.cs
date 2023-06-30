@@ -13,7 +13,6 @@ namespace Lab.Domain.Dto.Question
     public class AddQuestionDto
     {
         public string Description { get; set; }
-        public int Value { get; set; }
         public int? IdFile { get; set; }
 
     }

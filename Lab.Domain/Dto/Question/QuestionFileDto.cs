@@ -15,12 +15,10 @@ namespace Lab.Domain.Dto.Question {
             Answers = new List<AnswerFileDto>();
             AnswersInsert = new List<AnswerFileDto>();
         }
-
         public string Description { get; set; }
-        public int Value { get; set; }
+
+        public int idDifficulty { get; set; }
        
-        //public int IdSkill { get; set; }
-        //public string? FileName { get; set; }
         //To add File...
         public IFormFile? File { get; set; }
         public List<int> Skills { get; set; }

@@ -173,6 +173,7 @@ namespace Lab.Domain.Services
                         IsVisible = true,
                         Description = questionDto.Description,
                         FileEntity = img,
+                        IdDifficulty = questionDto.idDifficulty,
                         QuestionAnswerEntities = questionAnswers,
                         QuestionSkillEntities = questionDto.Skills.Select(s => new QuestionSkillEntity()
                         {
