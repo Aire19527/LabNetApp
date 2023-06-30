@@ -435,15 +435,18 @@ namespace Infraestructure.Core.Context
                 {
                     new DifficultyEntity
                     {
-                        Description = "Facil"
+                        Description = "Facil",
+                        Value = 3
                     },
                      new DifficultyEntity
                     {
-                        Description = "Intermedio"
+                        Description = "Intermedio",
+                        Value = 6
                     },
                       new DifficultyEntity
                     {
-                        Description = "Dificil"
+                        Description = "Dificil",
+                        Value = 9
                     },
                 });
 

@@ -124,7 +124,7 @@ namespace Infraestructure.Core.Migrations
                     TimeInMinutes = table.Column<int>(type: "int", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    PercentageMinimoRerequired = table.Column<int>(type: "int", nullable: false)
+                    PercentageMinimoRequired = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {

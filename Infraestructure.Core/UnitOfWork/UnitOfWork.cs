@@ -4,7 +4,6 @@ using Infraestructure.Core.Repository.Inerface;
 using Infraestructure.Core.UnitOfWork.Interface;
 using Infraestructure.Entity.Models;
 using Microsoft.EntityFrameworkCore.Storage;
-using System.Resources;
 
 namespace Infraestructure.Core.UnitOfWork
 {
@@ -43,6 +42,7 @@ namespace Infraestructure.Core.UnitOfWork
         private IRepository<FileEntity> fileRepository;
         private IRepository<QuestionAnswerEntity> questionAnswerRepository;
         private IRepository<DifficultyEntity> difficultyRepository;
+        private IRepository<RequestEntity> requestRepository;
         #endregion
 
         #region Members
@@ -244,6 +244,18 @@ namespace Infraestructure.Core.UnitOfWork
                     this.difficultyRepository = new Repository<DifficultyEntity>(_context);
                 }
                 return difficultyRepository;
+            }
+        }
+
+        public IRepository<RequestEntity> RequestRepository
+        {
+            get
+            {
+                if (this.requestRepository == null)
+                {
+                    this.requestRepository = new Repository<RequestEntity>(_context);
+                }
+                return requestRepository;
             }
         }
 

@@ -37,6 +37,7 @@ namespace MyLabApp.Handlers
             services.AddTransient<IQuestionServices, QuestionServices>();
             services.AddTransient<IAnswerService, AnswerServices>();
             services.AddTransient<IDifficultyService, DifficultyService>();
+            services.AddTransient<IRequestService, RequestService>();
         }
     }
 }

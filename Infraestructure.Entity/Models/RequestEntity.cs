@@ -17,7 +17,7 @@ namespace Infraestructure.Entity.Models
         [Required]
         public string Title { get; set; }
         public DateTime CreationDate { get; set; }
-        public int PercentageMinimoRerequired { get; set; }
+        public int PercentageMinimoRequired { get; set; }
         public IEnumerable<DetailRequirementEntity> DetailRequirementEntities { get; set; }
         public IEnumerable<AssessmentUserEntity> AssessmentUserEntities { get; set; }
     }

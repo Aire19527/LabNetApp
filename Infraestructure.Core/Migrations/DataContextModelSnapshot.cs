@@ -660,7 +660,7 @@ namespace Infraestructure.Core.Migrations
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("PercentageMinimoRerequired")
+                    b.Property<int>("PercentageMinimoRequired")
                         .HasColumnType("int");
 
                     b.Property<int>("TimeInMinutes")

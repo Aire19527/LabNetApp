@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infraestructure.Core.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230630141416_nuevasTablas")]
+    [Migration("20230630161123_nuevasTablas")]
     partial class nuevasTablas
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -662,7 +662,7 @@ namespace Infraestructure.Core.Migrations
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("PercentageMinimoRerequired")
+                    b.Property<int>("PercentageMinimoRequired")
                         .HasColumnType("int");
 
                     b.Property<int>("TimeInMinutes")
