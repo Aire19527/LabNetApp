@@ -164,9 +164,3 @@ namespace MyLabApp.Controllers
 
     }
 }
-
-
-
-
-
-
