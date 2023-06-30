@@ -23,5 +23,6 @@ namespace Infraestructure.Entity.Models
         [ForeignKey("RoleEntity")]
         public int IdRole { get; set; }
         public RoleEntity RoleEntity { get; set; }
+        public IEnumerable<AssessmentUserEntity> AssessmentUserEntities { get; set; }
     }
 }

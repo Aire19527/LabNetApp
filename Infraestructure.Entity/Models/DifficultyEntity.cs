@@ -22,7 +22,7 @@ namespace Infraestructure.Entity.Models
         [Required]
         public int Value { get; set; }
 
-        public IEnumerable<QuestionEntity> QuestionEntity { get; set; }
-        public IEnumerable<DetailRequirementEntity> DetailRequirementEntity { get; set; }
+        public IEnumerable<QuestionEntity> QuestionEntities { get; set; }
+        public IEnumerable<DetailRequirementEntity> DetailRequirementEntities { get; set; }
     }
 }

@@ -26,6 +26,8 @@ namespace Infraestructure.Entity.Models
 
         [ForeignKey("ProfileEntity")]
         public int? IdProfile { get; set; }
-        
+
+        public ProfileEntity ProfileEntity { get; set; }
+
     }
 }

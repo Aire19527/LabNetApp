@@ -21,17 +21,20 @@ namespace Infraestructure.Entity.Models
         [Required]
         public bool IsVisible { get; set; }
 
+        [ForeignKey("FileEntity")]
         public int? IdFile { get; set; }
         public FileEntity? FileEntity { get; set; }
 
         [ForeignKey("DifficultyEntity")]
-        public int IdIdDifficulty { get; set; }
+        public int IdDifficulty { get; set; }
 
         public DifficultyEntity DifficultyEntity { get; set; }
 
-        public IEnumerable<QuestionSkillEntity> QuestionSkillEntity { get; set; }
+        public IEnumerable<QuestionSkillEntity> QuestionSkillEntities { get; set; }
 
         public IEnumerable<QuestionAnswerEntity>? QuestionAnswerEntities { get; set; }
-        public IEnumerable<RequirementQuestionEntity> RequirementQuestionEntity { get; set; }
+        public IEnumerable<RequirementQuestionEntity> RequirementQuestionEntities { get; set; }
+
+        public IEnumerable<AssessmentQuestionEntity> AssessmentQuestionEntities { get; set; }
     }
 }

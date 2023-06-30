@@ -15,9 +15,10 @@ namespace Infraestructure.Entity.Models
         public int Id { get; set; }
         public int TimeInMinutes { get; set; }
         [Required]
-        public string Degree { get; set; }
+        public string Title { get; set; }
         public DateTime CreationDate { get; set; }
         public int PercentageMinimoRerequired { get; set; }
-        public IEnumerable<DetailRequirementEntity> DetailRequirementEntity { get; set; }
+        public IEnumerable<DetailRequirementEntity> DetailRequirementEntities { get; set; }
+        public IEnumerable<AssessmentUserEntity> AssessmentUserEntities { get; set; }
     }
 }

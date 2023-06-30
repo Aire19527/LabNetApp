@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infraestructure.Core.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230627142523_deleteFileName")]
-    partial class deleteFileName
+    [Migration("20230630141416_nuevasTablas")]
+    partial class nuevasTablas
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -76,6 +76,84 @@ namespace Infraestructure.Core.Migrations
                         .HasFilter("[IdFile] IS NOT NULL");
 
                     b.ToTable("Answer");
+                });
+
+            modelBuilder.Entity("Infraestructure.Entity.Models.AssessmentQuestionAnswerEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("IdAnswer")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdAssessmentQuestion")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Points")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdAnswer");
+
+                    b.HasIndex("IdAssessmentQuestion");
+
+                    b.ToTable("AssessmentQuestionAnswer");
+                });
+
+            modelBuilder.Entity("Infraestructure.Entity.Models.AssessmentQuestionEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("IdAssessmentUser")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdQuestion")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdAssessmentUser");
+
+                    b.HasIndex("IdQuestion");
+
+                    b.ToTable("AssessmentQuestion");
+                });
+
+            modelBuilder.Entity("Infraestructure.Entity.Models.AssessmentUserEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("IdRequest")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdUser")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PointsMaximum")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PointsObtained")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdRequest");
+
+                    b.HasIndex("IdUser");
+
+                    b.ToTable("AssessmentUser");
                 });
 
             modelBuilder.Entity("Infraestructure.Entity.Models.CertificationEntity", b =>
@@ -154,6 +232,58 @@ namespace Infraestructure.Core.Migrations
                     b.ToTable("Country");
                 });
 
+            modelBuilder.Entity("Infraestructure.Entity.Models.DetailRequirementEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("IdDifficulty")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdRequest")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdSkill")
+                        .HasColumnType("int");
+
+                    b.Property<int>("QuantityQuestions")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdDifficulty");
+
+                    b.HasIndex("IdRequest");
+
+                    b.HasIndex("IdSkill");
+
+                    b.ToTable("DetailRequirement");
+                });
+
+            modelBuilder.Entity("Infraestructure.Entity.Models.DifficultyEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(120)
+                        .HasColumnType("nvarchar(120)");
+
+                    b.Property<int>("Value")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Difficulty");
+                });
+
             modelBuilder.Entity("Infraestructure.Entity.Models.DniTypeEntity", b =>
                 {
                     b.Property<int>("id")
@@ -230,6 +360,8 @@ namespace Infraestructure.Core.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("IdProfile");
 
                     b.ToTable("File");
                 });
@@ -476,16 +608,18 @@ namespace Infraestructure.Core.Migrations
                         .HasMaxLength(120)
                         .HasColumnType("nvarchar(120)");
 
+                    b.Property<int>("IdDifficulty")
+                        .HasColumnType("int");
+
                     b.Property<int?>("IdFile")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsVisible")
                         .HasColumnType("bit");
 
-                    b.Property<int>("Value")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("IdDifficulty");
 
                     b.HasIndex("IdFile")
                         .IsUnique()
@@ -515,6 +649,55 @@ namespace Infraestructure.Core.Migrations
                     b.HasIndex("IdSkill");
 
                     b.ToTable("QuestionSkillEntity");
+                });
+
+            modelBuilder.Entity("Infraestructure.Entity.Models.RequestEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PercentageMinimoRerequired")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TimeInMinutes")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Request");
+                });
+
+            modelBuilder.Entity("Infraestructure.Entity.Models.RequirementQuestionEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("IdQuestion")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdRequest")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdQuestion");
+
+                    b.HasIndex("IdRequest");
+
+                    b.ToTable("RequirementQuestion");
                 });
 
             modelBuilder.Entity("Infraestructure.Entity.Models.RoleEntity", b =>
@@ -777,6 +960,63 @@ namespace Infraestructure.Core.Migrations
                     b.Navigation("FileEntity");
                 });
 
+            modelBuilder.Entity("Infraestructure.Entity.Models.AssessmentQuestionAnswerEntity", b =>
+                {
+                    b.HasOne("Infraestructure.Entity.Models.AnswerEntity", "AnswerEntity")
+                        .WithMany("AssessmentQuestionAnswerEntities")
+                        .HasForeignKey("IdAnswer")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Infraestructure.Entity.Models.AssessmentQuestionEntity", "AssessmentQuestionEntity")
+                        .WithMany("AssessmentQuestionAnswerEntities")
+                        .HasForeignKey("IdAssessmentQuestion")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AnswerEntity");
+
+                    b.Navigation("AssessmentQuestionEntity");
+                });
+
+            modelBuilder.Entity("Infraestructure.Entity.Models.AssessmentQuestionEntity", b =>
+                {
+                    b.HasOne("Infraestructure.Entity.Models.AssessmentUserEntity", "AssessmentUserEntity")
+                        .WithMany("AssessmentQuestionEntities")
+                        .HasForeignKey("IdAssessmentUser")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Infraestructure.Entity.Models.QuestionEntity", "QuestionEntity")
+                        .WithMany("AssessmentQuestionEntities")
+                        .HasForeignKey("IdQuestion")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AssessmentUserEntity");
+
+                    b.Navigation("QuestionEntity");
+                });
+
+            modelBuilder.Entity("Infraestructure.Entity.Models.AssessmentUserEntity", b =>
+                {
+                    b.HasOne("Infraestructure.Entity.Models.RequestEntity", "RequestEntity")
+                        .WithMany("AssessmentUserEntities")
+                        .HasForeignKey("IdRequest")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Infraestructure.Entity.Models.UserEntity", "UserEntity")
+                        .WithMany("AssessmentUserEntities")
+                        .HasForeignKey("IdUser")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("RequestEntity");
+
+                    b.Navigation("UserEntity");
+                });
+
             modelBuilder.Entity("Infraestructure.Entity.Models.CityEntity", b =>
                 {
                     b.HasOne("Infraestructure.Entity.Models.ProvinceEntity", "ProvinceEntity")
@@ -788,6 +1028,33 @@ namespace Infraestructure.Core.Migrations
                     b.Navigation("ProvinceEntity");
                 });
 
+            modelBuilder.Entity("Infraestructure.Entity.Models.DetailRequirementEntity", b =>
+                {
+                    b.HasOne("Infraestructure.Entity.Models.DifficultyEntity", "DifficultyEntity")
+                        .WithMany("DetailRequirementEntities")
+                        .HasForeignKey("IdDifficulty")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Infraestructure.Entity.Models.RequestEntity", "RequestEntity")
+                        .WithMany("DetailRequirementEntities")
+                        .HasForeignKey("IdRequest")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Infraestructure.Entity.Models.SkillEntity", "SkillEntity")
+                        .WithMany("DetailRequirementEntity")
+                        .HasForeignKey("IdSkill")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DifficultyEntity");
+
+                    b.Navigation("RequestEntity");
+
+                    b.Navigation("SkillEntity");
+                });
+
             modelBuilder.Entity("Infraestructure.Entity.Models.EducationEntity", b =>
                 {
                     b.HasOne("Infraestructure.Entity.Models.InstitutionTypeEntity", "InstitutionTypeEntity")
@@ -797,12 +1064,21 @@ namespace Infraestructure.Core.Migrations
                         .IsRequired();
 
                     b.HasOne("Infraestructure.Entity.Models.ProfileEntity", "ProfileEntity")
-                        .WithMany("EducationEntity")
+                        .WithMany("EducationEntities")
                         .HasForeignKey("IdProfile")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("InstitutionTypeEntity");
+
+                    b.Navigation("ProfileEntity");
+                });
+
+            modelBuilder.Entity("Infraestructure.Entity.Models.FileEntity", b =>
+                {
+                    b.HasOne("Infraestructure.Entity.Models.ProfileEntity", "ProfileEntity")
+                        .WithMany("FileEntities")
+                        .HasForeignKey("IdProfile");
 
                     b.Navigation("ProfileEntity");
                 });
@@ -827,7 +1103,7 @@ namespace Infraestructure.Core.Migrations
                         .IsRequired();
 
                     b.HasOne("Infraestructure.Entity.Models.ProfileEntity", "ProfileEntity")
-                        .WithMany("ProfileCertificationEntity")
+                        .WithMany("ProfileCertificationEntities")
                         .HasForeignKey("IdProfile")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -863,7 +1139,7 @@ namespace Infraestructure.Core.Migrations
             modelBuilder.Entity("Infraestructure.Entity.Models.ProfilesSkillsEntity", b =>
                 {
                     b.HasOne("Infraestructure.Entity.Models.ProfileEntity", "ProfileEntity")
-                        .WithMany("ProfilesSkillsEntity")
+                        .WithMany("ProfilesSkillsEntities")
                         .HasForeignKey("IdProfile")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -911,9 +1187,17 @@ namespace Infraestructure.Core.Migrations
 
             modelBuilder.Entity("Infraestructure.Entity.Models.QuestionEntity", b =>
                 {
+                    b.HasOne("Infraestructure.Entity.Models.DifficultyEntity", "DifficultyEntity")
+                        .WithMany("QuestionEntities")
+                        .HasForeignKey("IdDifficulty")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Infraestructure.Entity.Models.FileEntity", "FileEntity")
                         .WithOne("QuestionEntity")
                         .HasForeignKey("Infraestructure.Entity.Models.QuestionEntity", "IdFile");
+
+                    b.Navigation("DifficultyEntity");
 
                     b.Navigation("FileEntity");
                 });
@@ -921,7 +1205,7 @@ namespace Infraestructure.Core.Migrations
             modelBuilder.Entity("Infraestructure.Entity.Models.QuestionSkillEntity", b =>
                 {
                     b.HasOne("Infraestructure.Entity.Models.QuestionEntity", "QuestionEntity")
-                        .WithMany("QuestionSkillEntity")
+                        .WithMany("QuestionSkillEntities")
                         .HasForeignKey("IdQuestion")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -935,6 +1219,25 @@ namespace Infraestructure.Core.Migrations
                     b.Navigation("QuestionEntity");
 
                     b.Navigation("SkillEntity");
+                });
+
+            modelBuilder.Entity("Infraestructure.Entity.Models.RequirementQuestionEntity", b =>
+                {
+                    b.HasOne("Infraestructure.Entity.Models.QuestionEntity", "QuestionEntity")
+                        .WithMany("RequirementQuestionEntities")
+                        .HasForeignKey("IdQuestion")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Infraestructure.Entity.Models.RequestEntity", "RequestEntity")
+                        .WithMany()
+                        .HasForeignKey("IdRequest")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("QuestionEntity");
+
+                    b.Navigation("RequestEntity");
                 });
 
             modelBuilder.Entity("Infraestructure.Entity.Models.RolePermissionEntity", b =>
@@ -974,7 +1277,7 @@ namespace Infraestructure.Core.Migrations
                         .HasForeignKey("IdJobPosition");
 
                     b.HasOne("Infraestructure.Entity.Models.ProfileEntity", "ProfileEntity")
-                        .WithMany("WorkEntity")
+                        .WithMany("WorkEntities")
                         .HasForeignKey("IdProfile")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1015,12 +1318,31 @@ namespace Infraestructure.Core.Migrations
 
             modelBuilder.Entity("Infraestructure.Entity.Models.AnswerEntity", b =>
                 {
+                    b.Navigation("AssessmentQuestionAnswerEntities");
+
                     b.Navigation("QuestionAnswerEntityEntities");
+                });
+
+            modelBuilder.Entity("Infraestructure.Entity.Models.AssessmentQuestionEntity", b =>
+                {
+                    b.Navigation("AssessmentQuestionAnswerEntities");
+                });
+
+            modelBuilder.Entity("Infraestructure.Entity.Models.AssessmentUserEntity", b =>
+                {
+                    b.Navigation("AssessmentQuestionEntities");
                 });
 
             modelBuilder.Entity("Infraestructure.Entity.Models.CertificationEntity", b =>
                 {
                     b.Navigation("ProfileCertificationEntity");
+                });
+
+            modelBuilder.Entity("Infraestructure.Entity.Models.DifficultyEntity", b =>
+                {
+                    b.Navigation("DetailRequirementEntities");
+
+                    b.Navigation("QuestionEntities");
                 });
 
             modelBuilder.Entity("Infraestructure.Entity.Models.DniTypeEntity", b =>
@@ -1057,13 +1379,15 @@ namespace Infraestructure.Core.Migrations
 
             modelBuilder.Entity("Infraestructure.Entity.Models.ProfileEntity", b =>
                 {
-                    b.Navigation("EducationEntity");
+                    b.Navigation("EducationEntities");
 
-                    b.Navigation("ProfileCertificationEntity");
+                    b.Navigation("FileEntities");
 
-                    b.Navigation("ProfilesSkillsEntity");
+                    b.Navigation("ProfileCertificationEntities");
 
-                    b.Navigation("WorkEntity");
+                    b.Navigation("ProfilesSkillsEntities");
+
+                    b.Navigation("WorkEntities");
                 });
 
             modelBuilder.Entity("Infraestructure.Entity.Models.ProvinceEntity", b =>
@@ -1073,9 +1397,20 @@ namespace Infraestructure.Core.Migrations
 
             modelBuilder.Entity("Infraestructure.Entity.Models.QuestionEntity", b =>
                 {
+                    b.Navigation("AssessmentQuestionEntities");
+
                     b.Navigation("QuestionAnswerEntities");
 
-                    b.Navigation("QuestionSkillEntity");
+                    b.Navigation("QuestionSkillEntities");
+
+                    b.Navigation("RequirementQuestionEntities");
+                });
+
+            modelBuilder.Entity("Infraestructure.Entity.Models.RequestEntity", b =>
+                {
+                    b.Navigation("AssessmentUserEntities");
+
+                    b.Navigation("DetailRequirementEntities");
                 });
 
             modelBuilder.Entity("Infraestructure.Entity.Models.RoleEntity", b =>
@@ -1087,6 +1422,8 @@ namespace Infraestructure.Core.Migrations
 
             modelBuilder.Entity("Infraestructure.Entity.Models.SkillEntity", b =>
                 {
+                    b.Navigation("DetailRequirementEntity");
+
                     b.Navigation("ProfilesSkillsEntity");
 
                     b.Navigation("QuestionSkillEntity");
@@ -1099,6 +1436,8 @@ namespace Infraestructure.Core.Migrations
 
             modelBuilder.Entity("Infraestructure.Entity.Models.UserEntity", b =>
                 {
+                    b.Navigation("AssessmentUserEntities");
+
                     b.Navigation("ProfileEntity")
                         .IsRequired();
                 });

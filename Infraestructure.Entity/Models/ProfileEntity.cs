@@ -43,6 +43,8 @@ namespace Infraestructure.Entity.Models
         public string Mail { get; set; }
 
         public string? CV { get; set; }
+
+        [ForeignKey("UserEntity")]
         public int IdUser { get; set; }
 
         [ForeignKey("AdressEntity")]
@@ -54,10 +56,10 @@ namespace Infraestructure.Entity.Models
         public DniTypeEntity? DniTypeEntity { get; set; }
         public UserEntity UserEntity { get; set; }
 
-        public IEnumerable<WorkEntity>? WorkEntity { get; set; }
-        public IEnumerable<EducationEntity>? EducationEntity { get; set; }
-        public IEnumerable<ProfilesSkillsEntity>? ProfilesSkillsEntity { get; set; }
-        public IEnumerable<ProfileCertificationEntity>? ProfileCertificationEntity { get; set; }
-
+        public IEnumerable<WorkEntity>? WorkEntities { get; set; }
+        public IEnumerable<EducationEntity>? EducationEntities { get; set; }
+        public IEnumerable<ProfilesSkillsEntity>? ProfilesSkillsEntities { get; set; }
+        public IEnumerable<ProfileCertificationEntity>? ProfileCertificationEntities { get; set; }
+        public IEnumerable<FileEntity>? FileEntities { get; set; }
     }
 }

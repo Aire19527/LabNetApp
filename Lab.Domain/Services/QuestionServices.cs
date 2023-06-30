@@ -31,7 +31,7 @@ namespace Lab.Domain.Services
         public List<QuestionDto> getAll()
         {
             IEnumerable<QuestionEntity> entities = _unitOfWork.QuestionRepository.GetAllSelect(
-                s => s.QuestionSkillEntity.Select(q => q.SkillEntity),
+                s => s.QuestionSkillEntities.Select(q => q.SkillEntity),
                 i => i.FileEntity,
                 a => a.QuestionAnswerEntities.Select(r => r.AnswerEntity),
                 a => a.QuestionAnswerEntities.Select(r => r.AnswerEntity.FileEntity)
@@ -44,7 +44,7 @@ namespace Lab.Domain.Services
                 IdFile = q.FileEntity?.Id,
                 UrlImg = q.FileEntity?.Url,
                 IsVisible = q.IsVisible,
-                SkillEntities = q.QuestionSkillEntity.Select(x => new ConsultSkllDto()
+                SkillEntities = q.QuestionSkillEntities.Select(x => new ConsultSkllDto()
                 {
                     Id = x.SkillEntity.Id,
                     Description = x.SkillEntity.Description,
@@ -68,7 +68,7 @@ namespace Lab.Domain.Services
         {
             QuestionEntity entity = _unitOfWork.QuestionRepository.FirstOrDefaultSelect(
                 x => x.Id == idQuestion,
-                s => s.QuestionSkillEntity.Select(q => q.SkillEntity),
+                s => s.QuestionSkillEntities.Select(q => q.SkillEntity),
                 i => i.FileEntity,
                 a => a.QuestionAnswerEntities.Select(r => r.AnswerEntity),
                 a => a.QuestionAnswerEntities.Select(r => r.AnswerEntity.FileEntity));
@@ -83,7 +83,7 @@ namespace Lab.Domain.Services
                 IdFile = entity.FileEntity?.Id,
                 UrlImg = entity.FileEntity?.Url,
                 IsVisible = entity.IsVisible,
-                SkillEntities = entity.QuestionSkillEntity.Select(x => new ConsultSkllDto()
+                SkillEntities = entity.QuestionSkillEntities.Select(x => new ConsultSkllDto()
                 {
                     Id = x.SkillEntity.Id,
                     Description = x.SkillEntity.Description,
@@ -174,7 +174,7 @@ namespace Lab.Domain.Services
                         Description = questionDto.Description,
                         FileEntity = img,
                         QuestionAnswerEntities = questionAnswers,
-                        QuestionSkillEntity = questionDto.Skills.Select(s => new QuestionSkillEntity()
+                        QuestionSkillEntities = questionDto.Skills.Select(s => new QuestionSkillEntity()
                         {
                             IdSkill = s
                         }).ToList(),
@@ -210,10 +210,9 @@ namespace Lab.Domain.Services
         public async Task<bool> Update(ModifyQuestionDto update)
         {
             QuestionEntity question = _unitOfWork.QuestionRepository.FirstOrDefaultSelect(x => x.Id == update.Id,
-                                                                                          s => s.QuestionSkillEntity);
+                                                                                          s => s.QuestionSkillEntities);
             if (question != null)
             {
-                question.Value = update.Value;
                 question.Description = update.Description;
 
                 List<QuestionSkillEntity> updatedSkills = update.Skills.Select(x => new QuestionSkillEntity()
@@ -222,7 +221,7 @@ namespace Lab.Domain.Services
                     IdQuestion = question.Id
                 }).ToList();
 
-                question.QuestionSkillEntity = updatedSkills;
+                question.QuestionSkillEntities = updatedSkills;
 
                 _unitOfWork.QuestionRepository.Update(question);
 

@@ -21,6 +21,7 @@ namespace Infraestructure.Entity.Models
         public int? IdFile { get; set; }
         public FileEntity FileEntity { get; set; }
 
+        public IEnumerable<AssessmentQuestionAnswerEntity> AssessmentQuestionAnswerEntities { get; set; }
     }
 
 }

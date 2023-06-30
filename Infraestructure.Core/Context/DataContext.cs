@@ -35,8 +35,12 @@ namespace Infraestructure.Core.Context
         public DbSet<QuestionEntity> QuestionsEntity { get; set; }
         public DbSet<AnswerEntity> AnswersEntity { get; set; }
         public DbSet<FileEntity> FilesEntities { get; set; }
-
         public DbSet<DifficultyEntity> DifficultyEntity { get; set; }
+
+        public DbSet<AssessmentUserEntity> AssessmentUserEntity { get; set; }
+        public DbSet<AssessmentQuestionEntity> AssessmentQuestionEntity { get; set; }
+        public DbSet<AssessmentQuestionAnswerEntity> AssessmentQuestionAnswerEntity { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

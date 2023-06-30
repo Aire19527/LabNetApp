@@ -36,8 +36,8 @@ namespace Lab.Domain.Services
         {
             IEnumerable<ProfileEntity> ProfileList = _unitOfWork.ProfileRepository.GetAllSelect(x => x.AdressEntity,
                                                                                                 d => d.DniTypeEntity,
-                                                                                                w => w.WorkEntity,
-                                                                                                e => e.EducationEntity.Select(x => x.InstitutionTypeEntity)
+                                                                                                w => w.WorkEntities,
+                                                                                                e => e.EducationEntities.Select(x => x.InstitutionTypeEntity)
                                                                                                 );
 
             List<ConsultProfileDto> profiles = ProfileList.Select(p => new ConsultProfileDto()
@@ -56,14 +56,14 @@ namespace Lab.Domain.Services
                 AdressDescription = p.AdressEntity?.Description,
                 IdDniType = p.DniTypeEntity?.id,
 
-                WorkEntities = p.WorkEntity.Select(x => new WorkDto()
+                WorkEntities = p.WorkEntities.Select(x => new WorkDto()
                 {
                     Id = x.Id,
                     Company = x.Company,
                     Role = x.Role,
                 }).ToList(),
 
-                EducationEntities = p.EducationEntity.Select(x => new EducationDto()
+                EducationEntities = p.EducationEntities.Select(x => new EducationDto()
                 {
                     Id = x.Id,
                     Degree = x.Degree,
@@ -84,11 +84,11 @@ namespace Lab.Domain.Services
             ProfileEntity profile = _unitOfWork.ProfileRepository.FirstOrDefaultSelect(x => x.IdUser == id,
                                                                                 a => a.AdressEntity,
                                                                                 d => d.DniTypeEntity,
-                                                                                w => w.WorkEntity.Select(x => x.SectorEntity),
-                                                                                w => w.WorkEntity.Select(x => x.UbicationEntity),
-                                                                                w => w.WorkEntity.Select(x => x.JobPositionEntity),
-                                                                                w => w.WorkEntity.Select(x => x.WorkTypeEntity),
-                                                                                e => e.EducationEntity.Select(x => x.InstitutionTypeEntity)
+                                                                                w => w.WorkEntities.Select(x => x.SectorEntity),
+                                                                                w => w.WorkEntities.Select(x => x.UbicationEntity),
+                                                                                w => w.WorkEntities.Select(x => x.JobPositionEntity),
+                                                                                w => w.WorkEntities.Select(x => x.WorkTypeEntity),
+                                                                                e => e.EducationEntities.Select(x => x.InstitutionTypeEntity)
                                                                                 );
 
 
@@ -113,7 +113,7 @@ namespace Lab.Domain.Services
                 IdDniType = profile.DniTypeEntity?.id,
                 DniDescrption = profile.DniTypeEntity?.Description,
 
-                WorkEntities = profile.WorkEntity.Select(x => new WorkDto()
+                WorkEntities = profile.WorkEntities.Select(x => new WorkDto()
                 {
                     Id = x.Id,
                     Company = x.Company,
@@ -130,7 +130,7 @@ namespace Lab.Domain.Services
                     EndDate = x.EndDate,
                 }).ToList(),
 
-                EducationEntities = profile.EducationEntity.Select(x => new EducationDto()
+                EducationEntities = profile.EducationEntities.Select(x => new EducationDto()
                 {
                     Id = x.Id,
                     Degree = x.Degree,
@@ -312,12 +312,12 @@ namespace Lab.Domain.Services
         {
 
             ProfileEntity profile = _unitOfWork.ProfileRepository.FirstOrDefaultSelect(x => x.Id == id,
-                                                                               r => r.ProfilesSkillsEntity.Select(e => e.SkillEntity));
+                                                                               r => r.ProfilesSkillsEntities.Select(e => e.SkillEntity));
 
             if (profile == null)
                 throw new BusinessException("No existe el perfil seleccinado");
 
-            IEnumerable<ConsultSkllDto> listSkill = profile.ProfilesSkillsEntity.Select(x => new ConsultSkllDto
+            IEnumerable<ConsultSkllDto> listSkill = profile.ProfilesSkillsEntities.Select(x => new ConsultSkllDto
             {
                 Id = x.SkillEntity.Id,
                 Description = x.SkillEntity.Description,
@@ -330,14 +330,14 @@ namespace Lab.Domain.Services
         {
 
             ProfileEntity profile = _unitOfWork.ProfileRepository.FirstOrDefaultSelect(x => x.Id == id,
-                                                                                        w => w.WorkEntity.Select(x => x.SectorEntity),
-                                                                                        w => w.WorkEntity.Select(x => x.UbicationEntity),
-                                                                                        w => w.WorkEntity.Select(x => x.WorkTypeEntity)
+                                                                                        w => w.WorkEntities.Select(x => x.SectorEntity),
+                                                                                        w => w.WorkEntities.Select(x => x.UbicationEntity),
+                                                                                        w => w.WorkEntities.Select(x => x.WorkTypeEntity)
                                                                                         );
             if (profile == null)
                 throw new BusinessException("No existe el perfil seleccinado");
 
-            IEnumerable<WorkDto> workEntities = profile.WorkEntity.Select(x => new WorkDto
+            IEnumerable<WorkDto> workEntities = profile.WorkEntities.Select(x => new WorkDto
             {
                 Id = x.Id,
                 Company = x.Company,

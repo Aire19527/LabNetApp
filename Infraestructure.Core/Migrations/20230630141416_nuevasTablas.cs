@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Infraestructure.Core.Migrations
 {
-    public partial class otra : Migration
+    public partial class nuevasTablas : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -50,6 +50,20 @@ namespace Infraestructure.Core.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Difficulty",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Description = table.Column<string>(type: "nvarchar(120)", maxLength: 120, nullable: false),
+                    Value = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Difficulty", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "DniType",
                 columns: table => new
                 {
@@ -60,21 +74,6 @@ namespace Infraestructure.Core.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_DniType", x => x.id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "File",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    FileName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Url = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_File", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -114,6 +113,22 @@ namespace Infraestructure.Core.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_PermissionType", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Request",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TimeInMinutes = table.Column<int>(type: "int", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    PercentageMinimoRerequired = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Request", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -257,29 +272,34 @@ namespace Infraestructure.Core.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Question",
+                name: "DetailRequirement",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Description = table.Column<string>(type: "nvarchar(120)", maxLength: 120, nullable: false),
-                    Value = table.Column<int>(type: "int", nullable: false),
-                    IsVisible = table.Column<bool>(type: "bit", nullable: false),
+                    IdRequest = table.Column<int>(type: "int", nullable: false),
                     IdSkill = table.Column<int>(type: "int", nullable: false),
-                    SkillId = table.Column<int>(type: "int", nullable: false),
-                    IdFile = table.Column<int>(type: "int", nullable: true)
+                    IdDifficulty = table.Column<int>(type: "int", nullable: false),
+                    QuantityQuestions = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Question", x => x.Id);
+                    table.PrimaryKey("PK_DetailRequirement", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Question_File_IdFile",
-                        column: x => x.IdFile,
-                        principalTable: "File",
-                        principalColumn: "Id");
+                        name: "FK_DetailRequirement_Difficulty_IdDifficulty",
+                        column: x => x.IdDifficulty,
+                        principalTable: "Difficulty",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Question_Skill_SkillId",
-                        column: x => x.SkillId,
+                        name: "FK_DetailRequirement_Request_IdRequest",
+                        column: x => x.IdRequest,
+                        principalTable: "Request",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DetailRequirement_Skill_IdSkill",
+                        column: x => x.IdSkill,
                         principalTable: "Skill",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -331,30 +351,31 @@ namespace Infraestructure.Core.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Answer",
+                name: "AssessmentUser",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IsCorrect = table.Column<bool>(type: "bit", nullable: false),
-                    IdQuestion = table.Column<int>(type: "int", nullable: false),
-                    IdFile = table.Column<int>(type: "int", nullable: true),
-                    QuestionEntityId = table.Column<int>(type: "int", nullable: true)
+                    IdUser = table.Column<int>(type: "int", nullable: false),
+                    IdRequest = table.Column<int>(type: "int", nullable: false),
+                    PointsObtained = table.Column<int>(type: "int", nullable: false),
+                    PointsMaximum = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Answer", x => x.Id);
+                    table.PrimaryKey("PK_AssessmentUser", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Answer_File_IdFile",
-                        column: x => x.IdFile,
-                        principalTable: "File",
-                        principalColumn: "Id");
+                        name: "FK_AssessmentUser_Request_IdRequest",
+                        column: x => x.IdRequest,
+                        principalTable: "Request",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Answer_Question_QuestionEntityId",
-                        column: x => x.QuestionEntityId,
-                        principalTable: "Question",
-                        principalColumn: "Id");
+                        name: "FK_AssessmentUser_User_IdUser",
+                        column: x => x.IdUser,
+                        principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -447,6 +468,26 @@ namespace Infraestructure.Core.Migrations
                         principalTable: "Profile",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "File",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Url = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IdProfile = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_File", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_File_Profile_IdProfile",
+                        column: x => x.IdProfile,
+                        principalTable: "Profile",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -556,6 +597,184 @@ namespace Infraestructure.Core.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Answer",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IdFile = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Answer", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Answer_File_IdFile",
+                        column: x => x.IdFile,
+                        principalTable: "File",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Question",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Description = table.Column<string>(type: "nvarchar(120)", maxLength: 120, nullable: false),
+                    IsVisible = table.Column<bool>(type: "bit", nullable: false),
+                    IdFile = table.Column<int>(type: "int", nullable: true),
+                    IdDifficulty = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Question", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Question_Difficulty_IdDifficulty",
+                        column: x => x.IdDifficulty,
+                        principalTable: "Difficulty",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Question_File_IdFile",
+                        column: x => x.IdFile,
+                        principalTable: "File",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AssessmentQuestion",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    IdAssessmentUser = table.Column<int>(type: "int", nullable: false),
+                    IdQuestion = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AssessmentQuestion", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AssessmentQuestion_AssessmentUser_IdAssessmentUser",
+                        column: x => x.IdAssessmentUser,
+                        principalTable: "AssessmentUser",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AssessmentQuestion_Question_IdQuestion",
+                        column: x => x.IdQuestion,
+                        principalTable: "Question",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "QuestionsAnswers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AnswerId = table.Column<int>(type: "int", nullable: false),
+                    QuestionId = table.Column<int>(type: "int", nullable: false),
+                    isCorrect = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_QuestionsAnswers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_QuestionsAnswers_Answer_AnswerId",
+                        column: x => x.AnswerId,
+                        principalTable: "Answer",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_QuestionsAnswers_Question_QuestionId",
+                        column: x => x.QuestionId,
+                        principalTable: "Question",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "QuestionSkillEntity",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    IdQuestion = table.Column<int>(type: "int", nullable: false),
+                    IdSkill = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_QuestionSkillEntity", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_QuestionSkillEntity_Question_IdQuestion",
+                        column: x => x.IdQuestion,
+                        principalTable: "Question",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_QuestionSkillEntity_Skill_IdSkill",
+                        column: x => x.IdSkill,
+                        principalTable: "Skill",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RequirementQuestion",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    IdRequest = table.Column<int>(type: "int", nullable: false),
+                    IdQuestion = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RequirementQuestion", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RequirementQuestion_Question_IdQuestion",
+                        column: x => x.IdQuestion,
+                        principalTable: "Question",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RequirementQuestion_Request_IdRequest",
+                        column: x => x.IdRequest,
+                        principalTable: "Request",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AssessmentQuestionAnswer",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    IdAssessmentQuestion = table.Column<int>(type: "int", nullable: false),
+                    IdAnswer = table.Column<int>(type: "int", nullable: false),
+                    Points = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AssessmentQuestionAnswer", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AssessmentQuestionAnswer_Answer_IdAnswer",
+                        column: x => x.IdAnswer,
+                        principalTable: "Answer",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AssessmentQuestionAnswer_AssessmentQuestion_IdAssessmentQuestion",
+                        column: x => x.IdAssessmentQuestion,
+                        principalTable: "AssessmentQuestion",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Adress_IdCityEntity",
                 table: "Adress",
@@ -569,14 +788,54 @@ namespace Infraestructure.Core.Migrations
                 filter: "[IdFile] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Answer_QuestionEntityId",
-                table: "Answer",
-                column: "QuestionEntityId");
+                name: "IX_AssessmentQuestion_IdAssessmentUser",
+                table: "AssessmentQuestion",
+                column: "IdAssessmentUser");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AssessmentQuestion_IdQuestion",
+                table: "AssessmentQuestion",
+                column: "IdQuestion");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AssessmentQuestionAnswer_IdAnswer",
+                table: "AssessmentQuestionAnswer",
+                column: "IdAnswer");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AssessmentQuestionAnswer_IdAssessmentQuestion",
+                table: "AssessmentQuestionAnswer",
+                column: "IdAssessmentQuestion");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AssessmentUser_IdRequest",
+                table: "AssessmentUser",
+                column: "IdRequest");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AssessmentUser_IdUser",
+                table: "AssessmentUser",
+                column: "IdUser");
 
             migrationBuilder.CreateIndex(
                 name: "IX_City_IDProvinceEntity",
                 table: "City",
                 column: "IDProvinceEntity");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DetailRequirement_IdDifficulty",
+                table: "DetailRequirement",
+                column: "IdDifficulty");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DetailRequirement_IdRequest",
+                table: "DetailRequirement",
+                column: "IdRequest");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DetailRequirement_IdSkill",
+                table: "DetailRequirement",
+                column: "IdSkill");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Education_IdInstitutionType",
@@ -586,6 +845,11 @@ namespace Infraestructure.Core.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Education_IdProfile",
                 table: "Education",
+                column: "IdProfile");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_File_IdProfile",
+                table: "File",
                 column: "IdProfile");
 
             migrationBuilder.CreateIndex(
@@ -637,6 +901,11 @@ namespace Infraestructure.Core.Migrations
                 column: "IdCountryEntity");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Question_IdDifficulty",
+                table: "Question",
+                column: "IdDifficulty");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Question_IdFile",
                 table: "Question",
                 column: "IdFile",
@@ -644,9 +913,34 @@ namespace Infraestructure.Core.Migrations
                 filter: "[IdFile] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Question_SkillId",
-                table: "Question",
-                column: "SkillId");
+                name: "IX_QuestionsAnswers_AnswerId",
+                table: "QuestionsAnswers",
+                column: "AnswerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_QuestionsAnswers_QuestionId",
+                table: "QuestionsAnswers",
+                column: "QuestionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_QuestionSkillEntity_IdQuestion",
+                table: "QuestionSkillEntity",
+                column: "IdQuestion");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_QuestionSkillEntity_IdSkill",
+                table: "QuestionSkillEntity",
+                column: "IdSkill");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RequirementQuestion_IdQuestion",
+                table: "RequirementQuestion",
+                column: "IdQuestion");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RequirementQuestion_IdRequest",
+                table: "RequirementQuestion",
+                column: "IdRequest");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RolesPermissions_IdPermission_IdRol",
@@ -699,10 +993,13 @@ namespace Infraestructure.Core.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Answer");
+                name: "AssessmentQuestionAnswer");
 
             migrationBuilder.DropTable(
                 name: "Configuration");
+
+            migrationBuilder.DropTable(
+                name: "DetailRequirement");
 
             migrationBuilder.DropTable(
                 name: "Education");
@@ -714,6 +1011,15 @@ namespace Infraestructure.Core.Migrations
                 name: "ProfilesSkills");
 
             migrationBuilder.DropTable(
+                name: "QuestionsAnswers");
+
+            migrationBuilder.DropTable(
+                name: "QuestionSkillEntity");
+
+            migrationBuilder.DropTable(
+                name: "RequirementQuestion");
+
+            migrationBuilder.DropTable(
                 name: "RolesPermissions");
 
             migrationBuilder.DropTable(
@@ -723,7 +1029,7 @@ namespace Infraestructure.Core.Migrations
                 name: "Work");
 
             migrationBuilder.DropTable(
-                name: "Question");
+                name: "AssessmentQuestion");
 
             migrationBuilder.DropTable(
                 name: "InstitutionType");
@@ -732,13 +1038,16 @@ namespace Infraestructure.Core.Migrations
                 name: "Certification");
 
             migrationBuilder.DropTable(
+                name: "Answer");
+
+            migrationBuilder.DropTable(
+                name: "Skill");
+
+            migrationBuilder.DropTable(
                 name: "Permission");
 
             migrationBuilder.DropTable(
                 name: "JobPosition");
-
-            migrationBuilder.DropTable(
-                name: "Profile");
 
             migrationBuilder.DropTable(
                 name: "Sector");
@@ -750,13 +1059,25 @@ namespace Infraestructure.Core.Migrations
                 name: "WorkType");
 
             migrationBuilder.DropTable(
-                name: "File");
+                name: "AssessmentUser");
 
             migrationBuilder.DropTable(
-                name: "Skill");
+                name: "Question");
 
             migrationBuilder.DropTable(
                 name: "PermissionType");
+
+            migrationBuilder.DropTable(
+                name: "Request");
+
+            migrationBuilder.DropTable(
+                name: "Difficulty");
+
+            migrationBuilder.DropTable(
+                name: "File");
+
+            migrationBuilder.DropTable(
+                name: "Profile");
 
             migrationBuilder.DropTable(
                 name: "Adress");

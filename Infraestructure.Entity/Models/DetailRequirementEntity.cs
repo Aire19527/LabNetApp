@@ -13,15 +13,15 @@ namespace Infraestructure.Entity.Models
     {
         [Key]
         public int Id { get; set; }
-        [ForeignKey("Request")]
+        [ForeignKey("RequestEntity")]
         public int IdRequest { get; set; }
         public RequestEntity RequestEntity { get; set; }
 
-        [ForeignKey("Skill")]
+        [ForeignKey("SkillEntity")]
         public int IdSkill { get; set; }
         public SkillEntity SkillEntity { get; set; }
 
-        [ForeignKey("Difficulty")]
+        [ForeignKey("DifficultyEntity")]
         public int IdDifficulty { get; set; }
         public DifficultyEntity DifficultyEntity { get; set; }
         public int QuantityQuestions { get; set; }

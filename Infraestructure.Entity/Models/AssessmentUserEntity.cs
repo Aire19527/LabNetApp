@@ -8,18 +8,22 @@ using System.Threading.Tasks;
 
 namespace Infraestructure.Entity.Models
 {
-    [Table("RequirementQuestion")]
-    public class RequirementQuestionEntity
+    [Table("AssessmentUser")]
+    public class AssessmentUserEntity
     {
         [Key]
         public int Id { get; set; }
+
+        [ForeignKey("UserEntity")]
+        public int IdUser { get; set; }
+        public UserEntity UserEntity { get; set; }
 
         [ForeignKey("RequestEntity")]
         public int IdRequest { get; set; }
         public RequestEntity RequestEntity { get; set; }
 
-        [ForeignKey("QuestionEntity")]
-        public int IdQuestion { get; set; }
-        public QuestionEntity QuestionEntity { get; set; }
+        public int PointsObtained { get; set; }
+        public int PointsMaximum { get; set; }
+        public IEnumerable<AssessmentQuestionEntity> AssessmentQuestionEntities { get; set; }
     }
 }
