@@ -8,21 +8,16 @@ using System.Threading.Tasks;
 
 namespace Infraestructure.Entity.Models
 {
-    [Table("Difficulty")]
-    public class DifficultyEntity
+    [Table("Request")]
+    public class RequestEntity
     {
         [Key]
         public int Id { get; set; }
-
+        public int TimeInMinutes { get; set; }
         [Required]
-        [MaxLength(120)]
-        [RegularExpression(@"^[A-Za-z\s]+$",
-                    ErrorMessage = "La descripcion solo pueden contener letras y espacios.")]
-        public string Description { get; set; }
-        [Required]
-        public int Value { get; set; }
-
-        public IEnumerable<QuestionEntity> QuestionEntity { get; set; }
+        public string Degree { get; set; }
+        public DateTime CreationDate { get; set; }
+        public int PercentageMinimoRerequired { get; set; }
         public IEnumerable<DetailRequirementEntity> DetailRequirementEntity { get; set; }
     }
 }

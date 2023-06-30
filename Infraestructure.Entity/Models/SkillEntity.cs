@@ -17,5 +17,7 @@ namespace Infraestructure.Entity.Models
         public IEnumerable<ProfilesSkillsEntity> ProfilesSkillsEntity { get; set; }
 
         public IEnumerable<QuestionSkillEntity> QuestionSkillEntity { get; set; }
+
+        public IEnumerable<DetailRequirementEntity> DetailRequirementEntity { get; set; }
     }
 }
