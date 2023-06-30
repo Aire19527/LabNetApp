@@ -10,6 +10,6 @@ namespace Lab.Domain.Services.Interfaces
 {
     public interface IDetailRequirementService
     {
-        Task<DetailRequirementEntity> GetDetailRequirement(DetailRequirementDto detailRequirementDto);
+        DetailRequirementEntity GetDetailRequirement(DetailRequirementDto detailRequirementDto);
     }
 }

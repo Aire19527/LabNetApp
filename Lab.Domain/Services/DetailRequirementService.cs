@@ -18,7 +18,7 @@ namespace Lab.Domain.Services
             this._unitOfWork = unitOfWork;
         }
 
-        public async Task<DetailRequirementEntity> GetDetailRequirement(DetailRequirementDto detailRequirementDto)
+        public DetailRequirementEntity GetDetailRequirement(DetailRequirementDto detailRequirementDto)
         {
             DetailRequirementEntity detailRequirementEntity = new DetailRequirementEntity()
             {

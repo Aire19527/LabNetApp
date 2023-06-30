@@ -2,6 +2,7 @@
 using Common.Resources;
 using Infraestructure.Core.UnitOfWork.Interface;
 using Infraestructure.Entity.Models;
+using Lab.Domain.Dto.DetailRequirement;
 using Lab.Domain.Dto.Resquest;
 using Lab.Domain.Services.Interfaces;
 
@@ -10,11 +11,12 @@ namespace Lab.Domain.Services
     public class RequestService : IRequestService
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IDetailRequirementService _detailRequirement;
+        //private readonly IDetailRequirementService _detailRequirement;
 
         public RequestService(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
+            //_detailRequirement = detailRequirementService;
         }
 
         public async Task<List<ConsultRequestDto>> GetAllRequests()
@@ -49,8 +51,13 @@ namespace Lab.Domain.Services
                     {
                         foreach (var item in insertRequestDto.DetailRequirements)
                         {
-                            DetailRequirementEntity detailRequirementEntity = await _detailRequirement.GetDetailRequirement(item);
-                            detailRequirementEntities.Add(detailRequirementEntity);
+                            //DetailRequirementEntity detailRequirementEntity = _detailRequirement.GetDetailRequirement(item);
+                            detailRequirementEntities.Add(new DetailRequirementEntity()
+                            {
+                                IdSkill = item.IdSkill,
+                                IdDifficulty = item.IdDifficulty,
+                                QuantityQuestions = item.QuantityQuestions,
+                            });
                         }
                     }
 
