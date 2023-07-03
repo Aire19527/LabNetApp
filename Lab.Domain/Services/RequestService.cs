@@ -11,12 +11,12 @@ namespace Lab.Domain.Services
     public class RequestService : IRequestService
     {
         private readonly IUnitOfWork _unitOfWork;
-        //private readonly IDetailRequirementService _detailRequirement;
+        private readonly IDetailRequirementService _detailRequirement;
 
-        public RequestService(IUnitOfWork unitOfWork)
+        public RequestService(IUnitOfWork unitOfWork, IDetailRequirementService detailRequirementService)
         {
             _unitOfWork = unitOfWork;
-            //_detailRequirement = detailRequirementService;
+            _detailRequirement = detailRequirementService;
         }
 
         public async Task<List<ConsultRequestDto>> GetAllRequests()
@@ -40,9 +40,6 @@ namespace Lab.Domain.Services
             List<DetailRequirementEntity> detailRequirementEntities =
                 new List<DetailRequirementEntity>();
 
-            List<RequirementQuestionEntity> requirementQuestionEntities =
-                new List<RequirementQuestionEntity>();
-
             using (var db = await _unitOfWork.BeginTransactionAsync())
             {
                 try
@@ -51,13 +48,8 @@ namespace Lab.Domain.Services
                     {
                         foreach (var item in insertRequestDto.DetailRequirements)
                         {
-                            //DetailRequirementEntity detailRequirementEntity = _detailRequirement.GetDetailRequirement(item);
-                            detailRequirementEntities.Add(new DetailRequirementEntity()
-                            {
-                                IdSkill = item.IdSkill,
-                                IdDifficulty = item.IdDifficulty,
-                                QuantityQuestions = item.QuantityQuestions,
-                            });
+                            DetailRequirementEntity detailRequirementEntity = _detailRequirement.GetDetailRequirement(item);
+                            detailRequirementEntities.Add(detailRequirementEntity);
                         }
                     }
 

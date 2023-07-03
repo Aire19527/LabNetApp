@@ -43,6 +43,8 @@ namespace Infraestructure.Core.UnitOfWork
         private IRepository<QuestionAnswerEntity> questionAnswerRepository;
         private IRepository<DifficultyEntity> difficultyRepository;
         private IRepository<RequestEntity> requestRepository;
+        private IRepository<DetailRequirementEntity> detailRequirementRepository;
+
         #endregion
 
         #region Members
@@ -256,6 +258,18 @@ namespace Infraestructure.Core.UnitOfWork
                     this.requestRepository = new Repository<RequestEntity>(_context);
                 }
                 return requestRepository;
+            }
+        }
+
+        public IRepository<DetailRequirementEntity> DetailRequirementRepository
+        {
+            get
+            {
+                if (this.detailRequirementRepository == null)
+                {
+                    this.detailRequirementRepository = new Repository<DetailRequirementEntity>(_context);
+                }
+                return detailRequirementRepository;
             }
         }
 

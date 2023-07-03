@@ -42,6 +42,8 @@ namespace Infraestructure.Core.Context
         public DbSet<AssessmentUserEntity> AssessmentUserEntity { get; set; }
         public DbSet<AssessmentQuestionEntity> AssessmentQuestionEntity { get; set; }
         public DbSet<AssessmentQuestionAnswerEntity> AssessmentQuestionAnswerEntity { get; set; }
+        public DbSet<DetailRequirementEntity> DetailRequirementEntity { get; set; }
+
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
