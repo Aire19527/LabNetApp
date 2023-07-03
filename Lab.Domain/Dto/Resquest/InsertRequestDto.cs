@@ -7,17 +7,13 @@ using System.Threading.Tasks;
 
 namespace Lab.Domain.Dto.Resquest
 {
-    public class InsertRequestDto
+    public class InsertRequestDto : RequestDto
     {
         public InsertRequestDto() {
 
             DetailRequirements = new List<DetailRequirementDto>();
             QuestionsRequired = new List<int>();
         }
-
-        public int PercentageMinimoRequired { get; set; }
-        public int TimeInMinutes { get; set; }
-        public string TitleRequest { get; set; }
 
         public List<DetailRequirementDto> DetailRequirements { get; set; }
         public List<int> QuestionsRequired { get; set; }

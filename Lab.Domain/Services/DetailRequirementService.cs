@@ -1,4 +1,6 @@
-﻿using Infraestructure.Core.UnitOfWork.Interface;
+﻿using Common.Exceptions;
+using Common.Resources;
+using Infraestructure.Core.UnitOfWork.Interface;
 using Infraestructure.Entity.Models;
 using Lab.Domain.Dto.DetailRequirement;
 using Lab.Domain.Services.Interfaces;
@@ -27,9 +29,21 @@ namespace Lab.Domain.Services
                 QuantityQuestions = detailRequirementDto.QuantityQuestions,
             };
 
-
-
             return detailRequirementEntity;
+        }
+
+
+        public async Task<bool> Delete(int id)
+        {
+            DetailRequirementEntity detail = _unitOfWork.DetailRequirementRepository
+                .FirstOrDefault(x => x.Id == id);
+
+            if (detail == null)
+                throw new BusinessException(GeneralMessages.ItemNoFound);
+
+            _unitOfWork.RequestRepository.Delete(detail);
+
+            return await _unitOfWork.Save() > 0;
         }
     }
 }

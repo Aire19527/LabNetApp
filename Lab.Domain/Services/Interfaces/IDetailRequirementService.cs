@@ -11,5 +11,7 @@ namespace Lab.Domain.Services.Interfaces
     public interface IDetailRequirementService
     {
         DetailRequirementEntity GetDetailRequirement(DetailRequirementDto detailRequirementDto);
+
+        Task<bool> Delete(int id);
     }
 }

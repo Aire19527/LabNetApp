@@ -26,6 +26,8 @@ namespace Infraestructure.Core.UnitOfWork.Interface
         IRepository<DifficultyEntity> DifficultyEntity { get; }
         //File
         IRepository<FileEntity> FileRepository { get; }
+        IRepository<DetailRequirementEntity> DetailRequirementRepository { get; }
+
         void Dispose();
         Task<int> Save();
 

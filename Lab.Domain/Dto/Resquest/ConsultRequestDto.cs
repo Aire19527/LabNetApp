@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Lab.Domain.Dto.DetailRequirement;
+using Lab.Domain.Dto.Question;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace Lab.Domain.Dto.Resquest
 {
-    public class ConsultRequestDto
+    public class ConsultRequestDto : RequestDto
     {
-        public int PercentageMinimoRequired { get; set; }
-        public int TimeInMinutes { get; set; }
-        public string TitleRequest { get; set; }
         public int IdRequest { get; set; }
+        public List<ConsultDetailRequirementDto> DetailRequirements { get; set; }
+        public List<QuestionDto> requiredQuestions { get; set; }
+
     }
 }

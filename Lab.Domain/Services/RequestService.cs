@@ -3,6 +3,7 @@ using Common.Resources;
 using Infraestructure.Core.UnitOfWork.Interface;
 using Infraestructure.Entity.Models;
 using Lab.Domain.Dto.DetailRequirement;
+using Lab.Domain.Dto.Question;
 using Lab.Domain.Dto.Resquest;
 using Lab.Domain.Services.Interfaces;
 
@@ -21,8 +22,12 @@ namespace Lab.Domain.Services
 
         public async Task<List<ConsultRequestDto>> GetAllRequests()
         {
-            IEnumerable<RequestEntity> requestEntities =
-                _unitOfWork.RequestRepository.GetAll();
+            IEnumerable<RequestEntity> requestEntities = _unitOfWork.RequestRepository.GetAllSelect(
+                                                                        d => d.DetailRequirementEntities.Select(s =>s.SkillEntity),
+                                                                        d => d.DetailRequirementEntities.Select(s =>s.DifficultyEntity),
+                                                                        d => d.RequirementQuestionEntities.Select(s =>s.QuestionEntity),
+                                                                        d => d.RequirementQuestionEntities.Select(s =>s.QuestionEntity.FileEntity)
+                                                                        );
 
             List<ConsultRequestDto> consultRequestDtos = requestEntities
                 .Select(x => new ConsultRequestDto()
@@ -31,6 +36,21 @@ namespace Lab.Domain.Services
                     TitleRequest = x.Title,
                     TimeInMinutes = x.TimeInMinutes,
                     PercentageMinimoRequired = x.PercentageMinimoRequired,
+                    DetailRequirements = x.DetailRequirementEntities.Select(x => new ConsultDetailRequirementDto()
+                    {
+                        id = x.Id,
+                        IdDifficulty = x.IdDifficulty,
+                        IdSkill = x.IdSkill,
+                        skillDescription = x.SkillEntity.Description,
+                        difficultDescription = x.DifficultyEntity.Description,
+                        QuantityQuestions = x.QuantityQuestions
+                    }).ToList(),
+                    requiredQuestions = x.RequirementQuestionEntities.Select(x => new QuestionDto()
+                    {
+                        Id = x.QuestionEntity.Id,
+                        Description = x.QuestionEntity.Description,
+                        UrlImg = x.QuestionEntity.FileEntity?.Url,
+                    }).ToList(),
                 }).ToList();
 
             return consultRequestDtos;
