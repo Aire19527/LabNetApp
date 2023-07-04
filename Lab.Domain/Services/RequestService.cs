@@ -110,7 +110,10 @@ namespace Lab.Domain.Services
 
         public async Task<bool> Update(ModifyRequestDto modifyRequestDto)
         {
-            RequestEntity request = _unitOfWork.RequestRepository.FirstOrDefault(x => x.Id == modifyRequestDto.id);
+            RequestEntity request = _unitOfWork.RequestRepository
+                .FirstOrDefault(x => x.Id == modifyRequestDto.id,
+                                a => a.DetailRequirementEntities,
+                                r => r.RequirementQuestionEntities);
             if (request == null)
                 throw new Exception(GeneralMessages.ItemNoFound);
 
