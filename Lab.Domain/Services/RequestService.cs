@@ -3,9 +3,11 @@ using Common.Resources;
 using Infraestructure.Core.UnitOfWork.Interface;
 using Infraestructure.Entity.Models;
 using Lab.Domain.Dto.DetailRequirement;
+using Lab.Domain.Dto.Profile;
 using Lab.Domain.Dto.Question;
 using Lab.Domain.Dto.Resquest;
 using Lab.Domain.Services.Interfaces;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Lab.Domain.Services
 {
@@ -91,6 +93,8 @@ namespace Lab.Domain.Services
             return await _unitOfWork.Save() > 0;
         }
 
+       
+
         public async Task<bool> Delete(int id)
         {
             RequestEntity requestEntity = _unitOfWork.RequestRepository
@@ -102,6 +106,24 @@ namespace Lab.Domain.Services
             _unitOfWork.RequestRepository.Delete(requestEntity);
 
             return await _unitOfWork.Save() > 0;
+        }
+
+        public async Task<bool> Update(ModifyRequestDto modifyRequestDto)
+        {
+            RequestEntity request = _unitOfWork.RequestRepository.FirstOrDefault(x => x.Id == modifyRequestDto.id);
+            if (request == null)
+
+            throw new Exception(GeneralMessages.ItemNoFound);
+
+            request.Title = modifyRequestDto.TitleRequest;
+            request.PercentageMinimoRequired = modifyRequestDto.PercentageMinimoRequired; 
+            request.TimeInMinutes = modifyRequestDto.TimeInMinutes;
+            
+            _unitOfWork.RequestRepository.Update(request);
+
+            return await _unitOfWork.Save() > 0;
+
+            
         }
     }
 }

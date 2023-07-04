@@ -51,6 +51,34 @@ namespace MyLabApp.Controllers
             return actionResult;
         }
 
+        [HttpPut]
+        [Route("Update")]
+        public async Task<IActionResult> Update(ModifyRequestDto modifyRequestDto)
+        {
+            IActionResult actionResult;
+
+            bool requestUpdate = await _requestService.Update(modifyRequestDto);
+
+            ResponseDto responseDto = new ResponseDto()
+            {
+                IsSuccess = true,
+                Message = requestUpdate ? GeneralMessages.ItemInserted : GeneralMessages.ItemNoInserted,
+                Result = requestUpdate
+            };
+
+            if (requestUpdate)
+            {
+                actionResult = Ok(responseDto);
+            }
+            else
+            {
+                actionResult = BadRequest(responseDto);
+            }
+
+            return actionResult;
+        }
+
+
         [HttpPost]
         [Route("Insert")]
         public async Task<IActionResult> Insert(InsertRequestDto insertRequestDto)

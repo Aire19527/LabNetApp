@@ -11,6 +11,7 @@ namespace Lab.Domain.Services.Interfaces
     {
         Task<List<ConsultRequestDto>> GetAllRequests();
         Task<bool> Insert(InsertRequestDto insertRequestDto);
+        Task<bool> Update(ModifyRequestDto modifyRequestDto);
         Task<bool> Delete(int id);
     }
 }
