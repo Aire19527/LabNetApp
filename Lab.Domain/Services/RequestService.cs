@@ -23,10 +23,10 @@ namespace Lab.Domain.Services
         public async Task<List<ConsultRequestDto>> GetAllRequests()
         {
             IEnumerable<RequestEntity> requestEntities = _unitOfWork.RequestRepository.GetAllSelect(
-                                                                        d => d.DetailRequirementEntities.Select(s =>s.SkillEntity),
-                                                                        d => d.DetailRequirementEntities.Select(s =>s.DifficultyEntity),
-                                                                        d => d.RequirementQuestionEntities.Select(s =>s.QuestionEntity),
-                                                                        d => d.RequirementQuestionEntities.Select(s =>s.QuestionEntity.FileEntity)
+                                                                        d => d.DetailRequirementEntities.Select(s => s.SkillEntity),
+                                                                        d => d.DetailRequirementEntities.Select(s => s.DifficultyEntity),
+                                                                        d => d.RequirementQuestionEntities.Select(s => s.QuestionEntity),
+                                                                        d => d.RequirementQuestionEntities.Select(s => s.QuestionEntity.FileEntity)
                                                                         );
 
             List<ConsultRequestDto> consultRequestDtos = requestEntities
@@ -55,64 +55,40 @@ namespace Lab.Domain.Services
 
             return consultRequestDtos;
         }
+
         public async Task<bool> Insert(InsertRequestDto insertRequestDto)
         {
             List<DetailRequirementEntity> detailRequirementEntities =
                 new List<DetailRequirementEntity>();
 
-            using (var db = await _unitOfWork.BeginTransactionAsync())
+            if (!insertRequestDto.DetailRequirements.Any())
+                throw new BusinessException("Detalle Requerido");
+
+
+            foreach (var item in insertRequestDto.DetailRequirements)
             {
-                try
-                {
-                    if (insertRequestDto.DetailRequirements.Any())
-                    {
-                        foreach (var item in insertRequestDto.DetailRequirements)
-                        {
-                            DetailRequirementEntity detailRequirementEntity = _detailRequirement.GetDetailRequirement(item);
-                            detailRequirementEntities.Add(detailRequirementEntity);
-                        }
-                    }
-
-                    if (!insertRequestDto.DetailRequirements.Any())
-                        throw new BusinessException("Detalle Requerido");
-
-                    if (!insertRequestDto.QuestionsRequired.Any())
-                        throw new BusinessException("Pregunta requerida");
-
-                    RequestEntity requestEntity = new RequestEntity()
-                    {
-                        Title = insertRequestDto.TitleRequest,
-                        TimeInMinutes = insertRequestDto.TimeInMinutes,
-                        PercentageMinimoRequired = insertRequestDto.PercentageMinimoRequired,
-                        CreationDate = DateTime.Now,
-                        DetailRequirementEntities = detailRequirementEntities,
-                        RequirementQuestionEntities = insertRequestDto.QuestionsRequired
-                        .Select(s => new RequirementQuestionEntity()
-                        {
-                            IdQuestion = s
-                        }).ToList(),
-                    };
-
-                    _unitOfWork.RequestRepository.Insert(requestEntity);
-
-                    await _unitOfWork.Save();
-                    await db.CommitAsync();
-
-                    return true;
-                }
-                catch (BusinessException ex)
-                {
-                    await db.RollbackAsync();
-
-                    throw ex;
-                }
-                catch (Exception ex)
-                {
-                    await db.RollbackAsync();
-
-                    throw new Exception(GeneralMessages.Error500, ex);
-                }
+                DetailRequirementEntity detailRequirementEntity = _detailRequirement.GetDetailRequirement(item);
+                detailRequirementEntities.Add(detailRequirementEntity);
             }
+
+
+            RequestEntity requestEntity = new RequestEntity()
+            {
+                Title = insertRequestDto.TitleRequest,
+                TimeInMinutes = insertRequestDto.TimeInMinutes,
+                PercentageMinimoRequired = insertRequestDto.PercentageMinimoRequired,
+                CreationDate = DateTime.Now,
+                DetailRequirementEntities = detailRequirementEntities,
+                RequirementQuestionEntities = insertRequestDto.QuestionsRequired
+                .Select(s => new RequirementQuestionEntity()
+                {
+                    IdQuestion = s
+                }).ToList(),
+            };
+
+            _unitOfWork.RequestRepository.Insert(requestEntity);
+
+            return await _unitOfWork.Save() > 0;
         }
 
         public async Task<bool> Delete(int id)
