@@ -112,13 +112,29 @@ namespace Lab.Domain.Services
         {
             RequestEntity request = _unitOfWork.RequestRepository.FirstOrDefault(x => x.Id == modifyRequestDto.id);
             if (request == null)
-
-            throw new Exception(GeneralMessages.ItemNoFound);
+                throw new Exception(GeneralMessages.ItemNoFound);
 
             request.Title = modifyRequestDto.TitleRequest;
             request.PercentageMinimoRequired = modifyRequestDto.PercentageMinimoRequired; 
             request.TimeInMinutes = modifyRequestDto.TimeInMinutes;
-            
+
+            List<DetailRequirementEntity> detailRequirementEntities = modifyRequestDto.DetailRequirements.Select(x => new DetailRequirementEntity()
+            {
+                IdSkill = x.IdSkill,
+                IdDifficulty = x.IdDifficulty,
+                QuantityQuestions = x.QuantityQuestions,
+            }).ToList();
+
+            List<RequirementQuestionEntity> requirementQuestionEntities = modifyRequestDto.QuestionsRequired.Select(x => new RequirementQuestionEntity()
+            {
+                IdQuestion = x,
+                IdRequest = modifyRequestDto.id,
+
+            }).ToList();
+
+            request.DetailRequirementEntities = detailRequirementEntities;
+            request.RequirementQuestionEntities = requirementQuestionEntities;
+
             _unitOfWork.RequestRepository.Update(request);
 
             return await _unitOfWork.Save() > 0;
