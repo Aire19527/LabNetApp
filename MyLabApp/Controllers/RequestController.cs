@@ -4,6 +4,7 @@ using Infraestructure.Entity.Models;
 using Lab.Domain.Dto;
 using Lab.Domain.Dto.Resquest;
 using Lab.Domain.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyLabApp.Handlers;
 
@@ -81,7 +82,7 @@ namespace MyLabApp.Controllers
 
         [HttpPost]
         [Route("Insert")]
-        public async Task<IActionResult> Insert(InsertRequestDto insertRequestDto)
+        public async Task<IActionResult> Insert([FromBody] InsertRequestDto insertRequestDto)
         {
             IActionResult actionResult;
 

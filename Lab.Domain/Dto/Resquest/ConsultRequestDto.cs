@@ -10,9 +10,9 @@ namespace Lab.Domain.Dto.Resquest
 {
     public class ConsultRequestDto : RequestDto
     {
-        public int IdRequest { get; set; }
+        public int Id { get; set; }
         public List<ConsultDetailRequirementDto> DetailRequirements { get; set; }
-        public List<QuestionDto> requiredQuestions { get; set; }
+        public List<QuestionDto> QuestionsRequired { get; set; }
 
     }
 }

@@ -34,7 +34,7 @@ namespace Lab.Domain.Services
             List<ConsultRequestDto> consultRequestDtos = requestEntities
                 .Select(x => new ConsultRequestDto()
                 {
-                    IdRequest = x.Id,
+                    Id = x.Id,
                     TitleRequest = x.Title,
                     TimeInMinutes = x.TimeInMinutes,
                     PercentageMinimoRequired = x.PercentageMinimoRequired,
@@ -47,7 +47,7 @@ namespace Lab.Domain.Services
                         difficultDescription = x.DifficultyEntity.Description,
                         QuantityQuestions = x.QuantityQuestions
                     }).ToList(),
-                    requiredQuestions = x.RequirementQuestionEntities.Select(x => new QuestionDto()
+                    QuestionsRequired = x.RequirementQuestionEntities.Select(x => new QuestionDto()
                     {
                         Id = x.QuestionEntity.Id,
                         Description = x.QuestionEntity.Description,
@@ -121,22 +121,32 @@ namespace Lab.Domain.Services
             request.PercentageMinimoRequired = modifyRequestDto.PercentageMinimoRequired; 
             request.TimeInMinutes = modifyRequestDto.TimeInMinutes;
 
-            List<DetailRequirementEntity> detailRequirementEntities = modifyRequestDto.DetailRequirements.Select(x => new DetailRequirementEntity()
+
+
+            if (modifyRequestDto.QuestionsRequired.Any())
             {
-                IdSkill = x.IdSkill,
-                IdDifficulty = x.IdDifficulty,
-                QuantityQuestions = x.QuantityQuestions,
-            }).ToList();
+                List<RequirementQuestionEntity> requirementQuestionEntities = modifyRequestDto.QuestionsRequired.Select(x => new RequirementQuestionEntity()
+                {
+                    IdQuestion = x,
+                    IdRequest = modifyRequestDto.id,
 
-            List<RequirementQuestionEntity> requirementQuestionEntities = modifyRequestDto.QuestionsRequired.Select(x => new RequirementQuestionEntity()
+                }).ToList();
+
+                request.RequirementQuestionEntities = requirementQuestionEntities;
+            }
+
+            if (modifyRequestDto.DetailRequirements.Any())
             {
-                IdQuestion = x,
-                IdRequest = modifyRequestDto.id,
 
-            }).ToList();
+                List<DetailRequirementEntity> detailRequirementEntities = modifyRequestDto.DetailRequirements.Select(x => new DetailRequirementEntity()
+                {
+                    IdSkill = x.IdSkill,
+                    IdDifficulty = x.IdDifficulty,
+                    QuantityQuestions = x.QuantityQuestions,
+                }).ToList();
 
-            request.DetailRequirementEntities = detailRequirementEntities;
-            request.RequirementQuestionEntities = requirementQuestionEntities;
+                request.DetailRequirementEntities = detailRequirementEntities;
+            }
 
             _unitOfWork.RequestRepository.Update(request);
 
