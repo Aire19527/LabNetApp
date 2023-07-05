@@ -1,15 +1,13 @@
 ﻿using Infraestructure.Entity.Models;
 using Lab.Domain.Dto.DetailRequirement;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Lab.Domain.Dto.Question;
 
 namespace Lab.Domain.Services.Interfaces
 {
     public interface IDetailRequirementService
     {
+
+        Task<List<QuestionDto>> GetQuestion(ConsultDetailRequirementDto consultDetailRequirementDto);
         DetailRequirementEntity GetDetailRequirement(DetailRequirementDto detailRequirementDto);
 
         Task<bool> Delete(int id);

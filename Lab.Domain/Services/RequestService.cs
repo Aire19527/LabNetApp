@@ -22,6 +22,40 @@ namespace Lab.Domain.Services
             _detailRequirement = detailRequirementService;
         }
 
+
+        public async Task<List<QuestionDto>> GetAllQuestion(int id)
+        {
+            List<QuestionDto> questionDtosList = new List<QuestionDto>();
+
+            RequestEntity requestEntity = _unitOfWork.RequestRepository
+                .FirstOrDefaultSelect(x => x.Id == id,
+                                d => d.DetailRequirementEntities
+                                .Select(x => x.DifficultyEntity),
+                                s => s.DetailRequirementEntities
+                                .Select(x => x.SkillEntity),
+                                q => q.RequirementQuestionEntities);
+
+            if (requestEntity == null)
+                throw new BusinessException("Request no existe");
+
+            foreach (var item in requestEntity.DetailRequirementEntities)
+            {
+                ConsultDetailRequirementDto consultDetailRequirementDto = new ConsultDetailRequirementDto()
+                {
+                    id = item.Id,
+                    difficultDescription = item.DifficultyEntity.Description,
+                    skillDescription = item.SkillEntity.Description
+                };
+
+                List<QuestionDto> lista = await _detailRequirement.GetQuestion(consultDetailRequirementDto);
+
+                questionDtosList.AddRange(lista);
+            }
+
+            return questionDtosList;
+
+        }
+
         public async Task<List<ConsultRequestDto>> GetAllRequests()
         {
             IEnumerable<RequestEntity> requestEntities = _unitOfWork.RequestRepository.GetAllSelect(
@@ -93,7 +127,7 @@ namespace Lab.Domain.Services
             return await _unitOfWork.Save() > 0;
         }
 
-       
+
 
         public async Task<bool> Delete(int id)
         {
@@ -118,7 +152,7 @@ namespace Lab.Domain.Services
                 throw new Exception(GeneralMessages.ItemNoFound);
 
             request.Title = modifyRequestDto.TitleRequest;
-            request.PercentageMinimoRequired = modifyRequestDto.PercentageMinimoRequired; 
+            request.PercentageMinimoRequired = modifyRequestDto.PercentageMinimoRequired;
             request.TimeInMinutes = modifyRequestDto.TimeInMinutes;
 
 
@@ -151,8 +185,6 @@ namespace Lab.Domain.Services
             _unitOfWork.RequestRepository.Update(request);
 
             return await _unitOfWork.Save() > 0;
-
-            
         }
     }
 }

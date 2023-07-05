@@ -2,6 +2,7 @@
 using Infraestructure.Core.UnitOfWork.Interface;
 using Infraestructure.Entity.Models;
 using Lab.Domain.Dto;
+using Lab.Domain.Dto.Question;
 using Lab.Domain.Dto.Resquest;
 using Lab.Domain.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -50,6 +51,31 @@ namespace MyLabApp.Controllers
             }
 
             return actionResult;
+        }
+
+        [HttpGet]
+        [Route("GetAllQuestion")]
+
+        public async Task<IActionResult> GetQuestionAll(int id)
+        {
+            IActionResult result;
+
+            List<QuestionDto> questionDtosList = await _requestService.GetAllQuestion(id);
+
+            ResponseDto responseDto = new ResponseDto()
+            {
+                IsSuccess = true,
+                Message = string.Empty,
+                Result = questionDtosList
+            };
+
+            if (responseDto != null )
+            {
+                result = Ok(responseDto);
+            }
+            else { result = BadRequest(responseDto); }
+
+            return result;
         }
 
         [HttpPut]
