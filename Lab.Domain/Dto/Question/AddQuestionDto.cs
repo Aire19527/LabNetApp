@@ -14,6 +14,5 @@ namespace Lab.Domain.Dto.Question
     {
         public string Description { get; set; }
         public int? IdFile { get; set; }
-
     }
 }

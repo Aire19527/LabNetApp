@@ -52,22 +52,22 @@ namespace Lab.Domain.Services
 
             List<QuestionDto> questionDtosList = new List<QuestionDto>();
 
-            List<QuestionEntity> questionEntitiesList = _unitOfWork.QuestionRepository
-                .FindAll(x => x.DifficultyEntity.Description == consultDetailRequirementDto.difficultDescription
-                              && x.QuestionSkillEntities
-                              .Any(s => s.SkillEntity.Description == consultDetailRequirementDto.skillDescription)).ToList();
+            List<QuestionEntity> questionEntitiesList = _unitOfWork.QuestionRepository.FindAllSelect(
+                                    x => x.DifficultyEntity.Description == consultDetailRequirementDto.difficultDescription
+                                    && x.QuestionSkillEntities.Any(s => s.SkillEntity.Description == consultDetailRequirementDto.skillDescription),
+                                    x => x.FileEntity
+                                    ).ToList();
 
 
-            Random random = new Random();
 
             if (questionEntitiesList.Count() < consultDetailRequirementDto.QuantityQuestions)
             {
-                //tengo => 50 < 4 (piden)
-
+           
                 List<QuestionDto> list = questionEntitiesList.Select(x => new QuestionDto()
                 {
                     Id = x.Id,
-                    Description = x.Description
+                    Description = x.Description,
+                    UrlImg = x.FileEntity?.Url
 
                 }).ToList();
 
@@ -75,6 +75,8 @@ namespace Lab.Domain.Services
             }
             else
             {
+
+                Random random = new Random();
 
                 while (questionDtosList.Count() < consultDetailRequirementDto.QuantityQuestions)
                 {
@@ -84,6 +86,7 @@ namespace Lab.Domain.Services
                     {
                         Id = questionEntitiesList[posicionRandom].Id,
                         Description = questionEntitiesList[posicionRandom].Description,
+                        UrlImg = questionEntitiesList[posicionRandom].FileEntity?.Url
                     };
 
                     if (!questionDtosList.Any(x => x.Id == questionDto.Id))

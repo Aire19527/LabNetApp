@@ -3,7 +3,6 @@ using Common.Resources;
 using Infraestructure.Core.UnitOfWork.Interface;
 using Infraestructure.Entity.Models;
 using Lab.Domain.Dto.DetailRequirement;
-using Lab.Domain.Dto.Profile;
 using Lab.Domain.Dto.Question;
 using Lab.Domain.Dto.Resquest;
 using Lab.Domain.Services.Interfaces;
@@ -22,18 +21,17 @@ namespace Lab.Domain.Services
             _detailRequirement = detailRequirementService;
         }
 
-
         public async Task<List<QuestionDto>> GetAllQuestion(int id)
         {
             List<QuestionDto> questionDtosList = new List<QuestionDto>();
 
-            RequestEntity requestEntity = _unitOfWork.RequestRepository
-                .FirstOrDefaultSelect(x => x.Id == id,
-                                d => d.DetailRequirementEntities
-                                .Select(x => x.DifficultyEntity),
-                                s => s.DetailRequirementEntities
-                                .Select(x => x.SkillEntity),
-                                q => q.RequirementQuestionEntities);
+            RequestEntity requestEntity = _unitOfWork.RequestRepository.FirstOrDefaultSelect(x => x.Id == id,
+                                                                        d => d.DetailRequirementEntities.Select(x => x.DifficultyEntity),
+                                                                        s => s.DetailRequirementEntities.Select(x => x.SkillEntity),
+                                                                        q => q.RequirementQuestionEntities.Select(x => x.QuestionEntity),
+                                                                        f => f.RequirementQuestionEntities.Select(x => x.QuestionEntity.FileEntity)
+
+                                                                        );
 
             if (requestEntity == null)
                 throw new BusinessException("Request no existe");
@@ -55,8 +53,24 @@ namespace Lab.Domain.Services
                     questionDtosList.AddRange(lista);
             }
 
-            return questionDtosList;
 
+            if (requestEntity.RequirementQuestionEntities.Any())
+            {
+                foreach (var item in requestEntity.RequirementQuestionEntities)
+                {
+                    QuestionDto questionDto = new QuestionDto()
+                    {
+                        Id = item.QuestionEntity.Id,
+                        Description = item.QuestionEntity.Description,
+                        UrlImg = item.QuestionEntity.FileEntity?.Url
+                    };
+
+                    if (!questionDtosList.Any(x => x.Id == questionDto.Id))
+                        questionDtosList.Add(questionDto);
+                }
+            }
+
+            return questionDtosList;
         }
 
         public async Task<List<ConsultRequestDto>> GetAllRequests()
