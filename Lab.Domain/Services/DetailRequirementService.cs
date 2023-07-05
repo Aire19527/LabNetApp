@@ -53,25 +53,41 @@ namespace Lab.Domain.Services
             List<QuestionDto> questionDtosList = new List<QuestionDto>();
 
             List<QuestionEntity> questionEntitiesList = _unitOfWork.QuestionRepository
-                .GetAllSelect(x => x.DifficultyEntity.Description == consultDetailRequirementDto.difficultDescription
+                .FindAll(x => x.DifficultyEntity.Description == consultDetailRequirementDto.difficultDescription
                               && x.QuestionSkillEntities
                               .Any(s => s.SkillEntity.Description == consultDetailRequirementDto.skillDescription)).ToList();
 
+
             Random random = new Random();
 
-            while (questionDtosList.Count() < consultDetailRequirementDto.QuantityQuestions)
+            if (questionEntitiesList.Count() < consultDetailRequirementDto.QuantityQuestions)
             {
-                int posicionRandom = random.Next(0, questionEntitiesList.Count() - 1);
+                //tengo => 50 < 4 (piden)
 
-                QuestionDto questionDto = new QuestionDto()
+                List<QuestionDto> list = questionEntitiesList.Select(x => new QuestionDto()
                 {
-                    Id = questionEntitiesList[posicionRandom].Id,
-                    Description = questionEntitiesList[posicionRandom].Description,
-                };
+                    Id = x.Id,
+                    Description = x.Description
 
-                if (!questionDtosList.Any(x => x.Id == questionDto.Id))
+                }).ToList();
+
+                questionDtosList.AddRange(list);
+            }
+            else
+            {
+
+                while (questionDtosList.Count() < consultDetailRequirementDto.QuantityQuestions)
                 {
-                   questionDtosList.Add(questionDto);
+                    int posicionRandom = random.Next(0, questionEntitiesList.Count());
+
+                    QuestionDto questionDto = new QuestionDto()
+                    {
+                        Id = questionEntitiesList[posicionRandom].Id,
+                        Description = questionEntitiesList[posicionRandom].Description,
+                    };
+
+                    if (!questionDtosList.Any(x => x.Id == questionDto.Id))
+                        questionDtosList.Add(questionDto);
                 }
             }
 

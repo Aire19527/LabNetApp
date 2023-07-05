@@ -44,12 +44,15 @@ namespace Lab.Domain.Services
                 {
                     id = item.Id,
                     difficultDescription = item.DifficultyEntity.Description,
-                    skillDescription = item.SkillEntity.Description
+                    skillDescription = item.SkillEntity.Description,
+                    QuantityQuestions = item.QuantityQuestions
+                    
                 };
 
                 List<QuestionDto> lista = await _detailRequirement.GetQuestion(consultDetailRequirementDto);
 
-                questionDtosList.AddRange(lista);
+                if (lista != null)
+                    questionDtosList.AddRange(lista);
             }
 
             return questionDtosList;
