@@ -54,7 +54,7 @@ namespace MyLabApp.Controllers
         }
 
         [HttpGet]
-        [Route("GetAllQuestion")]
+        [Route("GetAllQuestion/{id}")]
 
         public async Task<IActionResult> GetQuestionAll(int id)
         {
