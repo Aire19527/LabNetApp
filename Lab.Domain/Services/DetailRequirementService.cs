@@ -4,11 +4,13 @@ using Infraestructure.Core.UnitOfWork.Interface;
 using Infraestructure.Entity.Models;
 using Lab.Domain.Dto.Answer;
 using Lab.Domain.Dto.DetailRequirement;
+using Lab.Domain.Dto.Difficulty;
 using Lab.Domain.Dto.Question;
 using Lab.Domain.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -59,7 +61,8 @@ namespace Lab.Domain.Services
                                     && x.QuestionSkillEntities.Any(s => s.IdSkill == detailRequirement.IdSkill),
                                     f => f.FileEntity,
                                     ans=>ans.QuestionAnswerEntities.Select(a=>a.AnswerEntity),
-                                    ans=>ans.QuestionAnswerEntities.Select(a=>a.AnswerEntity.FileEntity)
+                                    ans=>ans.QuestionAnswerEntities.Select(a=>a.AnswerEntity.FileEntity),
+                                    d => d.DifficultyEntity
                                     ).ToList();
 
 
@@ -72,7 +75,13 @@ namespace Lab.Domain.Services
                     Id = x.Id,
                     Description = x.Description,
                     UrlImg = x.FileEntity?.Url,
-                    Answers=x.QuestionAnswerEntities.Select(a=>new GetAnswerDto()
+                    Difficulty = new ConsultDifficulty()
+                    {
+                        id = x.DifficultyEntity.Id,
+                        Description = x.DifficultyEntity.Description,
+                        Value = x.DifficultyEntity.Value,
+                    },
+                    Answers =x.QuestionAnswerEntities.Select(a=>new GetAnswerDto()
                     {
                         Id=a.AnswerEntity.Id,
                         Description=a.AnswerEntity.Description,
@@ -98,6 +107,12 @@ namespace Lab.Domain.Services
                         Id = questionEntitiesList[posicionRandom].Id,
                         Description = questionEntitiesList[posicionRandom].Description,
                         UrlImg = questionEntitiesList[posicionRandom].FileEntity?.Url,
+                        Difficulty = new ConsultDifficulty()
+                        {
+                            id = questionEntitiesList[posicionRandom].DifficultyEntity.Id,
+                            Description = questionEntitiesList[posicionRandom].DifficultyEntity.Description,
+                            Value = questionEntitiesList[posicionRandom].DifficultyEntity.Value,
+                        },
                         Answers = questionEntitiesList[posicionRandom].QuestionAnswerEntities.Select(a => new GetAnswerDto()
                         {
                             Id = a.AnswerEntity.Id,

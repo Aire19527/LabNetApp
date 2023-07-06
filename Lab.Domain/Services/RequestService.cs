@@ -4,6 +4,7 @@ using Infraestructure.Core.UnitOfWork.Interface;
 using Infraestructure.Entity.Models;
 using Lab.Domain.Dto.Answer;
 using Lab.Domain.Dto.DetailRequirement;
+using Lab.Domain.Dto.Difficulty;
 using Lab.Domain.Dto.Question;
 using Lab.Domain.Dto.Resquest;
 using Lab.Domain.Services.Interfaces;
@@ -28,6 +29,7 @@ namespace Lab.Domain.Services
 
             RequestEntity requestEntity = _unitOfWork.RequestRepository.FirstOrDefaultSelect(x => x.Id == id,
                                                                     d => d.DetailRequirementEntities,
+                                                                   f => f.RequirementQuestionEntities.Select(x => x.QuestionEntity.DifficultyEntity),
                                                                     f => f.RequirementQuestionEntities.Select(x => x.QuestionEntity.FileEntity),
                                                                     ans => ans.RequirementQuestionEntities.Select(
                                                                                 x => x.QuestionEntity.QuestionAnswerEntities.Select(a => a.AnswerEntity.FileEntity)));
@@ -53,6 +55,14 @@ namespace Lab.Domain.Services
                         Id = item.QuestionEntity.Id,
                         Description = item.QuestionEntity.Description,
                         UrlImg = item.QuestionEntity.FileEntity?.Url,
+
+                        Difficulty = new ConsultDifficulty()
+                        {
+                            id = item.QuestionEntity.DifficultyEntity.Id,
+                            Description = item.QuestionEntity.DifficultyEntity.Description,
+                            Value = item.QuestionEntity.DifficultyEntity.Value,
+                        },
+
                         Answers = item.QuestionEntity.QuestionAnswerEntities.Select(a => new GetAnswerDto()
                         {
                             Id = a.AnswerEntity.Id,
@@ -76,7 +86,9 @@ namespace Lab.Domain.Services
                                                                         d => d.DetailRequirementEntities.Select(s => s.SkillEntity),
                                                                         d => d.DetailRequirementEntities.Select(s => s.DifficultyEntity),
                                                                         d => d.RequirementQuestionEntities.Select(s => s.QuestionEntity),
-                                                                        d => d.RequirementQuestionEntities.Select(s => s.QuestionEntity.FileEntity)
+                                                                        d => d.RequirementQuestionEntities.Select(s => s.QuestionEntity.FileEntity),
+                                                                        d => d.RequirementQuestionEntities.Select(s => s.QuestionEntity.DifficultyEntity)
+                                                                       
                                                                         );
 
             List<ConsultRequestDto> consultRequestDtos = requestEntities
@@ -95,11 +107,18 @@ namespace Lab.Domain.Services
                         difficultDescription = x.DifficultyEntity.Description,
                         QuantityQuestions = x.QuantityQuestions
                     }).ToList(),
-                    QuestionsRequired = x.RequirementQuestionEntities.Select(x => new QuestionDto()
+                    QuestionsRequired = x.RequirementQuestionEntities.Select(q => new QuestionDto()
                     {
-                        Id = x.QuestionEntity.Id,
-                        Description = x.QuestionEntity.Description,
-                        UrlImg = x.QuestionEntity.FileEntity?.Url,
+                        Id = q.QuestionEntity.Id,
+                        Description = q.QuestionEntity.Description,
+                        UrlImg = q.QuestionEntity.FileEntity?.Url,
+                        Difficulty = new ConsultDifficulty()
+                        {
+                            id = q.QuestionEntity.DifficultyEntity.Id,
+                            Description = q.QuestionEntity.DifficultyEntity.Description,
+                            Value = q.QuestionEntity.DifficultyEntity.Value,    
+                        }
+                        
                     }).ToList(),
                 }).ToList();
 
