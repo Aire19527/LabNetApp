@@ -97,13 +97,13 @@ namespace Lab.Domain.Services
                     {
                         Id = questionEntitiesList[posicionRandom].Id,
                         Description = questionEntitiesList[posicionRandom].Description,
-                        UrlImg = questionEntitiesList[posicionRandom]?.FileEntity.Url,
+                        UrlImg = questionEntitiesList[posicionRandom].FileEntity?.Url,
                         Answers = questionEntitiesList[posicionRandom].QuestionAnswerEntities.Select(a => new GetAnswerDto()
                         {
                             Id = a.AnswerEntity.Id,
                             Description = a.AnswerEntity.Description,
                             isCorrect = a.isCorrect,
-                            urlFile = a.AnswerEntity?.FileEntity.Url
+                            urlFile = a.AnswerEntity.FileEntity?.Url
                         }).ToList(),
                     };
 
