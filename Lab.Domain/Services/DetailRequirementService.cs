@@ -2,6 +2,7 @@
 using Common.Resources;
 using Infraestructure.Core.UnitOfWork.Interface;
 using Infraestructure.Entity.Models;
+using Lab.Domain.Dto.Answer;
 using Lab.Domain.Dto.DetailRequirement;
 using Lab.Domain.Dto.Question;
 using Lab.Domain.Services.Interfaces;
@@ -47,27 +48,37 @@ namespace Lab.Domain.Services
             return await _unitOfWork.Save() > 0;
         }
 
-        public async Task<List<QuestionDto>> GetQuestion(ConsultDetailRequirementDto consultDetailRequirementDto)
+        //public async Task<List<QuestionDto>> GetQuestion(ConsultDetailRequirementDto consultDetailRequirementDto)
+        public List<QuestionDto> GetQuestion(DetailRequirementEntity detailRequirement)
         {
 
             List<QuestionDto> questionDtosList = new List<QuestionDto>();
 
             List<QuestionEntity> questionEntitiesList = _unitOfWork.QuestionRepository.FindAllSelect(
-                                    x => x.DifficultyEntity.Description == consultDetailRequirementDto.difficultDescription
-                                    && x.QuestionSkillEntities.Any(s => s.SkillEntity.Description == consultDetailRequirementDto.skillDescription),
-                                    x => x.FileEntity
+                                    x => x.IdDifficulty == detailRequirement.IdDifficulty
+                                    && x.QuestionSkillEntities.Any(s => s.IdSkill == detailRequirement.IdSkill),
+                                    f => f.FileEntity,
+                                    ans=>ans.QuestionAnswerEntities.Select(a=>a.AnswerEntity),
+                                    ans=>ans.QuestionAnswerEntities.Select(a=>a.AnswerEntity.FileEntity)
                                     ).ToList();
 
 
 
-            if (questionEntitiesList.Count() < consultDetailRequirementDto.QuantityQuestions)
+            if (questionEntitiesList.Count() < detailRequirement.QuantityQuestions)
             {
-           
+
                 List<QuestionDto> list = questionEntitiesList.Select(x => new QuestionDto()
                 {
                     Id = x.Id,
                     Description = x.Description,
-                    UrlImg = x.FileEntity?.Url
+                    UrlImg = x?.FileEntity.Url,
+                    Answers=x.QuestionAnswerEntities.Select(a=>new GetAnswerDto()
+                    {
+                        Id=a.AnswerEntity.Id,
+                        Description=a.AnswerEntity.Description,
+                        isCorrect=a.isCorrect,
+                        urlFile=a.AnswerEntity?.FileEntity.Url
+                    } ).ToList(),
 
                 }).ToList();
 
@@ -78,7 +89,7 @@ namespace Lab.Domain.Services
 
                 Random random = new Random();
 
-                while (questionDtosList.Count() < consultDetailRequirementDto.QuantityQuestions)
+                while (questionDtosList.Count() < detailRequirement.QuantityQuestions)
                 {
                     int posicionRandom = random.Next(0, questionEntitiesList.Count());
 
@@ -86,7 +97,14 @@ namespace Lab.Domain.Services
                     {
                         Id = questionEntitiesList[posicionRandom].Id,
                         Description = questionEntitiesList[posicionRandom].Description,
-                        UrlImg = questionEntitiesList[posicionRandom].FileEntity?.Url
+                        UrlImg = questionEntitiesList[posicionRandom]?.FileEntity.Url,
+                        Answers = questionEntitiesList[posicionRandom].QuestionAnswerEntities.Select(a => new GetAnswerDto()
+                        {
+                            Id = a.AnswerEntity.Id,
+                            Description = a.AnswerEntity.Description,
+                            isCorrect = a.isCorrect,
+                            urlFile = a.AnswerEntity?.FileEntity.Url
+                        }).ToList(),
                     };
 
                     if (!questionDtosList.Any(x => x.Id == questionDto.Id))

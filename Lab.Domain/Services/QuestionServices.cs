@@ -57,7 +57,7 @@ namespace Lab.Domain.Services
                     Description = x.SkillEntity.Description,
                     IsVisible = x.SkillEntity.IsVisible
                 }).ToList(),
-                AnswerEntities = q.QuestionAnswerEntities
+                Answers = q.QuestionAnswerEntities
                     .Select(x => new GetAnswerDto()
                     {
                         Id = x.AnswerEntity.Id,
@@ -96,7 +96,7 @@ namespace Lab.Domain.Services
                     Description = x.SkillEntity.Description,
                     IsVisible = x.SkillEntity.IsVisible
                 }).ToList(),
-                AnswerEntities = entity.QuestionAnswerEntities
+                Answers = entity.QuestionAnswerEntities
                     .Select(x => new GetAnswerDto()
                     {
                         Id = x.AnswerEntity.Id,

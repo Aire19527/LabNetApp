@@ -25,13 +25,16 @@ namespace Lab.Domain.Services
         {
             List<QuestionDto> questionDtosList = new List<QuestionDto>();
 
-            RequestEntity requestEntity = _unitOfWork.RequestRepository.FirstOrDefaultSelect(x => x.Id == id,
-                                                                        d => d.DetailRequirementEntities.Select(x => x.DifficultyEntity),
-                                                                        s => s.DetailRequirementEntities.Select(x => x.SkillEntity),
-                                                                        q => q.RequirementQuestionEntities.Select(x => x.QuestionEntity),
-                                                                        f => f.RequirementQuestionEntities.Select(x => x.QuestionEntity.FileEntity)
+            //RequestEntity requestEntity = _unitOfWork.RequestRepository.FirstOrDefaultSelect(x => x.Id == id,
+            //                                                            d => d.DetailRequirementEntities.Select(x => x.DifficultyEntity),
+            //                                                            s => s.DetailRequirementEntities.Select(x => x.SkillEntity),
+            //                                                            q => q.RequirementQuestionEntities.Select(x => x.QuestionEntity),
+            //                                                            f => f.RequirementQuestionEntities.Select(x => x.QuestionEntity.FileEntity)
 
-                                                                        );
+            //                                                            );
+
+            RequestEntity requestEntity = _unitOfWork.RequestRepository.FirstOrDefaultSelect(x => x.Id == id,
+                                                                    f => f.RequirementQuestionEntities.Select(x => x.QuestionEntity.FileEntity));
 
             if (requestEntity == null)
                 throw new BusinessException("Request no existe");
@@ -44,10 +47,10 @@ namespace Lab.Domain.Services
                     difficultDescription = item.DifficultyEntity.Description,
                     skillDescription = item.SkillEntity.Description,
                     QuantityQuestions = item.QuantityQuestions
-                    
+
                 };
 
-                List<QuestionDto> lista = await _detailRequirement.GetQuestion(consultDetailRequirementDto);
+                List<QuestionDto> lista =  _detailRequirement.GetQuestion(item);
 
                 if (lista != null)
                     questionDtosList.AddRange(lista);

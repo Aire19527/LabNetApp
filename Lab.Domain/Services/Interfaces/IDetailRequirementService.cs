@@ -7,7 +7,8 @@ namespace Lab.Domain.Services.Interfaces
     public interface IDetailRequirementService
     {
 
-        Task<List<QuestionDto>> GetQuestion(ConsultDetailRequirementDto consultDetailRequirementDto);
+        List<QuestionDto> GetQuestion(DetailRequirementEntity detailRequirement);
+        //Task<List<QuestionDto>> GetQuestion(ConsultDetailRequirementDto consultDetailRequirementDto);
         DetailRequirementEntity GetDetailRequirement(DetailRequirementDto detailRequirementDto);
 
         Task<bool> Delete(int id);

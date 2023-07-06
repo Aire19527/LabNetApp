@@ -18,7 +18,7 @@ namespace Lab.Domain.Dto.Question
         public string? UrlImg { get; set; }
         
         public ConsultDifficulty Difficulty { get; set; }
-        public IEnumerable<GetAnswerDto>? AnswerEntities { get; set; }
+        public IEnumerable<GetAnswerDto>? Answers { get; set; }
 
         public IEnumerable<ConsultSkllDto>? SkillEntities { get; set; }
 
