@@ -48,7 +48,7 @@ namespace Lab.Domain.Services
             return await _unitOfWork.Save() > 0;
         }
 
-        //public async Task<List<QuestionDto>> GetQuestion(ConsultDetailRequirementDto consultDetailRequirementDto)
+     
         public List<QuestionDto> GetQuestion(DetailRequirementEntity detailRequirement)
         {
 
@@ -71,13 +71,13 @@ namespace Lab.Domain.Services
                 {
                     Id = x.Id,
                     Description = x.Description,
-                    UrlImg = x?.FileEntity.Url,
+                    UrlImg = x.FileEntity?.Url,
                     Answers=x.QuestionAnswerEntities.Select(a=>new GetAnswerDto()
                     {
                         Id=a.AnswerEntity.Id,
                         Description=a.AnswerEntity.Description,
                         isCorrect=a.isCorrect,
-                        urlFile=a.AnswerEntity?.FileEntity.Url
+                        urlFile=a.AnswerEntity.FileEntity?.Url
                     } ).ToList(),
 
                 }).ToList();

@@ -2,6 +2,7 @@
 using Common.Resources;
 using Infraestructure.Core.UnitOfWork.Interface;
 using Infraestructure.Entity.Models;
+using Lab.Domain.Dto.Answer;
 using Lab.Domain.Dto.DetailRequirement;
 using Lab.Domain.Dto.Question;
 using Lab.Domain.Dto.Resquest;
@@ -25,31 +26,17 @@ namespace Lab.Domain.Services
         {
             List<QuestionDto> questionDtosList = new List<QuestionDto>();
 
-            //RequestEntity requestEntity = _unitOfWork.RequestRepository.FirstOrDefaultSelect(x => x.Id == id,
-            //                                                            d => d.DetailRequirementEntities.Select(x => x.DifficultyEntity),
-            //                                                            s => s.DetailRequirementEntities.Select(x => x.SkillEntity),
-            //                                                            q => q.RequirementQuestionEntities.Select(x => x.QuestionEntity),
-            //                                                            f => f.RequirementQuestionEntities.Select(x => x.QuestionEntity.FileEntity)
-
-            //                                                            );
-
             RequestEntity requestEntity = _unitOfWork.RequestRepository.FirstOrDefaultSelect(x => x.Id == id,
-                                                                    f => f.RequirementQuestionEntities.Select(x => x.QuestionEntity.FileEntity));
+                                                                    d => d.DetailRequirementEntities,
+                                                                    f => f.RequirementQuestionEntities.Select(x => x.QuestionEntity.FileEntity),
+                                                                    ans => ans.RequirementQuestionEntities.Select(
+                                                                                x => x.QuestionEntity.QuestionAnswerEntities.Select(a => a.AnswerEntity.FileEntity)));
 
             if (requestEntity == null)
-                throw new BusinessException("Request no existe");
+                throw new BusinessException(GeneralMessages.ItemNoFound);
 
             foreach (var item in requestEntity.DetailRequirementEntities)
             {
-                ConsultDetailRequirementDto consultDetailRequirementDto = new ConsultDetailRequirementDto()
-                {
-                    id = item.Id,
-                    difficultDescription = item.DifficultyEntity.Description,
-                    skillDescription = item.SkillEntity.Description,
-                    QuantityQuestions = item.QuantityQuestions
-
-                };
-
                 List<QuestionDto> lista =  _detailRequirement.GetQuestion(item);
 
                 if (lista != null)
@@ -65,7 +52,14 @@ namespace Lab.Domain.Services
                     {
                         Id = item.QuestionEntity.Id,
                         Description = item.QuestionEntity.Description,
-                        UrlImg = item.QuestionEntity.FileEntity?.Url
+                        UrlImg = item.QuestionEntity.FileEntity?.Url,
+                        Answers = item.QuestionEntity.QuestionAnswerEntities.Select(a => new GetAnswerDto()
+                        {
+                            Id = a.AnswerEntity.Id,
+                            Description = a.AnswerEntity.Description,
+                            isCorrect = a.isCorrect,
+                            urlFile = a.AnswerEntity.FileEntity?.Url
+                        }).ToList()
                     };
 
                     if (!questionDtosList.Any(x => x.Id == questionDto.Id))
