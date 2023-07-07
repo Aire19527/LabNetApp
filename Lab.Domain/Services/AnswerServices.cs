@@ -195,7 +195,7 @@ namespace Lab.Domain.Services
             {
                 AnswerId = add.IdAnswer,
                 QuestionId = add.IdQuestion,
-                isCorrect = add.isCorrect
+                IsCorrect = add.isCorrect
             });
 
             return await _unitOfWork.Save() > 0;

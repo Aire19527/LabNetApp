@@ -1,14 +1,8 @@
 ﻿using Infraestructure.Core.UnitOfWork.Interface;
 using Infraestructure.Entity.Models;
-using Lab.Domain.Dto.AssessmentQuestion;
 using Lab.Domain.Dto.AssessmentQuestionAnswer;
 using Lab.Domain.Dto.AssessmentUser;
 using Lab.Domain.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Lab.Domain.Services
 {
@@ -57,8 +51,6 @@ namespace Lab.Domain.Services
             assessmentUserEntity.AssessmentQuestionEntities = assessmentQuestions;
 
             _unitOfWork.AssessmentUserRepository.Insert(assessmentUserEntity);
-
-
 
             return await _unitOfWork.Save() > 0;
         }

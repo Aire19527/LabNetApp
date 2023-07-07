@@ -85,7 +85,7 @@ namespace Lab.Domain.Services
                     {
                         Id=a.AnswerEntity.Id,
                         Description=a.AnswerEntity.Description,
-                        isCorrect=a.isCorrect,
+                        isCorrect=a.IsCorrect,
                         urlFile=a.AnswerEntity.FileEntity?.Url
                     } ).ToList(),
 
@@ -117,7 +117,7 @@ namespace Lab.Domain.Services
                         {
                             Id = a.AnswerEntity.Id,
                             Description = a.AnswerEntity.Description,
-                            isCorrect = a.isCorrect,
+                            isCorrect = a.IsCorrect,
                             urlFile = a.AnswerEntity.FileEntity?.Url
                         }).ToList(),
                     };

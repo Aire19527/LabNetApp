@@ -70,7 +70,7 @@ namespace Lab.Domain.Services
                         Id = x.AnswerEntity.Id,
                         Description = x.AnswerEntity.Description,
                         IdFile = x.AnswerEntity.IdFile,
-                        isCorrect = x.isCorrect,
+                        isCorrect = x.IsCorrect,
                         urlFile = x.AnswerEntity.FileEntity?.Url,
                     }).ToList(),
             }).ToList();
@@ -109,7 +109,7 @@ namespace Lab.Domain.Services
                         Id = x.AnswerEntity.Id,
                         Description = x.AnswerEntity.Description,
                         IdFile = x.AnswerEntity.IdFile,
-                        isCorrect = x.isCorrect,
+                        isCorrect = x.IsCorrect,
                         urlFile = x.AnswerEntity.FileEntity?.Url
                     }).ToList()
             };
@@ -159,7 +159,7 @@ namespace Lab.Domain.Services
                             AnswerEntity answer = await _answerService.InsertToQuestion(item);
                             questionAnswers.Add(new QuestionAnswerEntity()
                             {
-                                isCorrect = item.IsCorrect,
+                                IsCorrect = item.IsCorrect,
                                 AnswerEntity = answer,
                             });
                         }
@@ -169,7 +169,7 @@ namespace Lab.Domain.Services
                     {
                         List<QuestionAnswerEntity> list = questionDto.Answers.Select(a => new QuestionAnswerEntity()
                         {
-                            isCorrect = a.IsCorrect,
+                            IsCorrect = a.IsCorrect,
                             AnswerId = a.IdAnswer
                         }).ToList();
                         questionAnswers.AddRange(list);
