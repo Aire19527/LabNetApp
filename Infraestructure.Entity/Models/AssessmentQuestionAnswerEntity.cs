@@ -24,7 +24,7 @@ namespace Infraestructure.Entity.Models
 
         public AnswerEntity AnswerEntity { get; set; }
 
-        public int Points { get; set; }
+        public decimal Points { get; set; }
 
     }
 }

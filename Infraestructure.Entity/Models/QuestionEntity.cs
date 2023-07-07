@@ -32,7 +32,7 @@ namespace Infraestructure.Entity.Models
 
         public IEnumerable<QuestionSkillEntity> QuestionSkillEntities { get; set; }
 
-        public IEnumerable<QuestionAnswerEntity>? QuestionAnswerEntities { get; set; }
+        public IEnumerable<QuestionAnswerEntity> QuestionAnswerEntities { get; set; }
         public IEnumerable<RequirementQuestionEntity> RequirementQuestionEntities { get; set; }
 
         public IEnumerable<AssessmentQuestionEntity> AssessmentQuestionEntities { get; set; }

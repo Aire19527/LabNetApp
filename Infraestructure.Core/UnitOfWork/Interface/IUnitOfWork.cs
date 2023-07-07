@@ -28,6 +28,8 @@ namespace Infraestructure.Core.UnitOfWork.Interface
         IRepository<FileEntity> FileRepository { get; }
         IRepository<DetailRequirementEntity> DetailRequirementRepository { get; }
 
+        IRepository<AssessmentUserEntity> AssessmentUserRepository { get; }
+
         void Dispose();
         Task<int> Save();
 

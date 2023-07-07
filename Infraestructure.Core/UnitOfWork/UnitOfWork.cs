@@ -44,6 +44,7 @@ namespace Infraestructure.Core.UnitOfWork
         private IRepository<DifficultyEntity> difficultyRepository;
         private IRepository<RequestEntity> requestRepository;
         private IRepository<DetailRequirementEntity> detailRequirementRepository;
+        private IRepository<AssessmentUserEntity> assessmentUserRepository;
 
         #endregion
 
@@ -270,6 +271,19 @@ namespace Infraestructure.Core.UnitOfWork
                     this.detailRequirementRepository = new Repository<DetailRequirementEntity>(_context);
                 }
                 return detailRequirementRepository;
+            }
+        }
+
+        public IRepository<AssessmentUserEntity> AssessmentUserRepository
+
+        {
+            get
+            {
+                if (this.assessmentUserRepository == null)
+                {
+                    this.assessmentUserRepository = new Repository<AssessmentUserEntity>(_context);
+                }
+                return assessmentUserRepository;
             }
         }
 

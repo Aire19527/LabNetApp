@@ -29,6 +29,13 @@ namespace Lab.Domain.Services
 
         }
 
+        public QuestionEntity GetQuestionEntity(int idQuestion)
+        {
+            return _unitOfWork.QuestionRepository.FirstOrDefault(x => x.Id == idQuestion, 
+                                                                 d => d.DifficultyEntity,
+                                                                 a => a.QuestionAnswerEntities);
+        }
+
         public List<QuestionDto> getAll()
         {
             IEnumerable<QuestionEntity> entities = _unitOfWork.QuestionRepository.GetAllSelect(

@@ -56,7 +56,6 @@ namespace Lab.Domain.Services
             var _header = new JwtHeader(_signingCredentials);
 
             var _Claims = new[] {
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(TypeClaims.IdUser,userEntity.Id.ToString()),
                 new Claim(TypeClaims.Email,userEntity.Mail),
                 new Claim(TypeClaims.IdRol,userEntity.IdRole.ToString())

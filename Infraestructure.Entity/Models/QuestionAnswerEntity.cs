@@ -17,14 +17,14 @@ namespace Infraestructure.Entity.Models
 
         [ForeignKey("AnswerEntity")]
         public int AnswerId { get; set; }
-        public AnswerEntity? AnswerEntity { get; set; }
+        public AnswerEntity AnswerEntity { get; set; }
 
         [ForeignKey("QuestionEntity")]
         public int QuestionId { get; set; }
-        public QuestionEntity? QuestionEntity { get; set; }
+        public QuestionEntity QuestionEntity { get; set; }
 
         [Required]
-        public bool isCorrect { get; set; }
+        public bool IsCorrect { get; set; }
 
     }
 }
