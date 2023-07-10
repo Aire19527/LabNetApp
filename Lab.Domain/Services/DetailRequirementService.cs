@@ -75,7 +75,7 @@ namespace Lab.Domain.Services
                     Id = x.Id,
                     Description = x.Description,
                     UrlImg = x.FileEntity?.Url,
-                    Difficulty = new ConsultDifficulty()
+                    Difficulty = new ConsultDifficultyDto()
                     {
                         id = x.DifficultyEntity.Id,
                         Description = x.DifficultyEntity.Description,
@@ -107,7 +107,7 @@ namespace Lab.Domain.Services
                         Id = questionEntitiesList[posicionRandom].Id,
                         Description = questionEntitiesList[posicionRandom].Description,
                         UrlImg = questionEntitiesList[posicionRandom].FileEntity?.Url,
-                        Difficulty = new ConsultDifficulty()
+                        Difficulty = new ConsultDifficultyDto()
                         {
                             id = questionEntitiesList[posicionRandom].DifficultyEntity.Id,
                             Description = questionEntitiesList[posicionRandom].DifficultyEntity.Description,

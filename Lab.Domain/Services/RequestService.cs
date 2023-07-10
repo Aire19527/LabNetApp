@@ -27,7 +27,7 @@ namespace Lab.Domain.Services
         {
             List<QuestionDto> questionDtosList = new List<QuestionDto>();
 
-            RequestEntity requestEntity = _unitOfWork.RequestRepository.FirstOrDefaultSelect(x => x.Id == id,
+            RequestEntity requestEntity = await _unitOfWork.RequestRepository.FirstOrDefaultSelectAsync(x => x.Id == id,
                                                                     d => d.DetailRequirementEntities,
                                                                    f => f.RequirementQuestionEntities.Select(x => x.QuestionEntity.DifficultyEntity),
                                                                     f => f.RequirementQuestionEntities.Select(x => x.QuestionEntity.FileEntity),
@@ -39,48 +39,42 @@ namespace Lab.Domain.Services
 
             foreach (var item in requestEntity.DetailRequirementEntities)
             {
-                List<QuestionDto> lista =  _detailRequirement.GetQuestion(item);
+                List<QuestionDto> lista = _detailRequirement.GetQuestion(item);
 
                 if (lista != null)
                     questionDtosList.AddRange(lista);
             }
 
-
             if (requestEntity.RequirementQuestionEntities.Any())
             {
-                foreach (var item in requestEntity.RequirementQuestionEntities)
+
+                List<QuestionDto> listRequeriment = requestEntity.RequirementQuestionEntities.Select(x => new QuestionDto()
                 {
-                    QuestionDto questionDto = new QuestionDto()
+                    Id = x.QuestionEntity.Id,
+                    Description = x.QuestionEntity.Description,
+                    UrlImg = x.QuestionEntity?.FileEntity?.Url,
+                    Difficulty = new ConsultDifficultyDto()
                     {
-                        Id = item.QuestionEntity.Id,
-                        Description = item.QuestionEntity.Description,
-                        UrlImg = item.QuestionEntity.FileEntity?.Url,
+                        id = x.QuestionEntity.DifficultyEntity.Id,
+                        Description = x.QuestionEntity.DifficultyEntity.Description,
+                        Value = x.QuestionEntity.DifficultyEntity.Value,
+                    },
+                    Answers = x.QuestionEntity.QuestionAnswerEntities.Select(a => new GetAnswerDto()
+                    {
+                        Id = a.AnswerEntity.Id,
+                        Description = a.AnswerEntity.Description,
+                        isCorrect = a.IsCorrect,
+                        urlFile = a.AnswerEntity.FileEntity?.Url
+                    }).ToList()
+                }).ToList();
 
-                        Difficulty = new ConsultDifficulty()
-                        {
-                            id = item.QuestionEntity.DifficultyEntity.Id,
-                            Description = item.QuestionEntity.DifficultyEntity.Description,
-                            Value = item.QuestionEntity.DifficultyEntity.Value,
-                        },
-
-                        Answers = item.QuestionEntity.QuestionAnswerEntities.Select(a => new GetAnswerDto()
-                        {
-                            Id = a.AnswerEntity.Id,
-                            Description = a.AnswerEntity.Description,
-                            isCorrect = a.IsCorrect,
-                            urlFile = a.AnswerEntity.FileEntity?.Url
-                        }).ToList()
-                    };
-
-                    if (!questionDtosList.Any(x => x.Id == questionDto.Id))
-                        questionDtosList.Add(questionDto);
-                }
+                questionDtosList.AddRange(listRequeriment);
             }
 
             return questionDtosList;
         }
 
-        public async Task<List<ConsultRequestDto>> GetAllRequests()
+        public List<ConsultRequestDto> GetAllRequests()
         {
             IEnumerable<RequestEntity> requestEntities = _unitOfWork.RequestRepository.GetAllSelect(
                                                                         d => d.DetailRequirementEntities.Select(s => s.SkillEntity),
@@ -88,7 +82,7 @@ namespace Lab.Domain.Services
                                                                         d => d.RequirementQuestionEntities.Select(s => s.QuestionEntity),
                                                                         d => d.RequirementQuestionEntities.Select(s => s.QuestionEntity.FileEntity),
                                                                         d => d.RequirementQuestionEntities.Select(s => s.QuestionEntity.DifficultyEntity)
-                                                                       
+
                                                                         );
 
             List<ConsultRequestDto> consultRequestDtos = requestEntities
@@ -112,13 +106,13 @@ namespace Lab.Domain.Services
                         Id = q.QuestionEntity.Id,
                         Description = q.QuestionEntity.Description,
                         UrlImg = q.QuestionEntity.FileEntity?.Url,
-                        Difficulty = new ConsultDifficulty()
+                        Difficulty = new ConsultDifficultyDto()
                         {
                             id = q.QuestionEntity.DifficultyEntity.Id,
                             Description = q.QuestionEntity.DifficultyEntity.Description,
-                            Value = q.QuestionEntity.DifficultyEntity.Value,    
+                            Value = q.QuestionEntity.DifficultyEntity.Value,
                         }
-                        
+
                     }).ToList(),
                 }).ToList();
 

@@ -28,11 +28,11 @@ namespace MyLabApp.Controllers
 
         [HttpGet]
         [Route("GetAll")]
-        public async Task<IActionResult> GetAll()
+        public IActionResult GetAll()
         {
             IActionResult actionResult = null;
 
-            List<ConsultRequestDto> consultRequestDtos = await _requestService.GetAllRequests();
+            List<ConsultRequestDto> consultRequestDtos =  _requestService.GetAllRequests();
 
             ResponseDto responseDto = new ResponseDto()
             {
