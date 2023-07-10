@@ -160,21 +160,6 @@ namespace Lab.Domain.Services
             return await _unitOfWork.Save() > 0;
         }
 
-
-
-        public async Task<bool> Delete(int id)
-        {
-            RequestEntity requestEntity = _unitOfWork.RequestRepository
-                .FirstOrDefault(x => x.Id == id);
-
-            if (requestEntity == null)
-                throw new BusinessException(GeneralMessages.ItemNoFound);
-
-            _unitOfWork.RequestRepository.Delete(requestEntity);
-
-            return await _unitOfWork.Save() > 0;
-        }
-
         public async Task<bool> Update(ModifyRequestDto modifyRequestDto)
         {
             RequestEntity request = _unitOfWork.RequestRepository
@@ -216,6 +201,34 @@ namespace Lab.Domain.Services
             }
 
             _unitOfWork.RequestRepository.Update(request);
+
+            return await _unitOfWork.Save() > 0;
+        }
+
+        public async Task<bool> Delete(int id)
+        {
+            RequestEntity requestEntity = _unitOfWork.RequestRepository
+                .FirstOrDefault(x => x.Id == id);
+
+            if (requestEntity == null)
+                throw new BusinessException(GeneralMessages.ItemNoFound);
+
+            _unitOfWork.RequestRepository.Delete(requestEntity);
+
+            return await _unitOfWork.Save() > 0;
+        }
+
+        public async Task<bool> DeleteToQuestionRequired(int idRequest, int idQuestion)
+        {
+            RequirementQuestionEntity requirementQuestionEntity =
+               _unitOfWork.RequirementQuestionRepository
+               .FirstOrDefault(x => x.IdRequest == idRequest &&
+                               x.IdQuestion == idQuestion);
+
+            if (requirementQuestionEntity == null)
+                throw new BusinessException(GeneralMessages.ItemNoFound);
+
+            _unitOfWork.RequirementQuestionRepository.Delete(requirementQuestionEntity);
 
             return await _unitOfWork.Save() > 0;
         }

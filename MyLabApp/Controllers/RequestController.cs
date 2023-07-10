@@ -146,5 +146,19 @@ namespace MyLabApp.Controllers
                 Result = requestDelete
             });
         }
+
+        [HttpDelete]
+        [Route("DeleteToQuestionRequired/{idRequest}/{idQuestion}")]
+        public async Task<IActionResult> DeleteToQuestionRequired(int idRequest, int idQuestion)
+        {
+            bool requestDelete = await _requestService.DeleteToQuestionRequired(idRequest, idQuestion);
+
+            return Ok(new ResponseDto
+            {
+                IsSuccess = true,
+                Message = requestDelete ? GeneralMessages.ItemDeleted : GeneralMessages.ItemNoDeleted,
+                Result = requestDelete
+            });
+        }
     }
 }
