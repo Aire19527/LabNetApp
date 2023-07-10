@@ -82,6 +82,13 @@ namespace Infraestructure.Core.Repository
             return query.FirstOrDefault(where);
         }
 
+        public async Task<TEntity> FirstOrDefaultSelectAsync(Expression<Func<TEntity, bool>> where, params Expression<Func<TEntity, object>>[] includeProperties)
+        {
+            IQueryable<TEntity> query = AsQueryable();
+            query = PerformInclusionsAndSelect(includeProperties, query);
+            return await query.FirstOrDefaultAsync(where);
+        }
+
         public void Insert(TEntity entity)
         {
             _entities.Add(entity);

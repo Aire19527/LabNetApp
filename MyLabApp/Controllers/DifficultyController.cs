@@ -27,7 +27,7 @@ namespace MyLabApp.Controllers
         {
             IActionResult actionResult = null;
 
-            List<ConsultDifficulty> consultDifficulties = _difficultyService.GetAll();
+            List<ConsultDifficultyDto> consultDifficulties = _difficultyService.GetAll();
 
             ResponseDto responseDto = new ResponseDto()
             {

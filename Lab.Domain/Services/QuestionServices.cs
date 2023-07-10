@@ -53,7 +53,7 @@ namespace Lab.Domain.Services
                 IdFile = q.FileEntity?.Id,
                 UrlImg = q.FileEntity?.Url,
                 IsVisible = q.IsVisible,
-                Difficulty = new ConsultDifficulty() { 
+                Difficulty = new ConsultDifficultyDto() { 
                     id = q.DifficultyEntity.Id,
                     Description = q.DifficultyEntity.Description,
                     Value = q.DifficultyEntity.Value

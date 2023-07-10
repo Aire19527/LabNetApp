@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Lab.Domain.Dto.Difficulty
 {
-    public class ConsultDifficulty
+    public class ConsultDifficultyDto
     {
         public int id { get; set; }
         public string Description { get; set; }

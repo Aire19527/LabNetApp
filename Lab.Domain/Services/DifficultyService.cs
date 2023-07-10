@@ -15,7 +15,7 @@ namespace Lab.Domain.Services
             this._unitOfWork = unitOfWork;
         }
 
-        public List<ConsultDifficulty> GetAll()
+        public List<ConsultDifficultyDto> GetAll()
         {
             
             IEnumerable<DifficultyEntity> difficultyEntities = _unitOfWork.DifficultyEntity.GetAll();
@@ -25,8 +25,8 @@ namespace Lab.Domain.Services
                 throw new BusinessException("No existe entidades");
             }
 
-            List<ConsultDifficulty> consultDifficulties = difficultyEntities
-                .Select(x => new ConsultDifficulty()
+            List<ConsultDifficultyDto> consultDifficulties = difficultyEntities
+                .Select(x => new ConsultDifficultyDto()
                 {
                     id = x.Id,
                     Description = x.Description,

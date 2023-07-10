@@ -9,6 +9,6 @@ namespace Lab.Domain.Services.Interfaces
 {
     public interface IDifficultyService
     {
-       List<ConsultDifficulty> GetAll();
+       List<ConsultDifficultyDto> GetAll();
     }
 }

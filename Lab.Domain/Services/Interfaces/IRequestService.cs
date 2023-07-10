@@ -10,7 +10,7 @@ namespace Lab.Domain.Services.Interfaces
 {
     public interface IRequestService
     {
-        Task<List<ConsultRequestDto>> GetAllRequests();
+        List<ConsultRequestDto> GetAllRequests();
         Task<List<QuestionDto>> GetAllQuestion(int id);
         Task<bool> Insert(InsertRequestDto insertRequestDto);
         Task<bool> Update(ModifyRequestDto modifyRequestDto);
