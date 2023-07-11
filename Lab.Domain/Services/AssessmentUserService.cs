@@ -41,13 +41,13 @@ namespace Lab.Domain.Services
                             
                             IdQuestion = aq.IdQuestion,
                             QuestionDescription = aq.QuestionEntity.Description,
-                            UrlQuestion = aq.QuestionEntity.FileEntity.Url,
+                            UrlQuestion = aq.QuestionEntity.FileEntity?.Url,
                             AssessmentAnswer = aq.AssessmentQuestionAnswerEntities
                                 .Select(aa => new AssessmentAnswerDto()
                                 {
                                     IdAnswer = aa.IdAnswer,
-                                    AnswerDescription = aa.AnswerEntity.Description,
-                                    UrlAnswer = aa.AnswerEntity.FileEntity.Url,
+                                    AnswerDescription = aa.AnswerEntity?.Description,
+                                    UrlAnswer = aa.AnswerEntity?.FileEntity?.Url,
                                     //IsCorrect = b
                                 }).ToList()
                         }).ToList()

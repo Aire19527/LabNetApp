@@ -9,12 +9,15 @@ using Common.Helpers;
 using static Common.Constant.Const;
 using Microsoft.AspNetCore.Authorization;
 using MyLabApp.Handlers;
+using Lab.Domain.Dto.Skill;
+using Lab.Domain.Services;
+using Lab.Domain.Dto.Assessment;
 
 namespace MyLabApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     [TypeFilter(typeof(CustomExceptionHandler))]
     public class AssessmentUserController : ControllerBase
     {
@@ -23,6 +26,20 @@ namespace MyLabApp.Controllers
         public AssessmentUserController(IAssessmentUserService assessmentUserService)
         {
             _assessmentUserService = assessmentUserService;
+        }
+
+        [HttpGet]
+        [Route("GetAll")]
+        public IActionResult GetAll()
+        {
+            List<ConsultAssessmentUserDto> result = _assessmentUserService.GetAssessment();
+
+            return Ok(new ResponseDto()
+            {
+                IsSuccess = true,
+                Message = string.Empty,
+                Result = result
+            });
         }
 
         [HttpPost]
