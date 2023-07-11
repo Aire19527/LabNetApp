@@ -29,10 +29,10 @@ namespace Lab.Domain.Services
 
             RequestEntity requestEntity = await _unitOfWork.RequestRepository.FirstOrDefaultSelectAsync(x => x.Id == id,
                                                                     d => d.DetailRequirementEntities,
-                                                                   f => f.RequirementQuestionEntities.Select(x => x.QuestionEntity.DifficultyEntity),
+                                                                    f => f.RequirementQuestionEntities.Select(x => x.QuestionEntity.DifficultyEntity),
                                                                     f => f.RequirementQuestionEntities.Select(x => x.QuestionEntity.FileEntity),
                                                                     ans => ans.RequirementQuestionEntities.Select(
-                                                                                x => x.QuestionEntity.QuestionAnswerEntities.Select(a => a.AnswerEntity.FileEntity)));
+                                                                    x => x.QuestionEntity.QuestionAnswerEntities.Select(a => a.AnswerEntity.FileEntity)));
 
             if (requestEntity == null)
                 throw new BusinessException(GeneralMessages.ItemNoFound);

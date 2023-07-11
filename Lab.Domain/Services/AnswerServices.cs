@@ -179,7 +179,7 @@ namespace Lab.Domain.Services
             return answer;
         }
 
-        public async Task<bool> InsertAnswerInQuestion(AddAnswerQuestion add)
+        public async Task<bool> InsertAnswerInQuestion(AnswerQuestionDto add)
         {
             if (add.IdAnswer == null || add.IdQuestion == null)
                 throw new BusinessException("No se ha indicado pregunta y/o respuesta.");

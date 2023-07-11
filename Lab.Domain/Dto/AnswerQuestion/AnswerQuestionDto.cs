@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Lab.Domain.Dto.AnswerQuestion
 {
-    public class AddAnswerQuestion
+    public class AnswerQuestionDto
     {
         [Required]
         public int IdAnswer { get; set; }

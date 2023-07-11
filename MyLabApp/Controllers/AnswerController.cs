@@ -100,7 +100,7 @@ namespace MyLabApp.Controllers
 
         [HttpPost]
         [Route("InsertInQuestion")]
-        public async Task<IActionResult> InsertInQuestion([FromBody] AddAnswerQuestion add)
+        public async Task<IActionResult> InsertInQuestion([FromBody] AnswerQuestionDto add)
         {
             IActionResult action;
 

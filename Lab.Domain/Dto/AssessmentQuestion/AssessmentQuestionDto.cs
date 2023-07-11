@@ -10,7 +10,6 @@ namespace Lab.Domain.Dto.AssessmentQuestion
 {
     public class AssessmentQuestionDto
     {
-        //public int IdAssessmentUser { get; set; }
         public int IdQuestion { get; set; }
         public List<AssessmentQuestionAnswerDto> AssessmentQuestionAnswer { get; set; }
     }

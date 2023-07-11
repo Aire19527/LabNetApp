@@ -18,7 +18,7 @@ namespace Lab.Domain.Services.Interfaces
         Task<bool> DeleteAnswerToQuestion(int idQuestion, int idAnswer);
         GetAnswerDto getById(int id);
         List<GetAnswerDto> getAll();
-        Task<bool> InsertAnswerInQuestion(AddAnswerQuestion add);
+        Task<bool> InsertAnswerInQuestion(AnswerQuestionDto add);
         
     }
 }
