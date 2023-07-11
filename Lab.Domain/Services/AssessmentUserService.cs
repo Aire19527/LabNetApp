@@ -25,15 +25,16 @@ namespace Lab.Domain.Services
 
             IEnumerable<AssessmentUserEntity> assessmentUserList =
                 _unitOfWork.AssessmentUserRepository.GetAllSelect(
+                        q => q.AssessmentQuestionEntities.Select(x => x.QuestionEntity.FileEntity),
                         x => x.AssessmentQuestionEntities
                               .Select(x => x.AssessmentQuestionAnswerEntities
                               .Select(a => a.AnswerEntity.FileEntity)),
-                        q => q.AssessmentQuestionEntities.Select(x => x.QuestionEntity.FileEntity),
                         x => x.RequestEntity);
 
             List<ConsultAssessmentUserDto> assessmentUser =
                 assessmentUserList.Select(x => new ConsultAssessmentUserDto()
                 {
+                    IdRequest = x.IdRequest,
                     DateAssessment = x.RequestEntity.CreationDate,
                     RequestTitle = x.RequestEntity.Title,
                     PointsObtained = x.PointsObtained,
