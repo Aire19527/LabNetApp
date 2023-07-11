@@ -1,5 +1,7 @@
 ﻿using Infraestructure.Core.UnitOfWork.Interface;
 using Infraestructure.Entity.Models;
+using Lab.Domain.Dto.Assessment;
+using Lab.Domain.Dto.AssessmentQuestion;
 using Lab.Domain.Dto.AssessmentQuestionAnswer;
 using Lab.Domain.Dto.AssessmentUser;
 using Lab.Domain.Services.Interfaces;
@@ -16,6 +18,42 @@ namespace Lab.Domain.Services
         {
             _unitOfWork = unitOfWork;
             _questionServices = questionServices;
+        }
+
+        public List<ConsultAssessmentUserDto> GetAssessment()
+        {
+
+            IEnumerable<AssessmentUserEntity> assessmentUserList =
+                _unitOfWork.AssessmentUserRepository.GetAllSelect(
+                        x => x.AssessmentQuestionEntities
+                              .Select(x => x.AssessmentQuestionAnswerEntities
+                              .Select(a => a.AnswerEntity)));
+
+            List<ConsultAssessmentUserDto> assessmentUser =
+                assessmentUserList.Select(x => new ConsultAssessmentUserDto()
+                {
+                    DateAssessment = x.RequestEntity.CreationDate,
+                    RequestTitle = x.RequestEntity.Title,
+                    PointsObtained = x.PointsObtained,
+                    ConsultAssessmentQuestion = x.AssessmentQuestionEntities
+                        .Select(aq => new ConsultAssessmentQuestionDto()
+                        {
+                            
+                            IdQuestion = aq.IdQuestion,
+                            QuestionDescription = aq.QuestionEntity.Description,
+                            UrlQuestion = aq.QuestionEntity.FileEntity.Url,
+                            AssessmentAnswer = aq.AssessmentQuestionAnswerEntities
+                                .Select(aa => new AssessmentAnswerDto()
+                                {
+                                    IdAnswer = aa.IdAnswer,
+                                    AnswerDescription = aa.AnswerEntity.Description,
+                                    UrlAnswer = aa.AnswerEntity.FileEntity.Url,
+                                    //IsCorrect = b
+                                }).ToList()
+                        }).ToList()
+                }).ToList();
+
+            return assessmentUser;
         }
 
         public async Task<bool> Insert(AddAssessmentUserDto addAssessmentUserDto, int idUser)
@@ -57,7 +95,7 @@ namespace Lab.Domain.Services
 
         private decimal ConsultAnswer(AssessmentQuestionAnswerDto questionAnswer, QuestionEntity question)
         {
-            int count = question.QuestionAnswerEntities.Where( x => x.IsCorrect == true ).Count();
+            int count = question.QuestionAnswerEntities.Where(x => x.IsCorrect == true).Count();
             int point = question.DifficultyEntity.Value;
 
 

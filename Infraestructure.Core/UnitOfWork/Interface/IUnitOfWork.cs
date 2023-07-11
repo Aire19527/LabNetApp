@@ -30,7 +30,6 @@ namespace Infraestructure.Core.UnitOfWork.Interface
 
         IRepository<AssessmentUserEntity> AssessmentUserRepository { get; }
         IRepository<RequirementQuestionEntity> RequirementQuestionRepository { get; }
-
         void Dispose();
         Task<int> Save();
 
