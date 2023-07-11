@@ -27,7 +27,9 @@ namespace Lab.Domain.Services
                 _unitOfWork.AssessmentUserRepository.GetAllSelect(
                         x => x.AssessmentQuestionEntities
                               .Select(x => x.AssessmentQuestionAnswerEntities
-                              .Select(a => a.AnswerEntity)));
+                              .Select(a => a.AnswerEntity.FileEntity)),
+                        q => q.AssessmentQuestionEntities.Select(x => x.QuestionEntity.FileEntity),
+                        x => x.RequestEntity);
 
             List<ConsultAssessmentUserDto> assessmentUser =
                 assessmentUserList.Select(x => new ConsultAssessmentUserDto()
@@ -48,7 +50,7 @@ namespace Lab.Domain.Services
                                     IdAnswer = aa.IdAnswer,
                                     AnswerDescription = aa.AnswerEntity?.Description,
                                     UrlAnswer = aa.AnswerEntity?.FileEntity?.Url,
-                                    //IsCorrect = b
+                                    //IsCorrect = aa.is
                                 }).ToList()
                         }).ToList()
                 }).ToList();
