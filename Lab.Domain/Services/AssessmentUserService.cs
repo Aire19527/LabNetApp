@@ -1,4 +1,5 @@
-﻿using Infraestructure.Core.UnitOfWork.Interface;
+﻿using Common.Enums;
+using Infraestructure.Core.UnitOfWork.Interface;
 using Infraestructure.Entity.Models;
 using Lab.Domain.Dto.Assessment;
 using Lab.Domain.Dto.AssessmentQuestion;
@@ -31,16 +32,15 @@ namespace Lab.Domain.Services
                         x => x.RequestEntity,
                         u => u.UserEntity);
 
-            List<ConsultAssessmentUserDto> assessmentUser =
+            List<ConsultAssessmentUserDto> assessmentUser = 
                 assessmentUserList.Select(x => new ConsultAssessmentUserDto()
                 {
                     IdRequest = x.IdRequest,
-                    DateAssessment = x.RequestEntity.CreationDate,
+                    DateAssessment = x.RequestEntity.CreationDate, 
                     RequestTitle = x.RequestEntity.Title,
-                    PointsObtained = x.PointsObtained,
-                    IdUser = x.IdUser,
-                    NombreUser = x.UserEntity.Mail,
-                    ConsultAssessmentQuestion = x.AssessmentQuestionEntities
+                    PointsObtained = x.PointsObtained, 
+                    IdUser = x.IdUser, 
+                        ConsultAssessmentQuestion = x.AssessmentQuestionEntities
                         .Select(aq => new ConsultAssessmentQuestionDto()
                         {
 
@@ -70,8 +70,8 @@ namespace Lab.Domain.Services
                         x => x.AssessmentQuestionEntities
                               .Select(x => x.AssessmentQuestionAnswerEntities
                               .Select(a => a.AnswerEntity.FileEntity)),
-                        x => x.RequestEntity,
-                        u => u.IdUser == idUser);
+                        x => x.RequestEntity
+                        /*x => x.IdUser == idUser*/);
 
             List<ConsultAssessmentUserDto> assessmentUser =
                 assessmentUserList.Select(x => new ConsultAssessmentUserDto()
@@ -106,15 +106,13 @@ namespace Lab.Domain.Services
 
             List<ConsultAssessmentUserDto> list = new List<ConsultAssessmentUserDto>();
 
-            RoleEntity rol =  _unitOfWork.RoleRepository.FirstOrDefault(x => x.Id == idRol);
-
-            if (rol.Description.ToLower() == "user")
+            if (idRol == (int)Enums.Role.User)
             {
-              list.AddRange(this.GetAssessmentUser(idUser));
+              list.AddRange(GetAssessmentUser(idUser));
             }
             else
             {
-               list.AddRange(this.GetAdminToRecruiter());
+               list.AddRange(GetAdminToRecruiter());
             }
 
             return list;
