@@ -22,6 +22,7 @@ namespace Lab.Domain.Services
             _unitOfWork = unitOfWork;
 
         }
+
         public List<GetRoleDto> GetAll()
         {
             IEnumerable<RoleEntity> roleQuery = _unitOfWork.RoleRepository.GetAll();

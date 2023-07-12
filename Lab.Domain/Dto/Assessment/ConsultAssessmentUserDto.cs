@@ -12,6 +12,9 @@ namespace Lab.Domain.Dto.Assessment
 
         public int PointsObtained { get; set; }
 
+        public int IdUser { get; set; }
+        public string NombreUser { get; set; }
+
         public List<ConsultAssessmentQuestionDto> ConsultAssessmentQuestion { get; set; }
     }
 }

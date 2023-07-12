@@ -29,10 +29,14 @@ namespace MyLabApp.Controllers
         }
 
         [HttpGet]
-        [Route("GetAll")]
-        public IActionResult GetAll()
+        [Route("GetAssessment")]
+        public IActionResult GetAssessment()
         {
-            List<ConsultAssessmentUserDto> result = _assessmentUserService.GetAssessment();
+            string idUser = Utils.GetClaimValue(Request.Headers["Authorization"], TypeClaims.IdUser);
+
+            string idRol = Utils.GetClaimValue(Request.Headers["Authorization"], TypeClaims.IdRol);
+
+            List<ConsultAssessmentUserDto> result = _assessmentUserService.GetAssessment(int.Parse(idUser), int.Parse(idRol));
 
             return Ok(new ResponseDto()
             {

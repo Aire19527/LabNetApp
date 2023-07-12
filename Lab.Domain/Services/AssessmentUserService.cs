@@ -20,16 +20,16 @@ namespace Lab.Domain.Services
             _questionServices = questionServices;
         }
 
-        public List<ConsultAssessmentUserDto> GetAssessment()
+        private List<ConsultAssessmentUserDto> GetAdminToRecruiter()
         {
-
             IEnumerable<AssessmentUserEntity> assessmentUserList =
                 _unitOfWork.AssessmentUserRepository.GetAllSelect(
                         q => q.AssessmentQuestionEntities.Select(x => x.QuestionEntity.FileEntity),
                         x => x.AssessmentQuestionEntities
                               .Select(x => x.AssessmentQuestionAnswerEntities
                               .Select(a => a.AnswerEntity.FileEntity)),
-                        x => x.RequestEntity);
+                        x => x.RequestEntity,
+                        u => u.UserEntity);
 
             List<ConsultAssessmentUserDto> assessmentUser =
                 assessmentUserList.Select(x => new ConsultAssessmentUserDto()
@@ -38,10 +38,12 @@ namespace Lab.Domain.Services
                     DateAssessment = x.RequestEntity.CreationDate,
                     RequestTitle = x.RequestEntity.Title,
                     PointsObtained = x.PointsObtained,
+                    IdUser = x.IdUser,
+                    NombreUser = x.UserEntity.Mail,
                     ConsultAssessmentQuestion = x.AssessmentQuestionEntities
                         .Select(aq => new ConsultAssessmentQuestionDto()
                         {
-                            
+
                             IdQuestion = aq.IdQuestion,
                             QuestionDescription = aq.QuestionEntity.Description,
                             UrlQuestion = aq.QuestionEntity.FileEntity?.Url,
@@ -57,6 +59,65 @@ namespace Lab.Domain.Services
                 }).ToList();
 
             return assessmentUser;
+        }
+
+        private List<ConsultAssessmentUserDto> GetAssessmentUser(int idUser)
+        {
+
+            IEnumerable<AssessmentUserEntity> assessmentUserList =
+                _unitOfWork.AssessmentUserRepository.GetAllSelect(
+                        q => q.AssessmentQuestionEntities.Select(x => x.QuestionEntity.FileEntity),
+                        x => x.AssessmentQuestionEntities
+                              .Select(x => x.AssessmentQuestionAnswerEntities
+                              .Select(a => a.AnswerEntity.FileEntity)),
+                        x => x.RequestEntity,
+                        u => u.IdUser == idUser);
+
+            List<ConsultAssessmentUserDto> assessmentUser =
+                assessmentUserList.Select(x => new ConsultAssessmentUserDto()
+                {
+                    IdRequest = x.IdRequest,
+                    DateAssessment = x.RequestEntity.CreationDate,
+                    RequestTitle = x.RequestEntity.Title,
+                    PointsObtained = x.PointsObtained,
+                    ConsultAssessmentQuestion = x.AssessmentQuestionEntities
+                        .Select(aq => new ConsultAssessmentQuestionDto()
+                        {
+
+                            IdQuestion = aq.IdQuestion,
+                            QuestionDescription = aq.QuestionEntity.Description,
+                            UrlQuestion = aq.QuestionEntity.FileEntity?.Url,
+                            AssessmentAnswer = aq.AssessmentQuestionAnswerEntities
+                                .Select(aa => new AssessmentAnswerDto()
+                                {
+                                    IdAnswer = aa.IdAnswer,
+                                    AnswerDescription = aa.AnswerEntity?.Description,
+                                    UrlAnswer = aa.AnswerEntity?.FileEntity?.Url,
+                                    //IsCorrect = aa.is
+                                }).ToList()
+                        }).ToList()
+                }).ToList();
+
+            return assessmentUser;
+        }
+
+        public List<ConsultAssessmentUserDto> GetAssessment(int idUser, int idRol)
+        {
+
+            List<ConsultAssessmentUserDto> list = new List<ConsultAssessmentUserDto>();
+
+            RoleEntity rol =  _unitOfWork.RoleRepository.FirstOrDefault(x => x.Id == idRol);
+
+            if (rol.Description.ToLower() == "user")
+            {
+              list.AddRange(this.GetAssessmentUser(idUser));
+            }
+            else
+            {
+               list.AddRange(this.GetAdminToRecruiter());
+            }
+
+            return list;
         }
 
         public async Task<bool> Insert(AddAssessmentUserDto addAssessmentUserDto, int idUser)

@@ -52,6 +52,4 @@ namespace Common.Helpers
             return claimData.Value;
         }
     }
-
-
 }
