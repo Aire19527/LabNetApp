@@ -21,7 +21,7 @@ namespace Infraestructure.Entity.Models
         [ForeignKey("RequestEntity")]
         public int IdRequest { get; set; }
         public RequestEntity RequestEntity { get; set; }
-
+        public DateTime CreationDate { get; set; }
         public int PointsObtained { get; set; }
         public int PointsMaximum { get; set; }
         public IEnumerable<AssessmentQuestionEntity> AssessmentQuestionEntities { get; set; }

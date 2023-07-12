@@ -30,16 +30,16 @@ namespace Lab.Domain.Services
                               .Select(x => x.AssessmentQuestionAnswerEntities
                               .Select(a => a.AnswerEntity.FileEntity)),
                         x => x.RequestEntity,
-                        u => u.UserEntity);
+                        u => u.UserEntity.ProfileEntity);
 
             List<ConsultAssessmentUserDto> assessmentUser = 
                 assessmentUserList.Select(x => new ConsultAssessmentUserDto()
                 {
                     IdRequest = x.IdRequest,
-                    DateAssessment = x.RequestEntity.CreationDate, 
+                    DateAssessment = x.CreationDate, 
                     RequestTitle = x.RequestEntity.Title,
                     PointsObtained = x.PointsObtained, 
-                    IdUser = x.IdUser, 
+                    DniUsuario = x.UserEntity.ProfileEntity.DNI, 
                         ConsultAssessmentQuestion = x.AssessmentQuestionEntities
                         .Select(aq => new ConsultAssessmentQuestionDto()
                         {
@@ -53,7 +53,6 @@ namespace Lab.Domain.Services
                                     IdAnswer = aa.IdAnswer,
                                     AnswerDescription = aa.AnswerEntity?.Description,
                                     UrlAnswer = aa.AnswerEntity?.FileEntity?.Url,
-                                    //IsCorrect = aa.is
                                 }).ToList()
                         }).ToList()
                 }).ToList();
@@ -70,8 +69,7 @@ namespace Lab.Domain.Services
                         x => x.AssessmentQuestionEntities
                               .Select(x => x.AssessmentQuestionAnswerEntities
                               .Select(a => a.AnswerEntity.FileEntity)),
-                        x => x.RequestEntity
-                        /*x => x.IdUser == idUser*/);
+                        x => x.RequestEntity);
 
             List<ConsultAssessmentUserDto> assessmentUser =
                 assessmentUserList.Select(x => new ConsultAssessmentUserDto()
@@ -93,7 +91,6 @@ namespace Lab.Domain.Services
                                     IdAnswer = aa.IdAnswer,
                                     AnswerDescription = aa.AnswerEntity?.Description,
                                     UrlAnswer = aa.AnswerEntity?.FileEntity?.Url,
-                                    //IsCorrect = aa.is
                                 }).ToList()
                         }).ToList()
                 }).ToList();
@@ -126,6 +123,7 @@ namespace Lab.Domain.Services
             AssessmentUserEntity assessmentUserEntity = new AssessmentUserEntity()
             {
                 IdRequest = addAssessmentUserDto.IdRequest,
+                CreationDate = DateTime.Today,
                 IdUser = idUser,
             };
 
@@ -153,6 +151,11 @@ namespace Lab.Domain.Services
             _unitOfWork.AssessmentUserRepository.Insert(assessmentUserEntity);
 
             return await _unitOfWork.Save() > 0;
+        }
+
+        private decimal SumaPuntosTotal()
+        {
+            string resultadoFinal = "sumade preguntas correctas" + "/ valor de evaluacion";
         }
 
         private decimal ConsultAnswer(AssessmentQuestionAnswerDto questionAnswer, QuestionEntity question)
