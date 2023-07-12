@@ -153,10 +153,10 @@ namespace Lab.Domain.Services
             return await _unitOfWork.Save() > 0;
         }
 
-        private decimal SumaPuntosTotal()
-        {
-            string resultadoFinal = "sumade preguntas correctas" + "/ valor de evaluacion";
-        }
+        //private decimal SumaPuntosTotal()
+        //{
+        //    string resultadoFinal = "sumade preguntas correctas" + "/ valor de evaluacion";
+        //}
 
         private decimal ConsultAnswer(AssessmentQuestionAnswerDto questionAnswer, QuestionEntity question)
         {
