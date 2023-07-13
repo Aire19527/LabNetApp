@@ -159,12 +159,13 @@ namespace Lab.Domain.Services
             assessmentUserEntity.PointsObtained = listPoints.Sum();
             assessmentUserEntity.PointsMaximum = maxPoints;
 
-            var request = await _requestService.GetRequestEntity(addAssessmentUserDto.IdRequest);
+            //Porcentaje obtenido
             decimal percentageObtained = (assessmentUserEntity.PointsObtained * 100) / maxPoints;
+            assessmentUserEntity.PercentageObtained = percentageObtained;
 
-            assessmentUserEntity.PercentageObtained=percentageObtained;
+            //Consultamos request, para obtener el porcentaje minimo requerido.
+            var request = await _requestService.GetRequestEntity(addAssessmentUserDto.IdRequest);            
             assessmentUserEntity.Approved = percentageObtained >= request.PercentageMinimoRequired;
-
 
             _unitOfWork.AssessmentUserRepository.Insert(assessmentUserEntity);
 
