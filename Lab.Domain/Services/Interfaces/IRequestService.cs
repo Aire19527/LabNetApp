@@ -1,4 +1,5 @@
-﻿using Lab.Domain.Dto.Question;
+﻿using Infraestructure.Entity.Models;
+using Lab.Domain.Dto.Question;
 using Lab.Domain.Dto.Resquest;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ namespace Lab.Domain.Services.Interfaces
 {
     public interface IRequestService
     {
+        Task<RequestEntity> GetRequestEntity(int idRequest);
         List<ConsultRequestDto> GetAllRequests();
         Task<List<QuestionDto>> GetAllQuestion(int id);
         Task<bool> Insert(InsertRequestDto insertRequestDto);

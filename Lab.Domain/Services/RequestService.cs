@@ -23,6 +23,12 @@ namespace Lab.Domain.Services
             _detailRequirement = detailRequirementService;
         }
 
+        public async Task<RequestEntity> GetRequestEntity(int idRequest)
+        {
+            return await _unitOfWork.RequestRepository.FirstOrDefaultAsync(x => x.Id == idRequest);
+        }
+
+
         public async Task<List<QuestionDto>> GetAllQuestion(int id)
         {
             List<QuestionDto> questionDtosList = new List<QuestionDto>();

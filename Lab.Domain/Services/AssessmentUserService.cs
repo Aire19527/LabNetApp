@@ -14,11 +14,13 @@ namespace Lab.Domain.Services
 
         private readonly IUnitOfWork _unitOfWork;
         private readonly IQuestionServices _questionServices;
+        private readonly IRequestService _requestService;
 
-        public AssessmentUserService(IUnitOfWork unitOfWork, IQuestionServices questionServices)
+        public AssessmentUserService(IUnitOfWork unitOfWork, IQuestionServices questionServices, IRequestService requestService)
         {
             _unitOfWork = unitOfWork;
             _questionServices = questionServices;
+            _requestService = requestService;
         }
 
         private List<ConsultAssessmentUserDto> GetAdminToRecruiter()
@@ -32,16 +34,16 @@ namespace Lab.Domain.Services
                         x => x.RequestEntity,
                         u => u.UserEntity.ProfileEntity);
 
-            List<ConsultAssessmentUserDto> assessmentUser = 
+            List<ConsultAssessmentUserDto> assessmentUser =
                 assessmentUserList.Select(x => new ConsultAssessmentUserDto()
                 {
                     IdRequest = x.IdRequest,
-                    DateAssessment = x.CreationDate, 
+                    DateAssessment = x.CreationDate,
                     RequestTitle = x.RequestEntity.Title,
-                    PointsObtained = x.PointsObtained, 
-                    DniUsuario = x.UserEntity.ProfileEntity.DNI, 
+                    PointsObtained = x.PointsObtained,
+                    DniUsuario = x.UserEntity.ProfileEntity.DNI,
                     NombreUser = x.UserEntity.ProfileEntity.Name + "" + x.UserEntity.ProfileEntity.LastName,
-                        ConsultAssessmentQuestion = x.AssessmentQuestionEntities
+                    ConsultAssessmentQuestion = x.AssessmentQuestionEntities
                         .Select(aq => new ConsultAssessmentQuestionDto()
                         {
                             IdQuestion = aq.IdQuestion,
@@ -105,11 +107,11 @@ namespace Lab.Domain.Services
 
             if (idRol == (int)Enums.Role.User)
             {
-              list.AddRange(GetAssessmentUser(idUser));
+                list.AddRange(GetAssessmentUser(idUser));
             }
             else
             {
-               list.AddRange(GetAdminToRecruiter());
+                list.AddRange(GetAdminToRecruiter());
             }
 
             return list;
@@ -117,16 +119,17 @@ namespace Lab.Domain.Services
 
         public async Task<bool> Insert(AddAssessmentUserDto addAssessmentUserDto, int idUser)
         {
-            List<AssessmentQuestionEntity> assessmentQuestions =
-                new List<AssessmentQuestionEntity>();
+            List<AssessmentQuestionEntity> assessmentQuestions = new List<AssessmentQuestionEntity>();
 
             AssessmentUserEntity assessmentUserEntity = new AssessmentUserEntity()
             {
                 IdRequest = addAssessmentUserDto.IdRequest,
                 CreationDate = DateTime.Today,
                 IdUser = idUser,
+
             };
 
+            int maxPoints = 0;
             foreach (var item in addAssessmentUserDto.AssessmentQuestion)
             {
                 AssessmentQuestionEntity assessmentQuestion = new AssessmentQuestionEntity()
@@ -144,30 +147,38 @@ namespace Lab.Domain.Services
                     }).ToList();
 
                 assessmentQuestions.Add(assessmentQuestion);
+                
+                //Máxima puntuación en el assessment
+                maxPoints = maxPoints + question.DifficultyEntity.Value;
             }
 
             assessmentUserEntity.AssessmentQuestionEntities = assessmentQuestions;
+
+            //Obtenemos los puntos del usuario
+            var listPoints = assessmentQuestions.Select(x => x.AssessmentQuestionAnswerEntities.Sum(p => p.Points));
+            assessmentUserEntity.PointsObtained = listPoints.Sum();
+            assessmentUserEntity.PointsMaximum = maxPoints;
+
+            var request = await _requestService.GetRequestEntity(addAssessmentUserDto.IdRequest);
+            decimal percentageObtained = (assessmentUserEntity.PointsObtained * 100) / maxPoints;
+
+            assessmentUserEntity.PercentageObtained=percentageObtained;
+            assessmentUserEntity.Approved = percentageObtained >= request.PercentageMinimoRequired;
+
 
             _unitOfWork.AssessmentUserRepository.Insert(assessmentUserEntity);
 
             return await _unitOfWork.Save() > 0;
         }
 
-        //private decimal SumaPuntosTotal(QuestionEntity question)
-        //{
-        //    int count = question.QuestionAnswerEntities.Where(x => x.IsCorrect == true).Count();
-
-        //    string resultadoFinal = "suma de preguntas correctas" + "/ valor de evaluacion";
-        //}
-
-    private decimal ConsultAnswer(AssessmentQuestionAnswerDto questionAnswer, QuestionEntity question)
+        private decimal ConsultAnswer(AssessmentQuestionAnswerDto questionAnswer, QuestionEntity question)
         {
-            int count = question.QuestionAnswerEntities.Where(x => x.IsCorrect == true).Count();
+            int count = question.QuestionAnswerEntities.Count(x => x.IsCorrect);
             int point = question.DifficultyEntity.Value;
 
 
             var answer = question.QuestionAnswerEntities.FirstOrDefault(x => x.AnswerId == questionAnswer.IdAnswer
-                                                          && x.IsCorrect == questionAnswer.IsCorrect);
+                                                                          && x.IsCorrect == questionAnswer.IsCorrect);
 
             decimal value = 0;
 

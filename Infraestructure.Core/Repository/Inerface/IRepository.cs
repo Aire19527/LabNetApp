@@ -21,6 +21,8 @@ namespace Infraestructure.Core.Repository.Inerface
 
         /// Retorna la primera entidad encontrada bajo una condición especificada o null sino encontrara registros
         TEntity FirstOrDefault(Expression<Func<TEntity, bool>> where, params Expression<Func<TEntity, object>>[] includeProperties);
+        Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> where, params Expression<Func<TEntity, object>>[] includeProperties);
+        
         TEntity FirstOrDefaultSelect(Expression<Func<TEntity, bool>> where, params Expression<Func<TEntity, object>>[] includeProperties);
         Task<TEntity> FirstOrDefaultSelectAsync(Expression<Func<TEntity, bool>> where, params Expression<Func<TEntity, object>>[] includeProperties);
         /// Registra una entidad

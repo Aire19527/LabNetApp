@@ -22,8 +22,11 @@ namespace Infraestructure.Entity.Models
         public int IdRequest { get; set; }
         public RequestEntity RequestEntity { get; set; }
         public DateTime CreationDate { get; set; }
-        public int PointsObtained { get; set; }
+        public decimal PointsObtained { get; set; }
         public int PointsMaximum { get; set; }
+        public decimal PercentageObtained { get; set; }
+        public bool Approved { get; set; }
+
         public IEnumerable<AssessmentQuestionEntity> AssessmentQuestionEntities { get; set; }
     }
 }
