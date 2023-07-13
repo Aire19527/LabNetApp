@@ -10,7 +10,7 @@ namespace Lab.Domain.Dto.Assessment
 
         public DateTime DateAssessment { get; set; }
 
-        public int PointsObtained { get; set; }
+        public decimal PointsObtained { get; set; }
 
         public int DniUsuario { get; set; }
 
