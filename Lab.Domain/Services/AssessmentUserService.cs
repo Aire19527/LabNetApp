@@ -40,10 +40,10 @@ namespace Lab.Domain.Services
                     RequestTitle = x.RequestEntity.Title,
                     PointsObtained = x.PointsObtained, 
                     DniUsuario = x.UserEntity.ProfileEntity.DNI, 
+                    NombreUser = x.UserEntity.ProfileEntity.Name + "" + x.UserEntity.ProfileEntity.LastName,
                         ConsultAssessmentQuestion = x.AssessmentQuestionEntities
                         .Select(aq => new ConsultAssessmentQuestionDto()
                         {
-
                             IdQuestion = aq.IdQuestion,
                             QuestionDescription = aq.QuestionEntity.Description,
                             UrlQuestion = aq.QuestionEntity.FileEntity?.Url,
@@ -153,12 +153,14 @@ namespace Lab.Domain.Services
             return await _unitOfWork.Save() > 0;
         }
 
-        private decimal SumaPuntosTotal()
-        {
-            string resultadoFinal = "sumade preguntas correctas" + "/ valor de evaluacion";
-        }
+        //private decimal SumaPuntosTotal(QuestionEntity question)
+        //{
+        //    int count = question.QuestionAnswerEntities.Where(x => x.IsCorrect == true).Count();
 
-        private decimal ConsultAnswer(AssessmentQuestionAnswerDto questionAnswer, QuestionEntity question)
+        //    string resultadoFinal = "suma de preguntas correctas" + "/ valor de evaluacion";
+        //}
+
+    private decimal ConsultAnswer(AssessmentQuestionAnswerDto questionAnswer, QuestionEntity question)
         {
             int count = question.QuestionAnswerEntities.Where(x => x.IsCorrect == true).Count();
             int point = question.DifficultyEntity.Value;
